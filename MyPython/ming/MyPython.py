@@ -5,4 +5,5 @@ Created on 2014/3/31
 '''
 
 if __name__ == '__main__':
-    pass
+    print 'start'
+    print 'end'
