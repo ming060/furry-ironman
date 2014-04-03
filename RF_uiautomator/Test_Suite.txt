@@ -1,6 +1,6 @@
 *** Settings ***
 Library           ../../../../../Python27/Lib/site-packages/robot/libraries/Collections.py
-Library           ../../../Documents/GitHub/furry-ironman/MyPython/ming/Mobile.py    HYZPLVR48T6TS8LV    WITH NAME    A
+Library           ../MyPython/ming/Mobile.py    HYZPLVR48T6TS8LV    WITH NAME    A
 
 *** Test Cases ***
 switch_camera_lens_position
