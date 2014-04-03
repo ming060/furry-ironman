@@ -1,22 +1,8 @@
 *** Settings ***
-Library           D:/workspace_inhon/MyPython/src/ming/python/Mobile.py    HYZPLVR48T6TS8LV    WITH NAME    A
-Library           D:/workspace_inhon/MyPython/src/ming/python/Mobile.py    IVY5GEJFJRJR45PJ    WITH NAME    B
 Library           ../../../../../Python27/Lib/site-packages/robot/libraries/Collections.py
+Library           ../../../Documents/GitHub/furry-ironman/MyPython/ming/Mobile.py    HYZPLVR48T6TS8LV    WITH NAME    A
 
 *** Test Cases ***
-Test_Case
-    print_info
-    ${obj}    get_object    Chrome
-    Call Method    ${obj}    info
-    Example Keyword    a=A    b=B
-
-test
-    ${1}    A.Press Power
-    ${2}    A.Press Power
-    ${3}    B.Press Power
-    ${4}    B.Press Power
-    A.wait_until    ${1}    ${2}    ${3}    ${4}
-
 switch_camera_lens_position
     ${linearLayout}    A.Get Object    className=android.widget.LinearLayout    index=2
     ${info_dict}    A.get_info_of_object    ${linearLayout}
