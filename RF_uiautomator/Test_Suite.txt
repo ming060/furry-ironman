@@ -1,5 +1,6 @@
 *** Settings ***
 Library           ../../../../../Python27/Lib/site-packages/robot/libraries/Collections.py
+Library           ../MyPython/ming/Mobile.py
 Library           ../MyPython/ming/Mobile.py    HYZPLVR48T6TS8LV    WITH NAME    A
 
 *** Test Cases ***
@@ -10,3 +11,7 @@ switch_camera_lens_position
     ${chileCount}    Evaluate    int(${chileCount})-1
     ${btn}    A.call    ${linearLayout}    child    instance=${chileCount}    className=android.widget.ImageView
     A.call    ${btn}    click
+
+test
+    ${info}    A.Get Info
+    ${chileCount}    Get From Dictionary    ${info}    displayRotation
