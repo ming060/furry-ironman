@@ -15,3 +15,17 @@ switch_camera_lens_position
 test
     ${info}    A.Get Info
     ${chileCount}    Get From Dictionary    ${info}    displayRotation
+
+test2
+    ${info}    Mobile.Get Info
+    log    ${info}
+    Mobile.Press Power
+    Mobile.Press Power
+    z_open_screen_lock
+
+test3
+    z_open_screen_lock
+
+*** Keywords ***
+z_open_screen_lock
+    Mobile.Swipe    240    560    450    560

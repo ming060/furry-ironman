@@ -151,6 +151,26 @@ class Mobile():
         self.device.press.power()
 
 #Gesture interaction of the device
+
+    def click(self, x, y):
+        """
+        click (x, y) on screen
+        """
+        self.device.click(x, y)
+
+    def swipe(self, sx, sy, ex, ey, steps=10):
+        """
+        swipe from (sx, sy) to (ex, ey) with steps
+        """
+        self.device.swipe(sx, sy, ex, ey, steps)
+
+    def drag(self,sx, sy, ex, ey, steps=10):
+        """
+        not test yet desire z only API 17 does not support
+        drag from (sx, sy) to (ex, ey) with steps
+        """
+        self.device.drag(sx, sy, ex, ey, steps)
+
 #Screen Actions of the device
 #Watcher
 #     def (self):
@@ -182,9 +202,8 @@ class Mobile():
 if __name__ == '__main__':
     print 'start'
 
-    m = Mobile('HYZPLVR48T6TS8LV')
+    m = Mobile()
 
-    m.press_home()
 
 #     m.turn_off_screen()
 #     m.turn_on_screen()
