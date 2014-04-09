@@ -26,6 +26,11 @@ test2
 test3
     z_open_screen_lock
 
+testDemo
+    Mobile.Press Home
+    Mobile.Click On    description=Apps
+    Mobile.Click On    text=Apps
+
 *** Keywords ***
 z_open_screen_lock
     Mobile.Swipe    240    560    450    560
