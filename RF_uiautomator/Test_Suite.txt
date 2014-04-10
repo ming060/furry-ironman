@@ -33,8 +33,13 @@ testDemo
 
 launch_google_play
     Mobile.Press Home
-    Mobile.Click On    description=Apps
-    Mobile.Click On    text=Apps
+    ${view}    Mobile.Get Object    className=android.view.View    index=4
+    ${all_apps_button}    Mobile.Call    ${view}    child    className=android.widget.TextView    index=2
+    Mobile.Call    ${all_apps_button}    click
+    Mobile.Click On    description=Shop
+    ${play_store_text}    Mobile.Get Object    text=Play Store
+    ${is_play_store_text_exist}    Mobile.Wait For Exists    ${play_store_text}    5000
+    Should Be True    ${is_play_store_text_exist}    Play Store Text does not exist.
 
 *** Keywords ***
 z_open_screen_lock
