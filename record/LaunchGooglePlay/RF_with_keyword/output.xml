@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generated="20140410 16:18:36.692" generator="Robot 2.8.4 (Python 2.7.5 on win32)">
+<suite source="C:\Users\YuMing\Documents\GitHub\furry-ironman\RF_uiautomator" id="s1" name="RF uiautomator">
+<suite source="C:\Users\YuMing\Documents\GitHub\furry-ironman\RF_uiautomator\Test_Suite.txt" id="s1-s1" name="Test Suite">
+<test id="s1-s1-t1" name="launch_google_play_with_user_keyword">
+<kw type="kw" name="Mobile.Press Home">
+<doc>press home key</doc>
+<arguments>
+</arguments>
+<status status="PASS" endtime="20140410 16:18:38.290" starttime="20140410 16:18:37.939"></status>
+</kw>
+<kw type="kw" name="enter_all_apps">
+<doc></doc>
+<arguments>
+</arguments>
+<kw type="kw" name="${view} = Mobile.Get Object">
+<doc>get the ui object with attribute *attribute*</doc>
+<arguments>
+<arg>className=android.view.View</arg>
+<arg>index=4</arg>
+</arguments>
+<msg timestamp="20140410 16:18:38.295" level="INFO">${view} = &lt;uiautomator.AutomatorDeviceObject object at 0x00000000031AEBA8&gt;</msg>
+<status status="PASS" endtime="20140410 16:18:38.294" starttime="20140410 16:18:38.294"></status>
+</kw>
+<kw type="kw" name="${all_apps_button} = Mobile.Call">
+<doc></doc>
+<arguments>
+<arg>${view}</arg>
+<arg>child</arg>
+<arg>className=android.widget.TextView</arg>
+<arg>index=2</arg>
+</arguments>
+<msg timestamp="20140410 16:18:38.296" level="INFO">${all_apps_button} = &lt;uiautomator.AutomatorDeviceObject object at 0x00000000031AEBA8&gt;</msg>
+<status status="PASS" endtime="20140410 16:18:38.296" starttime="20140410 16:18:38.295"></status>
+</kw>
+<kw type="kw" name="Mobile.Call">
+<doc></doc>
+<arguments>
+<arg>${all_apps_button}</arg>
+<arg>click</arg>
+</arguments>
+<status status="PASS" endtime="20140410 16:18:40.300" starttime="20140410 16:18:38.297"></status>
+</kw>
+<status status="PASS" endtime="20140410 16:18:40.301" starttime="20140410 16:18:38.293"></status>
+</kw>
+<kw type="kw" name="enter_google_play_store">
+<doc></doc>
+<arguments>
+</arguments>
+<kw type="kw" name="Mobile.Click On">
+<doc>click on the object with *attribute*</doc>
+<arguments>
+<arg>description=Shop</arg>
+</arguments>
+<status status="PASS" endtime="20140410 16:18:41.220" starttime="20140410 16:18:40.302"></status>
+</kw>
+<status status="PASS" endtime="20140410 16:18:41.221" starttime="20140410 16:18:40.301"></status>
+</kw>
+<kw type="kw" name="${is_play_store_text_exist} = google_play_text_exist">
+<doc></doc>
+<arguments>
+</arguments>
+<kw type="kw" name="${play_store_text} = Mobile.Get Object">
+<doc>get the ui object with attribute *attribute*</doc>
+<arguments>
+<arg>text=Play Store</arg>
+</arguments>
+<msg timestamp="20140410 16:18:41.223" level="INFO">${play_store_text} = &lt;uiautomator.AutomatorDeviceObject object at 0x00000000031AEEB8&gt;</msg>
+<status status="PASS" endtime="20140410 16:18:41.223" starttime="20140410 16:18:41.222"></status>
+</kw>
+<kw type="kw" name="${is_play_store_text_exist} = Mobile.Wait For Exists">
+<doc>true means the object exist</doc>
+<arguments>
+<arg>${play_store_text}</arg>
+<arg>5000</arg>
+</arguments>
+<msg timestamp="20140410 16:18:42.240" level="INFO">${is_play_store_text_exist} = True</msg>
+<status status="PASS" endtime="20140410 16:18:42.240" starttime="20140410 16:18:41.224"></status>
+</kw>
+<msg timestamp="20140410 16:18:42.241" level="INFO">${is_play_store_text_exist} = True</msg>
+<status status="PASS" endtime="20140410 16:18:42.241" starttime="20140410 16:18:41.221"></status>
+</kw>
+<kw type="kw" name="BuiltIn.Should Be True">
+<doc>Fails if the given condition is not true.</doc>
+<arguments>
+<arg>${is_play_store_text_exist}</arg>
+<arg>Play Store Text does not exist.</arg>
+</arguments>
+<status status="PASS" endtime="20140410 16:18:42.243" starttime="20140410 16:18:42.242"></status>
+</kw>
+<doc></doc>
+<tags>
+</tags>
+<status status="PASS" endtime="20140410 16:18:42.243" critical="yes" starttime="20140410 16:18:37.938"></status>
+</test>
+<doc></doc>
+<metadata>
+</metadata>
+<status status="PASS" endtime="20140410 16:18:42.244" starttime="20140410 16:18:36.727"></status>
+</suite>
+<doc></doc>
+<metadata>
+</metadata>
+<status status="PASS" endtime="20140410 16:18:42.246" starttime="20140410 16:18:36.703"></status>
+</suite>
+<statistics>
+<total>
+<stat fail="0" pass="1">Critical Tests</stat>
+<stat fail="0" pass="1">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat fail="0" pass="1" id="s1" name="RF uiautomator">RF uiautomator</stat>
+<stat fail="0" pass="1" id="s1-s1" name="Test Suite">RF uiautomator.Test Suite</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

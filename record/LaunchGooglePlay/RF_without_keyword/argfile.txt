@@ -1,0 +1,10 @@
+--outputdir
+c:\users\yuming\appdata\local\temp\RIDE_0ohup.d
+--monitorcolors
+off
+--monitorwidth
+168
+--suite
+RF uiautomator.Test Suite
+--test
+RF uiautomator.Test Suite.launch_google_play_without_user_keyword

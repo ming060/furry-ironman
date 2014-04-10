@@ -1,0 +1,15 @@
+uiautomator：
+
+4.995
+5.101
+
+python uiautomator：
+
+5.216
+5.178
+
+RF uiautomator：
+
+without_keyword：5.908
+
+with_keyword：5.543

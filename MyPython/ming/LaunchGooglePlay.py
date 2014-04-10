@@ -4,9 +4,11 @@ Created on 2014/3/31
 @author: YuMing
 '''
 from uiautomator import device as d
+import time
 
 if __name__ == '__main__':
-
+    start = time.time()
+    
     d.press.home()
 
     view = d(className='android.view.View', index=4)
@@ -19,3 +21,6 @@ if __name__ == '__main__':
 
     play_store_text = d(text='Play Store')
     assert play_store_text.wait.exists(timeout=5000), 'Play Store Text does not exist.'
+    
+    end = time.time()
+    print end - start
