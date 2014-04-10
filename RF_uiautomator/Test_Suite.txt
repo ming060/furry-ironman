@@ -31,7 +31,7 @@ testDemo
     Mobile.Click On    description=Apps
     Mobile.Click On    text=Apps
 
-launch_google_play
+launch_google_play_without_user_keyword
     Mobile.Press Home
     ${view}    Mobile.Get Object    className=android.view.View    index=4
     ${all_apps_button}    Mobile.Call    ${view}    child    className=android.widget.TextView    index=2
@@ -41,6 +41,26 @@ launch_google_play
     ${is_play_store_text_exist}    Mobile.Wait For Exists    ${play_store_text}    5000
     Should Be True    ${is_play_store_text_exist}    Play Store Text does not exist.
 
+launch_google_play_with_user_keyword
+    Mobile.Press Home
+    enter_all_apps
+    enter_google_play_store
+    ${is_play_store_text_exist}    google_play_text_exist
+    Should Be True    ${is_play_store_text_exist}    Play Store Text does not exist.
+
 *** Keywords ***
 z_open_screen_lock
     Mobile.Swipe    240    560    450    560
+
+enter_all_apps
+    ${view}    Mobile.Get Object    className=android.view.View    index=4
+    ${all_apps_button}    Mobile.Call    ${view}    child    className=android.widget.TextView    index=2
+    Mobile.Call    ${all_apps_button}    click
+
+enter_google_play_store
+    Mobile.Click On    description=Shop
+
+google_play_text_exist
+    ${play_store_text}    Mobile.Get Object    text=Play Store
+    ${is_play_store_text_exist}    Mobile.Wait For Exists    ${play_store_text}    5000
+    [Return]    ${is_play_store_text_exist}
