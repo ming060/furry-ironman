@@ -11,8 +11,9 @@ public class LaunchGooglePlay extends UiAutomatorTestCase {
 
 		getUiDevice().pressHome();
 		
-		UiObject allAppsButton = new UiObject(new UiSelector().className(android.view.View.class).index(4))
-			.getChild(new UiSelector().className(android.widget.TextView.class).index(2));
+		UiObject view = new UiObject(new UiSelector().className(android.view.View.class).index(4));
+		
+		UiObject allAppsButton = view.getChild(new UiSelector().className(android.widget.TextView.class).index(2));
 		allAppsButton.click();
 
 		UiObject googlePlayIcon = new UiObject(new UiSelector().description("Shop"));
