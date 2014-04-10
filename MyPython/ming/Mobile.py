@@ -171,6 +171,26 @@ class Mobile():
         """
         self.device.drag(sx, sy, ex, ey, steps)
 
+    #Wait until the specific ui object appears or gone
+
+    # wait until the ui object appears
+    def wait_for_exists(self, obj, timeout=0):
+        """
+        true means the object exist
+        false means the object does not exist
+        in the given timeout
+        """
+        return obj.wait.exists(timeout=timeout)
+
+    # wait until the ui object gone
+    def wait_until_gone(self, obj, timeout=0):
+        """
+        true means the object disappear
+        false means the object exist
+        in the given timeout
+        """
+        return obj.wait.gone(timeout=timeout)
+
 #Screen Actions of the device
 #Watcher
 #     def (self):
@@ -203,8 +223,7 @@ if __name__ == '__main__':
     print 'start'
 
     m = Mobile()
-
-
+    
 #     m.turn_off_screen()
 #     m.turn_on_screen()
 #     m.sleep()
