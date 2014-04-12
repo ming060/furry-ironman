@@ -1,0 +1,3 @@
+*** Keywords ***
+enter_app
+    [Arguments]    ${app_name}

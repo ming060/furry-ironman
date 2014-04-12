@@ -1,6 +1,9 @@
 *** Settings ***
 Library           ../../../../../Python27/Lib/site-packages/robot/libraries/Collections.py
 Library           ../MyPython/ming/Mobile.py    HT12ERT00129
+Resource          abstract.txt
+Resource          desire_z.txt
+Resource          nexus_5.txt
 
 *** Test Cases ***
 switch_camera_lens_position
@@ -45,6 +48,13 @@ launch_google_play_with_user_keyword
     enter_all_apps
     enter_google_play_store
     verify_google_play_text
+
+resource_test
+    Import Resource    ${CURDIR}${/}nexus_5.txt
+    ${resource_name}    Set Variable    nexus_5
+    log    ${resource_name}.enter_app
+    desire_z.enter_app    b
+    等
 
 *** Keywords ***
 z_open_screen_lock
