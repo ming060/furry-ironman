@@ -215,6 +215,12 @@ class Mobile():
         """
         self.device(**attribute).click()
 
+    def long_click_on(self, **attribute):
+        """
+        click on the object with *attribute*
+        """
+        self.device(**attribute).long_click()
+
     def call(self, obj, method, **attribute):
         func = getattr(obj, method)
         return func(**attribute)
