@@ -191,6 +191,69 @@ class Mobile():
         """
         return obj.wait.gone(timeout=timeout)
 
+    # Perform fling on the specific ui object(scrollable)
+    def fling_forward_horizontally(self, obj):
+        """
+        return whether the object can be fling or not
+        """
+        return obj.fling.horiz.forward()
+
+    def fling_backward_horizontally(self, obj):
+        """
+        return whether the object can be fling or not
+        """
+        return obj.fling.horiz.backward()
+
+    def fling_forward_vertically(self, obj):
+        """
+        return whether the object can be fling or not
+        """
+        return obj.fling.vert.forward()
+
+    def fling_backward_vertically(self, obj):
+        """
+        return whether the object can be fling or not
+        """
+        return obj.fling.vert.backward()
+
+    # Perform scroll on the specific ui object(scrollable)
+
+    def scroll_forward_horizontally(self, obj, steps=10):
+        """
+        return whether the object can be fling or not
+        """
+        return obj.scroll.horiz.forward(steps=steps)
+
+    def scroll_backward_horizontally(self, obj, steps=10):
+        """
+        return whether the object can be fling or not
+        """
+        return obj.scroll.horiz.backward(steps=steps)
+
+    def scroll_to_horizontally(self, obj, **attribute):
+        """
+        return whether the object can be fling or not
+        """
+        return obj.scroll.horiz.to(**attribute)
+
+    def scroll_forward_vertically(self, obj, steps=10):
+        """
+        return whether the object can be fling or not
+        """
+        return obj.scroll.vert.forward(steps=steps)
+
+    def scroll_backward_vertically(self, obj, steps=10):
+        """
+        return whether the object can be fling or not
+        """
+        return obj.scroll.vert.backward(steps=steps)
+
+    def scroll_to_vertically(self, obj, **attribute):
+        """
+        return whether the object can be fling or not
+        """
+        return obj.scroll.vert.to(**attribute)
+
 #Screen Actions of the device
 #Watcher
 #     def (self):
@@ -228,12 +291,15 @@ class Mobile():
 if __name__ == '__main__':
     print 'start'
 
-    m = Mobile('HT12ERT00129')
-    obj = m.get_object(textContains='26')
-    print m.get_info_of_object(obj, 'contentDescription', 'checked')
-    
-#     'contentDescription', 'checked'
-    
+    m = Mobile('192.168.218.102:5555')
+#     m.press_home()
+#     print m.get_info()
+# #     {u'displayRotation': 0, u'displaySizeDpY': 640, u'displaySizeDpX': 360, u'currentPackageName': u'com.android.launcher', u'productName': u'vbox86p', u'displayWidth': 1080, u'sdkInt': 19, u'displayHeight': 1776, u'naturalOrientation': True}
+#     m.click_on(description='Apps')
+#     view = m.get_object(resourceId='com.android.launcher:id/apps_customize_pane_content')
+#     print m.get_info_of_object(view)
+# #     {u'contentDescription': u'', u'checked': False, u'scrollable': True, u'text': u'', u'packageName': u'com.android.launcher', u'selected': False, u'enabled': True, u'bounds': {u'top': 231, u'left': 0, u'right': 1080, u'bottom': 1776}, u'className': u'android.view.View', u'focusable': False, u'focused': False, u'clickable': False, u'checkable': False, u'chileCount': 1, u'longClickable': False, u'visibleBounds': {u'top': 231, u'left': 0, u'right': 1080, u'bottom': 1776}}
+
 #     m.turn_off_screen()
 #     m.turn_on_screen()
 #     m.sleep()
