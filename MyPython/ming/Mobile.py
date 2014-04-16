@@ -228,7 +228,10 @@ class Mobile():
 if __name__ == '__main__':
     print 'start'
 
-    m = Mobile()
+    m = Mobile('HT12ERT00129')
+    obj = m.get_object(textContains='26')
+    print m.get_info_of_object(obj, )
+#     'contentDescription''checked'
     
 #     m.turn_off_screen()
 #     m.turn_on_screen()

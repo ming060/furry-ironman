@@ -56,6 +56,10 @@ resource_test
     desire_z.enter_app    b
     等
 
+test_long_click
+    ${obj}    Get Object    textContains=26
+    ${dict}    Get Info Of Object    ${obj}
+
 *** Keywords ***
 z_open_screen_lock
     Mobile.Swipe    240    560    450    560
