@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 from robot.api import logger
-from uiautomator import Device, device
+from uiautomator import Device
 
 class Mobile():
 
     def __init__(self, android_serial = None):
-        if android_serial is None:
-            self.device = device
-        else:
-            self.device = Device(android_serial)
+        self.device = Device(android_serial)
 
     def get_info(self):
         """
@@ -291,8 +288,8 @@ class Mobile():
 if __name__ == '__main__':
     print 'start'
 
-    m = Mobile('192.168.218.102:5555')
-#     m.press_home()
+    m = Mobile()
+    m.press_home()
 #     print m.get_info()
 # #     {u'displayRotation': 0, u'displaySizeDpY': 640, u'displaySizeDpX': 360, u'currentPackageName': u'com.android.launcher', u'productName': u'vbox86p', u'displayWidth': 1080, u'sdkInt': 19, u'displayHeight': 1776, u'naturalOrientation': True}
 #     m.click_on(description='Apps')
