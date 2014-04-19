@@ -4,6 +4,7 @@ Library           ../MyPython/ming/Mobile.py    HT12ERT00129
 Resource          abstract.txt
 Resource          desire_z.txt
 Resource          nexus_5.txt
+Library           ../MyPython/ming/Mobile.py    192.168.185.101:5555    WITH NAME    NEXUS5
 
 *** Test Cases ***
 switch_camera_lens_position
@@ -59,6 +60,23 @@ resource_test
 test_long_click
     ${obj}    Get Object    textContains=26
     ${dict}    Get Info Of Object    ${obj}
+
+test_two_phone
+    G1s.Press Menu
+    G1s.Press Back
+    MA85.Press Menu
+    MA85.Press Back
+
+test_install
+    NEXUS5.Install    C:${/}Users${/}YuMing${/}Documents${/}GitHub${/}furry-ironman${/}RF_uiautomator${/}com.dropbox.android_2.4.0.2.apk
+
+test_uninstall
+    NEXUS5.uninstall    com.dropbox.android
+
+dropbox_test
+    NEXUS5.Install    C:${/}Users${/}YuMing${/}Documents${/}GitHub${/}furry-ironman${/}RF_uiautomator${/}com.dropbox.android_2.4.0.2.apk
+    enter_all_apps
+    NEXUS5.uninstall    com.dropbox.android
 
 *** Keywords ***
 z_open_screen_lock

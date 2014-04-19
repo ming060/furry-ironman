@@ -1,10 +1,43 @@
 # -*- coding: utf-8 -*-
 from robot.api import logger
 from uiautomator import Device
+import subprocess
+import os
+
+class ADB:
+    def __init__(self, android_serial=None):
+        self.buf = []
+        self.buf.append('adb ')
+        self.prefix_cmd = ''.join(self.buf)
+        if android_serial is not None :
+            self.buf.append('-s %s ' % android_serial)
+            self.prefix_cmd = ''.join(self.buf)
+
+    def cmd(self, cmd):
+        """
+                        將 adb -s SERIAL_NUMBER xxxxxx or adb xxxxxxx 取代成 xxxxxx
+        """
+        self.buf = []
+        self.buf.append(self.prefix_cmd)
+        self.buf.append(cmd)
+        cmd = ''.join(self.buf)
+        return subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+
+    def shell_cmd(self, cmd):
+        """
+                        將 adb -s SERIAL_NUMBER shell xxxxxx or adb shell xxxxxxx 取代成 xxxxxx
+        """
+        self.buf = []
+        self.buf.append(self.prefix_cmd)
+        self.buf.append('shell ')
+        self.buf.append(cmd)
+        cmd = ''.join(self.buf)
+        return subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
 
 class Mobile():
 
     def __init__(self, android_serial = None):
+        self.adb = ADB(android_serial)
         self.device = Device(android_serial)
 
     def get_info(self):
@@ -285,11 +318,39 @@ class Mobile():
         func = getattr(obj, method)
         return func(**attribute)
 
+    def set_text(self, text, **attribute):
+        self.device(**attribute).set_text(text)
+
+# Other feature
+
+    def install(self, apk_path):
+        self.adb.cmd('install "%s"' % apk_path)
+
+    def uninstall(self, package_name):
+        self.adb.cmd('uninstall %s' % package_name)
+
 if __name__ == '__main__':
     print 'start'
 
-    m = Mobile()
+    m = Mobile('192.168.185.101:5555')
+    m.uninstall('com.dropbox.android')
+    m.install('C:\\Users\\YuMing\\Documents\\GitHub\\furry-ironman\\RF_uiautomator\\com.dropbox.android_2.4.0.2.apk')
+    m.wakeup_the_device()
+  
+    info = m.get_info()
+    if info['currentPackageName'] == 'com.android.keyguard':
+        m.swipe(540, 1335, 900, 1335, 5)
+  
     m.press_home()
+    m.click_on(description='Apps')
+    m.click_on(text='Dropbox')
+ 
+    m.click_on(text='Sign in!')
+ 
+    m.set_text('lym060@gmail.com', resourceId='com.dropbox.android:id/login_email')
+    m.set_text('ginobili060', resourceId='com.dropbox.android:id/login_password')
+    m.click_on(resourceId='com.dropbox.android:id/login_submit')
+
 #     print m.get_info()
 # #     {u'displayRotation': 0, u'displaySizeDpY': 640, u'displaySizeDpX': 360, u'currentPackageName': u'com.android.launcher', u'productName': u'vbox86p', u'displayWidth': 1080, u'sdkInt': 19, u'displayHeight': 1776, u'naturalOrientation': True}
 #     m.click_on(description='Apps')
