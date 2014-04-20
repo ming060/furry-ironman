@@ -5,6 +5,7 @@ Resource          abstract.txt
 Resource          desire_z.txt
 Resource          nexus_5.txt
 Library           ../MyPython/ming/Mobile.py    192.168.185.101:5555    WITH NAME    NEXUS5
+Library           Selenium2Library
 
 *** Test Cases ***
 switch_camera_lens_position
@@ -77,6 +78,9 @@ dropbox_test
     NEXUS5.Install    C:${/}Users${/}YuMing${/}Documents${/}GitHub${/}furry-ironman${/}RF_uiautomator${/}com.dropbox.android_2.4.0.2.apk
     enter_all_apps
     NEXUS5.uninstall    com.dropbox.android
+
+web_test
+    Open Browser    https://www.dropbox.com/    firefox
 
 *** Keywords ***
 z_open_screen_lock
