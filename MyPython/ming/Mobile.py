@@ -195,6 +195,32 @@ class Mobile():
         """
         self.device.swipe(sx, sy, ex, ey, steps)
 
+# Swipe from the center of the ui object to its edge
+
+    def swipe_left(self, obj, steps=10):
+        """
+        swipe the *obj* from center to left
+        """
+        obj.swipe.left(steps=steps)
+
+    def swipe_right(self, obj, steps=10):
+        """
+        swipe the *obj* from center to right
+        """
+        obj.swipe.right(steps=steps)
+
+    def swipe_top(self, obj, steps=10):
+        """
+        swipe the *obj* from center to top
+        """
+        obj.swipe.top(steps=steps)
+
+    def swipe_bottom(self, obj, steps=10):
+        """
+        swipe the *obj* from center to bottom
+        """
+        obj.swipe.bottom(steps=steps)
+
     def drag(self,sx, sy, ex, ey, steps=10):
         """
         not test yet desire z only API 17 does not support

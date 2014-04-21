@@ -87,6 +87,26 @@ web_test
     Unselect Checkbox    id=remember_me
     Click Button    id=login_submit
 
+google_play_test
+    [Timeout]    25 seconds
+    Wakeup The Device
+    Press Home
+    ${info_list}    Get Info
+    ${current_package}    Get From Dictionary    ${info_list}    currentPackageName
+    Should Be Equal As Strings    com.android.launcher3    ${current_package}
+    Click On    text=Apps
+    ${app}    Set Variable    0
+    ${page_indactor}    Get Object    resourceId=com.android.launcher3:id/page_indicator
+    ${page_indactor_info}    Get Info Of Object    ${page_indactor}
+    Log Dictionary    ${page_indactor_info}
+    ${page_count}    Get From Dictionary    ${page_indactor_info}    chileCount
+    :FOR    ${index}    IN RANGE    ${page_count}
+    \    ${app_obj}    Get Object    text=${app}
+    \    ${is_app_exist}    Wait For Exists    ${app_obj}
+    \    ${view}    Get Object    resourceId=com.android.launcher3:id/apps_customize_pane_content
+    \    Run Keyword If    ${is_app_exist}    Run Keywords    Call    ${app_obj}    click
+    \    ...    AND    Exit For Loop    ELSE    Swipe Left    ${view}
+
 *** Keywords ***
 z_open_screen_lock
     Mobile.Swipe    240    560    450    560

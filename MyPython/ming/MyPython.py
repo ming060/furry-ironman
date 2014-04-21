@@ -11,9 +11,9 @@ def test(obj):
 if __name__ == '__main__':
     print 'start'
 
-    d = Device('192.168.185.101:5555')
+    d = Device()
     
-    d(resourceId='com.dropbox.android:id/login_email').set_text('abc')
+    d(resourceId='com.android.launcher3:id/apps_customize_pane_content').swipe.left()
 #     view = d(resourceId='android:id/list')
 #     print view.info
 #     view.fling.forward()
