@@ -1,10 +1,9 @@
 *** Settings ***
 Library           ../../../../../Python27/Lib/site-packages/robot/libraries/Collections.py
-Library           ../MyPython/ming/Mobile.py    HT12ERT00129
+Library           ../MyPython/ming/Mobile.py
 Resource          abstract.txt
 Resource          desire_z.txt
 Resource          nexus_5.txt
-Library           ../MyPython/ming/Mobile.py    192.168.185.101:5555    WITH NAME    NEXUS5
 Library           Selenium2Library
 
 *** Test Cases ***
@@ -80,7 +79,13 @@ dropbox_test
     NEXUS5.uninstall    com.dropbox.android
 
 web_test
+    Set Selenium Speed    1s
     Open Browser    https://www.dropbox.com/    firefox
+    Click Link    /login
+    Input Text    id=login_email    lym060@gmail.com
+    Input Password    id=login_password    ginobili060
+    Unselect Checkbox    id=remember_me
+    Click Button    id=login_submit
 
 *** Keywords ***
 z_open_screen_lock
