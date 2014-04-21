@@ -3,6 +3,7 @@ from robot.api import logger
 from uiautomator import Device
 import subprocess
 import os
+from robot.output.monitor import CommandLineWriter
 
 class ADB:
     def __init__(self, android_serial=None):
@@ -328,6 +329,13 @@ class Mobile():
 
     def uninstall(self, package_name):
         self.adb.cmd('uninstall %s' % package_name)
+
+    def foo(self):
+        clm = CommandLineWriter()
+        # output some messages on console
+        clm.message(' ')
+        clm.message(u'中文')
+        clm.message(u'2----------2')
 
 if __name__ == '__main__':
     print 'start'
