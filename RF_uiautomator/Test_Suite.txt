@@ -7,33 +7,18 @@ Resource          nexus_5.txt
 Library           Selenium2Library
 
 *** Test Cases ***
-switch_camera_lens_position
-    ${linearLayout}    A.Get Object    className=android.widget.LinearLayout    index=2
-    ${info_dict}    A.get_info_of_object    ${linearLayout}
-    ${chileCount}    Get From Dictionary    ${info_dict}    chileCount
-    ${chileCount}    Evaluate    int(${chileCount})-1
-    ${btn}    A.call    ${linearLayout}    child    instance=${chileCount}    className=android.widget.ImageView
-    A.call    ${btn}    click
-
 test
     ${obj}    Get Object    className=android.widget.TextView    focusable=false    longClickable=true    index=2
     ${info}    Get Info Of Object    ${obj}
     Log Dictionary    ${info}
 
-test2
-    ${info}    Mobile.Get Info
-    log    ${info}
-    Mobile.Press Power
-    Mobile.Press Power
-    z_open_screen_lock
-
-test3
-    z_open_screen_lock
-
-testDemo
-    Mobile.Press Home
-    Mobile.Click On    description=Apps
-    Mobile.Click On    text=Apps
+switch_camera_lens_position
+    ${linearLayout}    Get Object    className=android.widget.LinearLayout    index=2
+    ${info_dict}    get_info_of_object    ${linearLayout}
+    ${chileCount}    Get From Dictionary    ${info_dict}    chileCount
+    ${chileCount}    Evaluate    int(${chileCount})-1
+    ${btn}    call    ${linearLayout}    child    instance=${chileCount}    className=android.widget.ImageView
+    call    ${btn}    click
 
 launch_google_play_without_user_keyword
     Mobile.Press Home
@@ -58,26 +43,10 @@ resource_test
     desire_z.enter_app    b
     等
 
-test_long_click
-    ${obj}    Get Object    textContains=26
-    ${dict}    Get Info Of Object    ${obj}
-
-test_two_phone
-    G1s.Press Menu
-    G1s.Press Back
-    MA85.Press Menu
-    MA85.Press Back
-
-test_install
-    NEXUS5.Install    C:${/}Users${/}YuMing${/}Documents${/}GitHub${/}furry-ironman${/}RF_uiautomator${/}com.dropbox.android_2.4.0.2.apk
-
-test_uninstall
-    NEXUS5.uninstall    com.dropbox.android
-
 dropbox_test
-    NEXUS5.Install    C:${/}Users${/}YuMing${/}Documents${/}GitHub${/}furry-ironman${/}RF_uiautomator${/}com.dropbox.android_2.4.0.2.apk
+    Install    C:${/}Users${/}YuMing${/}Documents${/}GitHub${/}furry-ironman${/}RF_uiautomator${/}com.dropbox.android_2.4.0.2.apk
     enter_all_apps
-    NEXUS5.uninstall    com.dropbox.android
+    Uninstall    com.dropbox.android
 
 web_test
     Set Selenium Speed    1s
@@ -89,13 +58,12 @@ web_test
     Click Button    id=login_submit
 
 google_play_test
-    [Timeout]    25 seconds
     Wakeup The Device
     Press Home
     ${info_list}    Get Info
     ${current_package}    Get From Dictionary    ${info_list}    currentPackageName
     Should Be Equal As Strings    com.android.launcher3    ${current_package}
-    enter_app    Play Store
+    Enter App    Play Store
 
 *** Keywords ***
 z_open_screen_lock
@@ -115,7 +83,7 @@ verify_google_play_text
     Should Be True    ${is_play_store_text_exist}    Play Store Text does not exist.
     [Return]    ${is_play_store_text_exist}
 
-enter_app
+Enter App
     [Arguments]    ${app}
     Click On    text=Apps
     ${page_indactor}    Get Object    resourceId=com.android.launcher3:id/page_indicator

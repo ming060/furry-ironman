@@ -2,6 +2,3 @@
 enter_app
     [Arguments]    ${app_name}
     log    desire_z
-
-等
-    log    等一下
