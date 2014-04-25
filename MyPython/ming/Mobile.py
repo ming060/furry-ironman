@@ -287,7 +287,7 @@ class Mobile():
         """
         return obj.scroll.horiz.backward(steps=steps)
 
-    def scroll_to_horizontally(self, obj, **attribute):
+    def scroll_to_horizontally(self, obj, *args,**attribute):
         """
         return whether the object can be fling or not
         """
@@ -305,7 +305,7 @@ class Mobile():
         """
         return obj.scroll.vert.backward(steps=steps)
 
-    def scroll_to_vertically(self, obj, **attribute):
+    def scroll_to_vertically(self, obj, *args, **attribute):
         """
         return whether the object can be fling or not
         """
@@ -320,32 +320,32 @@ class Mobile():
 #         self.device
 #Selector
 
-    def get_object(self, **attribute):
+    def get_object(self, *args, **attribute):
         """
         get the ui object with attribute *attribute*
         """
-        return self.device(**attribute)
+        return self.device(*args, **attribute)
 
     def get_info_of_object(self, obj):
         return obj.info
 
-    def click_on(self, **attribute):
+    def click_on(self, *args, **attribute):
         """
         click on the object with *attribute*
         """
         self.device(**attribute).click()
 
-    def long_click_on(self, **attribute):
+    def long_click_on(self, *args, **attribute):
         """
         click on the object with *attribute*
         """
         self.device(**attribute).long_click()
 
-    def call(self, obj, method, **attribute):
+    def call(self, obj, method, *args, **attribute):
         func = getattr(obj, method)
         return func(**attribute)
 
-    def set_text(self, text, **attribute):
+    def set_text(self, text, *args, **attribute):
         self.device(**attribute).set_text(text)
 
 # Other feature
