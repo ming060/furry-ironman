@@ -16,8 +16,9 @@ switch_camera_lens_position
     A.call    ${btn}    click
 
 test
-    ${info}    A.Get Info
-    ${chileCount}    Get From Dictionary    ${info}    displayRotation
+    ${obj}    Get Object    className=android.widget.TextView    focusable=false    longClickable=true    index=2
+    ${info}    Get Info Of Object    ${obj}
+    Log Dictionary    ${info}
 
 test2
     ${info}    Mobile.Get Info
@@ -94,18 +95,7 @@ google_play_test
     ${info_list}    Get Info
     ${current_package}    Get From Dictionary    ${info_list}    currentPackageName
     Should Be Equal As Strings    com.android.launcher3    ${current_package}
-    Click On    text=Apps
-    ${app}    Set Variable    0
-    ${page_indactor}    Get Object    resourceId=com.android.launcher3:id/page_indicator
-    ${page_indactor_info}    Get Info Of Object    ${page_indactor}
-    Log Dictionary    ${page_indactor_info}
-    ${page_count}    Get From Dictionary    ${page_indactor_info}    chileCount
-    :FOR    ${index}    IN RANGE    ${page_count}
-    \    ${app_obj}    Get Object    text=${app}
-    \    ${is_app_exist}    Wait For Exists    ${app_obj}
-    \    ${view}    Get Object    resourceId=com.android.launcher3:id/apps_customize_pane_content
-    \    Run Keyword If    ${is_app_exist}    Run Keywords    Call    ${app_obj}    click
-    \    ...    AND    Exit For Loop    ELSE    Swipe Left    ${view}
+    enter_app    Play Store
 
 *** Keywords ***
 z_open_screen_lock
@@ -124,3 +114,17 @@ verify_google_play_text
     ${is_play_store_text_exist}    Mobile.Wait For Exists    ${play_store_text}    5000
     Should Be True    ${is_play_store_text_exist}    Play Store Text does not exist.
     [Return]    ${is_play_store_text_exist}
+
+enter_app
+    [Arguments]    ${app}
+    Click On    text=Apps
+    ${page_indactor}    Get Object    resourceId=com.android.launcher3:id/page_indicator
+    ${page_indactor_info}    Get Info Of Object    ${page_indactor}
+    Log Dictionary    ${page_indactor_info}
+    ${page_count}    Get From Dictionary    ${page_indactor_info}    chileCount
+    : FOR    ${index}    IN RANGE    ${page_count}
+    \    ${app_obj}    Get Object    text=${app}
+    \    ${is_app_exist}    Wait For Exists    ${app_obj}
+    \    ${view}    Get Object    resourceId=com.android.launcher3:id/apps_customize_pane_content
+    \    Run Keyword If    ${is_app_exist}    Run Keywords    Call    ${app_obj}    click
+    \    ...    AND    Exit For Loop    ELSE    Swipe Left    ${view}
