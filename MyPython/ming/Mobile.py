@@ -26,7 +26,7 @@ class ADB:
 
     def shell_cmd(self, cmd):
         """
-                        將 adb -s SERIAL_NUMBER shell xxxxxx or adb shell xxxxxxx 取代成 xxxxxx
+                        將 adb -s SERIAL_NUMBER shell xxxxxx or adb shell xxxxxxx 取代成 xxxxx-x
         """
         self.buf = []
         self.buf.append(self.prefix_cmd)
@@ -313,6 +313,17 @@ class Mobile():
 
 #Screen Actions of the device
 #Watcher
+    def register_click_watcher(self, watcher_name, attributes, *condition_list):
+        """
+        The watcher click on the object which has the attributes when conditions match
+        """
+        watcher = self.device.watcher(watcher_name)
+        for condition in condition_list:
+            watcher.when(**condition)
+        watcher.click(**attributes)
+        self.device.watchers.run()
+        print 'register watcher:%s' % watcher_name
+        return
 #     def (self):
 #         """
 #          
@@ -366,24 +377,26 @@ class Mobile():
 if __name__ == '__main__':
     print 'start'
 
-    m = Mobile('192.168.185.101:5555')
-    m.uninstall('com.dropbox.android')
-    m.install('C:\\Users\\YuMing\\Documents\\GitHub\\furry-ironman\\RF_uiautomator\\com.dropbox.android_2.4.0.2.apk')
-    m.wakeup_the_device()
-  
-    info = m.get_info()
-    if info['currentPackageName'] == 'com.android.keyguard':
-        m.swipe(540, 1335, 900, 1335, 5)
-  
-    m.press_home()
-    m.click_on(description='Apps')
-    m.click_on(text='Dropbox')
- 
-    m.click_on(text='Sign in!')
- 
-    m.set_text('lym060@gmail.com', resourceId='com.dropbox.android:id/login_email')
-    m.set_text('ginobili060', resourceId='com.dropbox.android:id/login_password')
-    m.click_on(resourceId='com.dropbox.android:id/login_submit')
+    m = Mobile()
+    
+#     m = Mobile('192.168.185.101:5555')
+#     m.uninstall('com.dropbox.android')
+#     m.install('C:\\Users\\YuMing\\Documents\\GitHub\\furry-ironman\\RF_uiautomator\\com.dropbox.android_2.4.0.2.apk')
+#     m.wakeup_the_device()
+#   
+#     info = m.get_info()
+#     if info['currentPackageName'] == 'com.android.keyguard':
+#         m.swipe(540, 1335, 900, 1335, 5)
+#   
+#     m.press_home()
+#     m.click_on(description='Apps')
+#     m.click_on(text='Dropbox')
+#  
+#     m.click_on(text='Sign in!')
+#  
+#     m.set_text('lym060@gmail.com', resourceId='com.dropbox.android:id/login_email')
+#     m.set_text('ginobili060', resourceId='com.dropbox.android:id/login_password')
+#     m.click_on(resourceId='com.dropbox.android:id/login_submit')
 
 #     print m.get_info()
 # #     {u'displayRotation': 0, u'displaySizeDpY': 640, u'displaySizeDpX': 360, u'currentPackageName': u'com.android.launcher', u'productName': u'vbox86p', u'displayWidth': 1080, u'sdkInt': 19, u'displayHeight': 1776, u'naturalOrientation': True}

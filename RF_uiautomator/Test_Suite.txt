@@ -8,9 +8,16 @@ Library           Selenium2Library
 
 *** Test Cases ***
 test
-    ${obj}    Get Object    className=android.widget.TextView    focusable=false    longClickable=true    index=2
-    ${info}    Get Info Of Object    ${obj}
-    Log Dictionary    ${info}
+    ${download_large_app_condition_dict}    Create Dictionary    text    Downloading a large app
+    ${proceed_button_attribtute_dict}    Create Dictionary    text    Proceed
+    register_click_watcher    test_watcher    ${proceed_button_attribtute_dict}    ${download_large_app_condition_dict}
+
+test_watcher
+    ${cookie_run_condition_dict}    Create Dictionary    text    CookieRun
+    ${clock_condition_dict}    Create Dictionary    resourceId    com.android.deskclock:id/analog_appwidget
+    ${condition_list}    Create List    ${clock_condition_dict}    ${cookie_run_condition_dict}
+    ${click_attribtute_dict}    Create Dictionary    text    Apps
+    Register Click Watcher    test_watcher    ${click_attribtute_dict}    ${clock_condition_dict}    ${cookie_run_condition_dict}
 
 switch_camera_lens_position
     ${linearLayout}    Get Object    className=android.widget.LinearLayout    index=2
@@ -64,6 +71,15 @@ google_play_test
     ${current_package}    Get From Dictionary    ${info_list}    currentPackageName
     Should Be Equal As Strings    com.android.launcher3    ${current_package}
     Enter App    Play Store
+    Enter Game Category
+    Enter Top Free
+    Click First Item
+    Click Install
+    Register Dialog Watcher
+    Click Accept Button
+    ${open_button}    Get Object    text=OPEN
+    ${install_complete}    Wait For Exists    ${open_button}    500000
+    Should Be True    ${install_complete}    Install Fail
 
 *** Keywords ***
 z_open_screen_lock
@@ -96,3 +112,33 @@ Enter App
     \    ${view}    Get Object    resourceId=com.android.launcher3:id/apps_customize_pane_content
     \    Run Keyword If    ${is_app_exist}    Run Keywords    Call    ${app_obj}    click
     \    ...    AND    Exit For Loop    ELSE    Swipe Left    ${view}
+
+Enter Game Category
+    ${game_text_view}    Get Object    resourceId=com.android.vending:id/li_title
+    Wait For Exists    ${game_text_view}    5000
+    Click On    resourceId=com.android.vending:id/li_title
+
+Enter Top Free
+    ${top_free_text_view}    Get Object    text=TOP FREE
+    Wait For Exists    ${top_free_text_view}    5000
+    Click On    text=TOP FREE
+
+Click First Item
+    ${view}    Get Object    resourceId=com.android.vending:id/bucket_items
+    Wait For Exists    ${view}    5000
+    Click On    resourceId=com.android.vending:id/bucket_items
+
+Click Install
+    ${install_button}    Get Object    resourceId=com.android.vending:id/buy_button
+    Wait For Exists    ${install_button}    5000
+    Click On    resourceId=com.android.vending:id/buy_button
+
+Register Dialog Watcher
+    ${download_large_app_condition_dict}    Create Dictionary    text    Downloading a large app
+    ${proceed_button_attribtute_dict}    Create Dictionary    text    Proceed
+    register_click_watcher    test_watcher    ${proceed_button_attribtute_dict}    ${download_large_app_condition_dict}
+
+Click Accept Button
+    ${accept_button}    Get Object    text=ACCEPT
+    Wait For Exists    ${accept_button}    5000
+    Click On    text=ACCEPT
