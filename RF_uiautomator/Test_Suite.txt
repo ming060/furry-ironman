@@ -82,12 +82,12 @@ web_test
     Input Password    id=login_password    ginobili060
     Unselect Checkbox    id=remember_me
     Click Button    id=login_submit
-    Wait Until Page Contains Element    //div[14]/div[3]/div/div/ol/li[13]/div/a    5s
+    Wait Until Page Contains Element    //a[text()="Camera Uploads"]    5s
     Comment    ${list_items}    Get List Items    id=browse-files
-    ${list_items}    Get Value    //div[14]/div[3]/div/div/ol/li[13]/div/a
-    Click Element    //div[14]/div[3]/div/div/ol/li[13]/div/a
-    Wait Until Page Contains Element    //div[14]/div[3]/div/div/ol/li/div/a
-    Page Should Contain    //div[14]/div[3]/div/div/ol/li/div/a    The photo does not exist.
+    ${list_items}    Get Value    //a[text()="Camera Uploads"]
+    Click Element    //a[text()="Camera Uploads"]
+    Wait Until Page Contains Element    //a[text()="2014-01-06 23.24.55.jpg"]    10s
+    Page Should Contain Element    //a[text()="2014-01-06 23.24.55.jpg"]    The photo does not exist.
 
 google_play_test
     Wakeup The Device
