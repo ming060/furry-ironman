@@ -3,7 +3,32 @@ from robot.api import logger
 from uiautomator import Device
 import subprocess
 import os
-from robot.output.monitor import CommandLineWriter
+from robot.output.monitor import CommandLineWriter as clm
+
+# logger.info("Importing Android library")
+# print "Importing Android library"
+# clm = CommandLineWriter()
+# clm.message("Importing Android library")
+
+class TestHelper:
+    def __init__(self, serial_number=None):
+        self.serial_number = serial_number
+
+    def __convert_to_unicode_by_text(self, text):
+        """
+                        將輸入的字串轉換成 Unicode Transformation Format (UTF-8)
+        """
+        # 由object轉換為string之後，移除前後的unicode標記，例如：將u'abc'轉換為字串abc
+        return repr(text)[2:-1]
+
+    def send_set_text_cmd(self, text):
+        """
+        shell指令使用雙引號括起來，例如：adb shell "am broadcast -a myIME.intent.action.pass.string -e input abc"
+                        但由於內容也可能為包含符號或是空白，所以必須再使用雙引號括起來，例如："abc c"
+        """
+        adb = ADB(self.serial_number)
+        adb.shell_cmd('\"am broadcast -a myIME.intent.action.pass.string -e input \\\"%s\\\"\"' % TestHelper.__convert_to_unicode_by_text(self, text))
+        adb.shell_cmd('input keyevent KEYCODE_UNKNOWN')
 
 class ADB:
     def __init__(self, android_serial=None):
@@ -38,8 +63,12 @@ class ADB:
 class Mobile():
 
     def __init__(self, android_serial = None):
+#         logger.info("Importing Android library")
+#         print "Importing Android library"
+#         clm.message("Importing Android library")
         self.adb = ADB(android_serial)
         self.device = Device(android_serial)
+        self.test_helper = TestHelper(android_serial)
 
     def get_info(self):
         """
@@ -338,6 +367,40 @@ class Mobile():
         return self.device(*args, **attribute)
 
     def get_info_of_object(self, obj):
+        """
+        return info dictionary of the *obj*
+        The info example:
+        {
+         u'contentDescription': u'',
+         u'checked': False,
+         u'scrollable': True,
+         u'text': u'',
+         u'packageName': u'com.android.launcher',
+         u'selected': False,
+         u'enabled': True,
+         u'bounds': 
+                   {
+                    u'top': 231,
+                    u'left': 0,
+                    u'right': 1080,
+                    u'bottom': 1776
+                   },
+         u'className': u'android.view.View',
+         u'focusable': False,
+         u'focused': False,
+         u'clickable': False,
+         u'checkable': False,
+         u'chileCount': 1,
+         u'longClickable': False,
+         u'visibleBounds':
+                          {
+                           u'top': 231,
+                           u'left': 0,
+                           u'right': 1080,
+                           u'bottom': 1776
+                          }
+        }
+        """
         return obj.info
 
     def click_on(self, *args, **attribute):
@@ -357,6 +420,9 @@ class Mobile():
         return func(**attribute)
 
     def set_text(self, text, *args, **attribute):
+        """
+        set *text* to the Component which has the *attribute* 
+        """
         self.device(**attribute).set_text(text)
 
 # Other feature
@@ -367,12 +433,19 @@ class Mobile():
     def uninstall(self, package_name):
         self.adb.cmd('uninstall %s' % package_name)
 
+    def type(self, text):
+        """
+        Type *text* at current focused component
+        """
+        self.test_helper.send_set_text_cmd(text)
+
     def foo(self):
-        clm = CommandLineWriter()
+        pass
+#         clm = CommandLineWriter()
         # output some messages on console
-        clm.message(' ')
-        clm.message(u'中文')
-        clm.message(u'2----------2')
+#         clm.message(' ')
+#         clm.message(u'中文')
+#         clm.message(u'2----------2')
 
 if __name__ == '__main__':
     print 'start'

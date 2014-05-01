@@ -8,9 +8,25 @@ Library           Selenium2Library
 
 *** Test Cases ***
 test
-    ${download_large_app_condition_dict}    Create Dictionary    text    Downloading a large app
-    ${proceed_button_attribtute_dict}    Create Dictionary    text    Proceed
-    register_click_watcher    test_watcher    ${proceed_button_attribtute_dict}    ${download_large_app_condition_dict}
+    Enter App    Settings
+    Click On    text=Wi‑Fi
+    ${switch}    Get Object    className=android.widget.Switch
+    ${switch_info}    Get Info Of Object    ${switch}
+    ${is_checked}    Get From Dictionary    ${switch_info}    checked
+    Run Keyword Unless    ${is_checked}    Click On    className=android.widget.Switch
+    ${switch_info}    Get Info Of Object    ${switch}
+    ${is_checked}    Get From Dictionary    ${switch_info}    checked
+    Should Be True    ${is_checked}    The Wifi should be On
+    ${access_point_name}    Set Variable    IAT
+    ${access_point}    Get Object    text=${access_point_name}
+    Scroll To Vertically    ${access_point}
+    Click On    text=${access_point_name}
+    ${is_correct_access_point}    Wait For Exists    ${access_point}
+    Should Be True    ${is_correct_access_point}    Click on wrong access point
+    ${pwd_text_view}    Get Object    text=Password
+    ${is_pwd_exist}    Wait For Exists    ${pwd_text_view}
+    Run Keyword If    ${is_pwd_exist}    Run Keywords    Set Text    smart@inhon    resourceId=com.android.settings:id/password    AND
+    ...    Click Connect Button
 
 test_watcher
     ${cookie_run_condition_dict}    Create Dictionary    text    CookieRun
@@ -50,26 +66,31 @@ resource_test
     desire_z.enter_app    b
     等
 
+test_type
+    type    中文你好
+
 dropbox_test
     Install    C:${/}Users${/}YuMing${/}Documents${/}GitHub${/}furry-ironman${/}RF_uiautomator${/}com.dropbox.android_2.4.0.2.apk
     enter_all_apps
     Uninstall    com.dropbox.android
 
 web_test
-    Set Selenium Speed    1s
+    Comment    Set Selenium Speed    1s
     Open Browser    https://www.dropbox.com/    firefox
     Click Link    /login
     Input Text    id=login_email    lym060@gmail.com
     Input Password    id=login_password    ginobili060
     Unselect Checkbox    id=remember_me
     Click Button    id=login_submit
+    Wait Until Page Contains Element    //div[14]/div[3]/div/div/ol/li[13]/div/a    5s
+    Comment    ${list_items}    Get List Items    id=browse-files
+    ${list_items}    Get Value    //div[14]/div[3]/div/div/ol/li[13]/div/a
+    Click Element    //div[14]/div[3]/div/div/ol/li[13]/div/a
+    Wait Until Page Contains Element    //div[14]/div[3]/div/div/ol/li/div/a
+    Page Should Contain    //div[14]/div[3]/div/div/ol/li/div/a    The photo does not exist.
 
 google_play_test
     Wakeup The Device
-    Press Home
-    ${info_list}    Get Info
-    ${current_package}    Get From Dictionary    ${info_list}    currentPackageName
-    Should Be Equal As Strings    com.android.launcher3    ${current_package}
     Enter App    Play Store
     Enter Game Category
     Enter Top Free
@@ -77,9 +98,7 @@ google_play_test
     Click Install
     Register Dialog Watcher
     Click Accept Button
-    ${open_button}    Get Object    text=OPEN
-    ${install_complete}    Wait For Exists    ${open_button}    500000
-    Should Be True    ${install_complete}    Install Fail
+    Verify Install Complete
 
 *** Keywords ***
 z_open_screen_lock
@@ -101,6 +120,10 @@ verify_google_play_text
 
 Enter App
     [Arguments]    ${app}
+    Press Home
+    ${info_list}    Get Info
+    ${current_package}    Get From Dictionary    ${info_list}    currentPackageName
+    Should Be Equal As Strings    com.android.launcher3    ${current_package}
     Click On    text=Apps
     ${page_indactor}    Get Object    resourceId=com.android.launcher3:id/page_indicator
     ${page_indactor_info}    Get Info Of Object    ${page_indactor}
@@ -142,3 +165,15 @@ Click Accept Button
     ${accept_button}    Get Object    text=ACCEPT
     Wait For Exists    ${accept_button}    5000
     Click On    text=ACCEPT
+
+Verify Install Complete
+    ${open_button}    Get Object    text=OPEN
+    ${install_complete}    Wait For Exists    ${open_button}    500000
+    Should Be True    ${install_complete}    Install Fail
+
+Click Connect Button
+    ${connect_button}    Get Object    text=Connect
+    ${connect_button_info}    Get Info Of Object    ${connect_button}
+    ${enabled_info}    Get From Dictionary    ${connect_button_info}    enabled
+    Should Be True    ${enabled_info}    Connect button is not enabled
+    Click On    text=Connect
