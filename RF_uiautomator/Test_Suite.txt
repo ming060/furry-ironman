@@ -5,18 +5,12 @@ Resource          abstract.txt
 Resource          desire_z.txt
 Resource          nexus_5.txt
 Library           Selenium2Library
+Library           ../MyPython/ming/Custom_Library.py
 
 *** Test Cases ***
 test
     Enter App    Settings
-    Click On    text=Wi‑Fi
-    ${switch}    Get Object    className=android.widget.Switch
-    ${switch_info}    Get Info Of Object    ${switch}
-    ${is_checked}    Get From Dictionary    ${switch_info}    checked
-    Run Keyword Unless    ${is_checked}    Click On    className=android.widget.Switch
-    ${switch_info}    Get Info Of Object    ${switch}
-    ${is_checked}    Get From Dictionary    ${switch_info}    checked
-    Should Be True    ${is_checked}    The Wifi should be On
+    Turn On Wifi
     ${access_point_name}    Set Variable    IAT
     ${access_point}    Get Object    text=${access_point_name}
     Scroll To Vertically    ${access_point}
@@ -28,12 +22,20 @@ test
     Run Keyword If    ${is_pwd_exist}    Run Keywords    Set Text    smart@inhon    resourceId=com.android.settings:id/password    AND
     ...    Click Connect Button
 
+test_time
+    Click On    text=0
+    Click On    text=1
+
 test_watcher
     ${cookie_run_condition_dict}    Create Dictionary    text    CookieRun
     ${clock_condition_dict}    Create Dictionary    resourceId    com.android.deskclock:id/analog_appwidget
     ${condition_list}    Create List    ${clock_condition_dict}    ${cookie_run_condition_dict}
     ${click_attribtute_dict}    Create Dictionary    text    Apps
     Register Click Watcher    test_watcher    ${click_attribtute_dict}    ${clock_condition_dict}    ${cookie_run_condition_dict}
+
+test_change_ssid
+    Turn Off AP
+    Turn On AP
 
 switch_camera_lens_position
     ${linearLayout}    Get Object    className=android.widget.LinearLayout    index=2
@@ -89,16 +91,10 @@ web_test
     Wait Until Page Contains Element    //a[text()="2014-01-06 23.24.55.jpg"]    10s
     Page Should Contain Element    //a[text()="2014-01-06 23.24.55.jpg"]    The photo does not exist.
 
-google_play_test
-    Wakeup The Device
-    Enter App    Play Store
-    Enter Game Category
-    Enter Top Free
-    Click First Item
-    Click Install
-    Register Dialog Watcher
-    Click Accept Button
-    Verify Install Complete
+Google Play Test
+    Install App
+    Turn Off AP
+    Verify Install Success
 
 *** Keywords ***
 z_open_screen_lock
@@ -166,7 +162,7 @@ Click Accept Button
     Wait For Exists    ${accept_button}    5000
     Click On    text=ACCEPT
 
-Verify Install Complete
+Verify Install Success
     ${open_button}    Get Object    text=OPEN
     ${install_complete}    Wait For Exists    ${open_button}    500000
     Should Be True    ${install_complete}    Install Fail
@@ -177,3 +173,29 @@ Click Connect Button
     ${enabled_info}    Get From Dictionary    ${connect_button_info}    enabled
     Should Be True    ${enabled_info}    Connect button is not enabled
     Click On    text=Connect
+
+Turn On Wifi
+    Click On    text=Wi‑Fi
+    ${switch}    Get Object    className=android.widget.Switch
+    ${switch_info}    Get Info Of Object    ${switch}
+    ${is_checked}    Get From Dictionary    ${switch_info}    checked
+    Run Keyword Unless    ${is_checked}    Click On    className=android.widget.Switch
+    ${switch_info}    Get Info Of Object    ${switch}
+    ${is_checked}    Get From Dictionary    ${switch_info}    checked
+    Should Be True    ${is_checked}    The Wifi should be On
+
+Turn Off AP
+    Change Ssid    IAT_OFF
+
+Turn On AP
+    Change Ssid    IAT_OFF
+
+Install App
+    Wakeup The Device
+    Enter App    Play Store
+    Enter Game Category
+    Enter Top Free
+    Click First Item
+    Click Install
+    Register Dialog Watcher
+    Click Accept Button
