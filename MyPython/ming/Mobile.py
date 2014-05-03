@@ -373,11 +373,7 @@ class Mobile():
         self.device.watchers.run()
         print 'register watcher:%s' % watcher_name
         return
-#     def (self):
-#         """
-#          
-#         """
-#         self.device
+
 #Selector
 
     def get_object(self, *args, **attribute):
