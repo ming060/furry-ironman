@@ -61,6 +61,8 @@ class ADB:
         return subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
 
 class Mobile():
+    """
+    """
 
     def __init__(self, android_serial = None):
 #         logger.info("Importing Android library")
@@ -260,7 +262,24 @@ class Mobile():
     #Wait until the specific ui object appears or gone
 
     # wait until the ui object appears
-    def wait_for_exists(self, obj, timeout=0):
+    def wait_for_exists(self, timeout=0, *args, **attribute):
+        """
+        true means the object which has *attribute* exist
+        false means the object does not exist
+        in the given timeout
+        """
+        return self.device(**attribute).wait.exists(timeout=timeout)
+
+    # wait until the ui object gone
+    def wait_until_gone(self, timeout=0, *args, **attribute):
+        """
+        true means the object which has *attribute* disappear
+        false means the object exist
+        in the given timeout
+        """
+        return self.device(**attribute).wait.gone(timeout=timeout)
+
+    def wait_for_object_exists(self, obj, timeout=0):
         """
         true means the object exist
         false means the object does not exist
@@ -269,13 +288,14 @@ class Mobile():
         return obj.wait.exists(timeout=timeout)
 
     # wait until the ui object gone
-    def wait_until_gone(self, obj, timeout=0):
+    def wait_until_object_gone(self, obj, timeout=0):
         """
         true means the object disappear
         false means the object exist
         in the given timeout
         """
         return obj.wait.gone(timeout=timeout)
+
 
     # Perform fling on the specific ui object(scrollable)
     def fling_forward_horizontally(self, obj):

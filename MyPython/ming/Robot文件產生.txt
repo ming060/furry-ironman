@@ -1,0 +1,16 @@
+Python libraries and dynamic libraries with name or path
+
+When documenting libraries implemented with Python or that use the dynamic library API, it is possible to specify the library either by using just the library name or path to the library source code. In the former case the library is searched using the library search path and its name must be in the same format as in Robot Framework test data.
+
+If these libraries require arguments when they are imported, the arguments must be catenated with the library name or path using two colons like MyLibrary::arg1::arg2. If arguments change what keywords the library provides or otherwise alter its documentation, it might be a good idea to use --name option to also change the library name accordingly.
+
+
+python -m robot.libdoc [options] library_or_resource output_file
+python -m robot.libdoc [options] library_or_resource list|show|version [names]
+
+python -m robot.libdoc [options] xxx.py xxx.html
+
+options we may use：
+
+-n the name display on html
+-v version may use date to distinguish

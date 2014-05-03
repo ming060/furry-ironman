@@ -7,20 +7,16 @@ Resource          nexus_5.txt
 Library           Selenium2Library
 Library           ../MyPython/ming/Custom_Library.py
 
+*** Variables ***
+${infinite}       10000
+
 *** Test Cases ***
 test
     Enter App    Settings
+    Click On    text=Wi‑Fi
     Turn On Wifi
-    ${access_point_name}    Set Variable    IAT
-    ${access_point}    Get Object    text=${access_point_name}
-    Scroll To Vertically    ${access_point}
-    Click On    text=${access_point_name}
-    ${is_correct_access_point}    Wait For Exists    ${access_point}
-    Should Be True    ${is_correct_access_point}    Click on wrong access point
-    ${pwd_text_view}    Get Object    text=Password
-    ${is_pwd_exist}    Wait For Exists    ${pwd_text_view}
-    Run Keyword If    ${is_pwd_exist}    Run Keywords    Set Text    smart@inhon    resourceId=com.android.settings:id/password    AND
-    ...    Click Connect Button
+    Disconnect All
+    Connect To    IAT
 
 test_time
     Click On    text=0
@@ -93,7 +89,7 @@ web_test
 
 Google Play Test
     Install App
-    Turn Off AP
+    Change Ssid    WIFI_IS_OFF
     Verify Install Success
 
 *** Keywords ***
@@ -127,14 +123,14 @@ Enter App
     ${page_count}    Get From Dictionary    ${page_indactor_info}    chileCount
     : FOR    ${index}    IN RANGE    ${page_count}
     \    ${app_obj}    Get Object    text=${app}
-    \    ${is_app_exist}    Wait For Exists    ${app_obj}
+    \    ${is_app_exist}    Wait For Object Exists    ${app_obj}
     \    ${view}    Get Object    resourceId=com.android.launcher3:id/apps_customize_pane_content
     \    Run Keyword If    ${is_app_exist}    Run Keywords    Call    ${app_obj}    click
     \    ...    AND    Exit For Loop    ELSE    Swipe Left    ${view}
 
 Enter Game Category
-    ${game_text_view}    Get Object    resourceId=com.android.vending:id/li_title
-    Wait For Exists    ${game_text_view}    5000
+    ${game_text_view}    Get Object
+    Wait For Exists    5000    resourceId=com.android.vending:id/li_title
     Click On    resourceId=com.android.vending:id/li_title
 
 Enter Top Free
@@ -175,7 +171,6 @@ Click Connect Button
     Click On    text=Connect
 
 Turn On Wifi
-    Click On    text=Wi‑Fi
     ${switch}    Get Object    className=android.widget.Switch
     ${switch_info}    Get Info Of Object    ${switch}
     ${is_checked}    Get From Dictionary    ${switch_info}    checked
@@ -185,7 +180,7 @@ Turn On Wifi
     Should Be True    ${is_checked}    The Wifi should be On
 
 Turn Off AP
-    Change Ssid    IAT_OFF
+    Change Ssid    WIFI_IS_OFF
 
 Turn On AP
     Change Ssid    IAT_OFF
@@ -199,3 +194,20 @@ Install App
     Click Install
     Register Dialog Watcher
     Click Accept Button
+
+Disconnect All
+    :FOR    ${i}    IN RANGE    ${infinite}
+    \    ${is_connected_exist}    Wait For Exists    5000    text=Connected
+    \    Run Keyword If    ${is_connected_exist}    Run Keywords    Click On    text=Connected    AND
+    \    ...    Click On    text=Forget    ELSE    Exit For Loop
+
+Connect To
+    [Arguments]    ${access_point_name}
+    ${list_view}    Get Object    className=android.widget.ListView
+    Scroll To Vertically    ${list_view}    text=${access_point_name}
+    Click On    text=${access_point_name}
+    ${is_correct_access_point}    Wait For Exists    text=${access_point_name}
+    Should Be True    ${is_correct_access_point}    Click on wrong access point
+    ${is_pwd_exist}    Wait For Exists    text=Password
+    Run Keyword If    ${is_pwd_exist}    Run Keywords    Set Text    smart@inhon    resourceId=com.android.settings:id/password    AND
+    ...    Press Back    AND    Click Connect Button
