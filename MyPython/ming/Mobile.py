@@ -100,11 +100,11 @@ class Mobile():
         """
         self.device.wakeup()
 
-    def sleep(self):
-        """
-        sleep the device, same as turning off the screen.
-        """
-        self.device.sleep()
+#     def sleep(self):
+#         """
+#         sleep the device, same as turning off the screen.
+#         """
+#         self.device.sleep()
 
     """
     Press hard/soft key
@@ -362,18 +362,80 @@ class Mobile():
 
 #Screen Actions of the device
 #Watcher
+#     def register_click_watcher(self, watcher_name, attributes, *condition_list):
+#         """
+#         The watcher click on the object which has the attributes when conditions match
+#         """
+#         print type(attributes)
+#         watcher = self.device.watcher(watcher_name)
+#         for condition in condition_list:
+#             watcher.when(**condition)
+#         watcher.click(**attributes)
+#         self.device.watchers.run()
+#         print 'register watcher:%s' % watcher_name
+#         return
+
+    def __unicode_to_dict(self, a_unicode):
+        a_dict = dict()
+        dict_item_count = a_unicode.count('=')
+        for count in range(dict_item_count):
+            equal_sign_position = a_unicode.find('=')
+            comma_position = a_unicode.find(',')
+            a_key = a_unicode[0:equal_sign_position]
+            if comma_position == -1:
+                a_value = a_unicode[equal_sign_position + 1:]
+            else:
+                a_value = a_unicode[equal_sign_position + 1:comma_position]
+                a_unicode = a_unicode[comma_position + 1:]
+            a_dict[a_key] = a_value
+        return a_dict
+
     def register_click_watcher(self, watcher_name, attributes, *condition_list):
         """
-        The watcher click on the object which has the attributes when conditions match
+        The watcher click on the object which has the *attributes* when conditions match
         """
         watcher = self.device.watcher(watcher_name)
         for condition in condition_list:
-            watcher.when(**condition)
-        watcher.click(**attributes)
+            watcher.when(**self.__unicode_to_dict(condition))
+        watcher.click(**self.__unicode_to_dict(attributes))
         self.device.watchers.run()
-        print 'register watcher:%s' % watcher_name
-        return
 
+    def register_press_watcher(self, watcher_name, press_keys, *condition_list):
+        """
+        The watcher perform *press_keys* action sequentially when conditions match
+        """
+        def unicode_to_list(a_unicode):
+            a_list = list()
+            comma_count = a_unicode.count(',')
+            for count in range(comma_count + 1):
+                comma_position = a_unicode.find(',')
+                if comma_position == -1:
+                    a_list.append(str(a_unicode))
+                else:
+                    a_list.append(a_unicode[0:comma_position])
+                    a_unicode = a_unicode[comma_position + 1:]
+            return a_list
+
+        watcher = self.device.watcher(watcher_name)
+        for condition in condition_list:
+            watcher.when(**self.__unicode_to_dict(condition))
+        watcher.press(*unicode_to_list(press_keys))
+        self.device.watchers.run()
+
+    def remove_watchers(self, watcher_name = None):
+        """
+        remove watcher with *watcher_name* or remove all watchers
+        """
+        if watcher_name == None:
+            self.device.watchers.remove()
+        else:
+            self.device.watchers.remove(watcher_name)
+
+    def list_all_watchers(self):
+        """
+        return the watcher list
+        """
+        return self.device.watchers
 #Selector
 
     def get_object(self, *args, **attribute):
@@ -443,6 +505,13 @@ class Mobile():
 
 # Other feature
 
+    def sleep(self, time):
+        """
+        sleep(no action) for *time* (in millisecond)
+        """
+        target = 'wait for %s' % str(time)
+        self.device(text=target).wait.exists(timeout=time)
+
     def install(self, apk_path):
         self.adb.cmd('install "%s"' % apk_path)
 
@@ -467,6 +536,9 @@ if __name__ == '__main__':
     print 'start'
 
     m = Mobile()
+
+#     dict = {'text':'音樂'}
+#     m.register_click_watcher('music', text='音樂', dict)
     
 #     m = Mobile('192.168.185.101:5555')
 #     m.uninstall('com.dropbox.android')

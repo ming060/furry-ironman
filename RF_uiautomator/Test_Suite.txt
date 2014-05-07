@@ -23,11 +23,17 @@ test_time
     Click On    text=1
 
 test_watcher
-    ${cookie_run_condition_dict}    Create Dictionary    text    CookieRun
-    ${clock_condition_dict}    Create Dictionary    resourceId    com.android.deskclock:id/analog_appwidget
-    ${condition_list}    Create List    ${clock_condition_dict}    ${cookie_run_condition_dict}
-    ${click_attribtute_dict}    Create Dictionary    text    Apps
-    Register Click Watcher    test_watcher    ${click_attribtute_dict}    ${clock_condition_dict}    ${cookie_run_condition_dict}
+    ${watcher_list}    List All Watchers
+    Register Click Watcher    test_watcher    text=Apps    resourceId=com.android.deskclock:id/analog_appwidget
+    Register Click Watcher    test_watcher_1    text=Apps    resourceId=com.android.deskclock:id/analog_appwidget
+    Register Click Watcher    test_watcher_2    text=Apps    resourceId=com.android.deskclock:id/analog_appwidget
+    ${watcher_list}    List All Watchers
+    Remove Watchers    test_watcher
+    ${watcher_list}    List All Watchers
+    Remove Watchers
+    ${watcher_list}    List All Watchers
+    Log    OK
+    Mobile.Sleep    30000
 
 test_change_ssid
     Turn Off AP
@@ -196,7 +202,7 @@ Install App
     Click Accept Button
 
 Disconnect All
-    :FOR    ${i}    IN RANGE    ${infinite}
+    : FOR    ${i}    IN RANGE    ${infinite}
     \    ${is_connected_exist}    Wait For Exists    5000    text=Connected
     \    Run Keyword If    ${is_connected_exist}    Run Keywords    Click On    text=Connected    AND
     \    ...    Click On    text=Forget    ELSE    Exit For Loop
