@@ -35,6 +35,9 @@ test_watcher
     Log    OK
     Mobile.Sleep    30000
 
+test_screenshot
+    screenshot
+
 test_change_ssid
     Turn Off AP
     Turn On AP

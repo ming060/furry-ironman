@@ -3,7 +3,10 @@ from robot.api import logger
 from uiautomator import Device
 import subprocess
 import os
+import time
+import datetime
 from robot.output.monitor import CommandLineWriter as clm
+from robot.libraries.BuiltIn import BuiltIn
 
 # logger.info("Importing Android library")
 # print "Importing Android library"
@@ -361,6 +364,17 @@ class Mobile():
         return obj.scroll.vert.to(**attribute)
 
 #Screen Actions of the device
+
+    def screenshot(self, scale=None, quality=None):
+        """
+        """
+        output_dir = BuiltIn().get_variable_value('${OUTPUTDIR}')
+        ts = time.time()
+        st = datetime.datetime.fromtimestamp(ts).strftime('%Y%m%d%H%M%S')
+        screenshot_path = '%s%s%s' % (output_dir, os.sep, st)
+        self.device.screenshot(screenshot_path, scale, quality)
+        logger.info('\n<a href="%s">%s</a><br><img src="%s">' % (screenshot_path, st, screenshot_path), html=True)
+
 #Watcher
 #     def register_click_watcher(self, watcher_name, attributes, *condition_list):
 #         """
@@ -436,6 +450,7 @@ class Mobile():
         return the watcher list
         """
         return self.device.watchers
+
 #Selector
 
     def get_object(self, *args, **attribute):
@@ -526,6 +541,7 @@ class Mobile():
 
     def foo(self):
         pass
+#         logger.info('\nGot arg %s %s' % (output_dir, st), also_console=True)
 #         clm = CommandLineWriter()
         # output some messages on console
 #         clm.message(' ')
