@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 2014/3/31
 
@@ -18,5 +19,6 @@ if __name__ == '__main__':
     print screenshot_path
     d = Device('0489902425228ab9')
     d.screenshot(screenshot_path)
+    
 
     print 'end'

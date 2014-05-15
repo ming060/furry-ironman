@@ -12,11 +12,16 @@ ${infinite}       10000
 
 *** Test Cases ***
 test
-    Enter App    Settings
-    Click On    text=Wi‑Fi
-    Turn On Wifi
-    Disconnect All
-    Connect To    IAT
+    Comment    Enter App    Settings
+    Comment    Click On    text=Wi‑Fi
+    Comment    Turn On Wifi
+    Comment    Disconnect All
+    Comment    Connect To    IAT
+    ${is_install_exist}    Set Variable    ${False}
+    ${is_update_exist}    Set Variable    ${True}
+    ${is_uninstall_exist}    Set Variable    ${False}
+    ${is_uninstall_complete}    Set Variable    ${is_install_exist} or (${is_update_exist} and not(${is_uninstall_exist}))
+    Run Keyword If    ${is_uninstall_complete}    Log    True
 
 test_time
     Click On    text=0

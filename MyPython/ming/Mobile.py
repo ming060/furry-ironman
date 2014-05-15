@@ -103,12 +103,6 @@ class Mobile():
         """
         self.device.wakeup()
 
-#     def sleep(self):
-#         """
-#         sleep the device, same as turning off the screen.
-#         """
-#         self.device.sleep()
-
     """
     Press hard/soft key
     """
@@ -371,7 +365,7 @@ class Mobile():
         output_dir = BuiltIn().get_variable_value('${OUTPUTDIR}')
         ts = time.time()
         st = datetime.datetime.fromtimestamp(ts).strftime('%Y%m%d%H%M%S')
-        screenshot_path = '%s%s%s' % (output_dir, os.sep, st)
+        screenshot_path = '%s%s%s.png' % (output_dir, os.sep, st)
         self.device.screenshot(screenshot_path, scale, quality)
         logger.info('\n<a href="%s">%s</a><br><img src="%s">' % (screenshot_path, st, screenshot_path), html=True)
 
@@ -518,6 +512,18 @@ class Mobile():
         """
         self.device(**attribute).set_text(text)
 
+    def clear_text(self, *args, **attributes):
+        """
+        Clear text of the component  with *attributes*
+        """
+        while True:
+            target = self.device(**attributes)
+            text = target.info['text']
+            target.clear_text()
+            remain_text = target.info['text']
+            if text == ''  or remain_text == text:
+                break
+
 # Other feature
 
     def sleep(self, time):
@@ -547,6 +553,9 @@ class Mobile():
 #         clm.message(' ')
 #         clm.message(u'中文')
 #         clm.message(u'2----------2')
+
+    def test(self):
+        pass
 
 if __name__ == '__main__':
     print 'start'
