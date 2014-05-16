@@ -75,6 +75,14 @@ class Mobile():
         self.device = Device(android_serial)
         self.test_helper = TestHelper(android_serial)
 
+    def set_serial(self, android_serial):
+        """
+        Set device serial
+        """
+        self.adb = ADB(android_serial)
+        self.device = Device(android_serial)
+        self.test_helper = TestHelper(android_serial)
+
     def get_info(self):
         """
         Retrieve the device info
@@ -251,7 +259,6 @@ class Mobile():
 
     def drag(self,sx, sy, ex, ey, steps=10):
         """
-        not test yet desire z only API 17 does not support
         drag from (sx, sy) to (ex, ey) with steps
         """
         self.device.drag(sx, sy, ex, ey, steps)
@@ -321,6 +328,11 @@ class Mobile():
 
     # Perform scroll on the specific ui object(scrollable)
 
+    def scroll_to_beginning_vertically(self, obj, steps=10):
+        """
+        """
+        return obj.scroll.vert.toBeginning(steps=steps)
+
     def scroll_forward_horizontally(self, obj, steps=10):
         """
         return whether the object can be fling or not
@@ -356,11 +368,12 @@ class Mobile():
         return whether the object can be fling or not
         """
         return obj.scroll.vert.to(**attribute)
-
+d(scrollable=True).scroll.vert.toEnd()
 #Screen Actions of the device
 
     def screenshot(self, scale=None, quality=None):
         """
+        Take a screenshot of device and log in the report with timestamp
         """
         output_dir = BuiltIn().get_variable_value('${OUTPUTDIR}')
         ts = time.time()

@@ -11,14 +11,16 @@ import os
 
 if __name__ == '__main__':
     print 'start'
-    
-    output_dir = 'C'
-    ts = time.time()
-    st = datetime.datetime.fromtimestamp(ts).strftime('%Y%m%d%H%M%S')
-    screenshot_path = '%s%s%s' % (output_dir, os.sep, st)
-    print screenshot_path
+
+#     output_dir = 'C'
+#     ts = time.time()
+#     st = datetime.datetime.fromtimestamp(ts).strftime('%Y%m%d%H%M%S')
+#     screenshot_path = '%s%s%s' % (output_dir, os.sep, st)
+#     print screenshot_path
     d = Device('0489902425228ab9')
-    d.screenshot(screenshot_path)
+#     d().swipe.left()
+    d(scrollable=True).scroll.vert.toEnd()
     
+#     d.screenshot(screenshot_path)
 
     print 'end'
