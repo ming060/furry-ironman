@@ -233,25 +233,49 @@ class Mobile():
 
 # Swipe from the center of the ui object to its edge
 
-    def swipe_left(self, obj, steps=10):
+    def swipe_left(self, steps=10, **attributes):
+        """
+        swipe the *obj* from center to left
+        """
+        self.device(**attributes).swipe.left(steps=steps)
+
+    def swipe_right(self, steps=10, **attributes):
+        """
+        swipe the *obj* from center to right
+        """
+        self.device(**attributes).swipe.right(steps=steps)
+
+    def swipe_top(self, steps=10, **attributes):
+        """
+        swipe the *obj* from center to top
+        """
+        self.device(**attributes).swipe.top(steps=steps)
+
+    def swipe_bottom(self, steps=10, **attributes):
+        """
+        swipe the *obj* from center to bottom
+        """
+        self.device(**attributes).swipe.bottom(steps=steps)
+
+    def object_swipe_left(self, obj, steps=10):
         """
         swipe the *obj* from center to left
         """
         obj.swipe.left(steps=steps)
 
-    def swipe_right(self, obj, steps=10):
+    def object_swipe_right(self, obj, steps=10):
         """
         swipe the *obj* from center to right
         """
         obj.swipe.right(steps=steps)
 
-    def swipe_top(self, obj, steps=10):
+    def object_swipe_top(self, obj, steps=10):
         """
         swipe the *obj* from center to top
         """
         obj.swipe.top(steps=steps)
 
-    def swipe_bottom(self, obj, steps=10):
+    def object_swipe_bottom(self, obj, steps=10):
         """
         swipe the *obj* from center to bottom
         """
@@ -328,10 +352,25 @@ class Mobile():
 
     # Perform scroll on the specific ui object(scrollable)
 
-    def scroll_to_beginning_vertically(self, obj, steps=10):
+    def scroll_to_beginning_vertically(self, steps=10, **attributes):
+        """
+        """
+        return self.device(**attributes).scroll.vert.toBeginning(steps=steps)
+
+    def scroll_to_end_vertically(self, steps=10, **attributes):
+        """
+        """
+        return self.device(**attributes).scroll.vert.toEnd(steps=steps)
+
+    def scroll_object_to_beginning_vertically(self, obj, steps=10):
         """
         """
         return obj.scroll.vert.toBeginning(steps=steps)
+
+    def scroll_object_to_end_vertically(self, obj, steps=10):
+        """
+        """
+        return obj.scroll.vert.toEnd(steps=steps)
 
     def scroll_forward_horizontally(self, obj, steps=10):
         """
@@ -365,10 +404,10 @@ class Mobile():
 
     def scroll_to_vertically(self, obj, *args, **attribute):
         """
-        return whether the object can be fling or not
+        return whether the object exists or not
         """
         return obj.scroll.vert.to(**attribute)
-d(scrollable=True).scroll.vert.toEnd()
+
 #Screen Actions of the device
 
     def screenshot(self, scale=None, quality=None):
@@ -466,7 +505,7 @@ d(scrollable=True).scroll.vert.toEnd()
         """
         return self.device(*args, **attribute)
 
-    def get_info_of_object(self, obj):
+    def get_info_of_object(self, obj, attribute=None):
         """
         return info dictionary of the *obj*
         The info example:
@@ -501,7 +540,10 @@ d(scrollable=True).scroll.vert.toEnd()
                           }
         }
         """
-        return obj.info
+        if attribute:
+            return obj.info.get(attribute)
+        else:
+            return obj.info
 
     def click_on(self, *args, **attribute):
         """

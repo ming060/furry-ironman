@@ -6,6 +6,7 @@ Resource          desire_z.txt
 Resource          nexus_5.txt
 Library           Selenium2Library
 Library           ../MyPython/ming/Custom_Library.py
+Library           ../../../../../../Python27/Lib/site-packages/robot/libraries/String.py
 
 *** Variables ***
 ${infinite}       10000
@@ -67,7 +68,7 @@ launch_google_play_without_user_keyword
 
 launch_google_play_with_user_keyword
     Mobile.Press Home
-    enter_all_apps
+    Enter All Apps
     enter_google_play_store
     verify_google_play_text
 
@@ -82,35 +83,50 @@ test_type
     type    中文你好
 
 dropbox_test
-    Install    C:${/}Users${/}YuMing${/}Documents${/}GitHub${/}furry-ironman${/}RF_uiautomator${/}com.dropbox.android_2.4.0.2.apk
-    enter_all_apps
-    Uninstall    com.dropbox.android
+    Install Dropbox
+    Set Serial    0489902425228ab9
+    Remove Dropbox Account
+    Sign In Dropbox    t7820315@ntut.org.tw    ming060
+    #
+    ${file_name}    Take A Photo
+    ${file_name_on_dropbox}    Convert File Name To Dropbox Format    ${file_name}
+    Uninstall Dropbox
 
 web_test
-    Comment    Set Selenium Speed    1s
-    Open Browser    https://www.dropbox.com/    firefox
-    Click Link    /login
-    Input Text    id=login_email    lym060@gmail.com
-    Input Password    id=login_password    ginobili060
-    Unselect Checkbox    id=remember_me
-    Click Button    id=login_submit
-    Wait Until Page Contains Element    //a[text()="Camera Uploads"]    5s
-    Comment    ${list_items}    Get List Items    id=browse-files
-    ${list_items}    Get Value    //a[text()="Camera Uploads"]
-    Click Element    //a[text()="Camera Uploads"]
-    Wait Until Page Contains Element    //a[text()="2014-01-06 23.24.55.jpg"]    10s
-    Page Should Contain Element    //a[text()="2014-01-06 23.24.55.jpg"]    The photo does not exist.
+    ${dropbox_account}    Set Variable    t7820315@ntut.org.tw
+    ${dropbox_pwd}    Set Variable    ming060
+    Login Dropbox Wed    ${dropbox_account}    ${dropbox_pwd}
+    Verify Photo On Dropbox    2009-02-06 21.27.14.jpg
+    Comment    2014-05-17 17.05.41.jpg
 
 Google Play Test
     Install App
     Change Ssid    WIFI_IS_OFF
     Verify Install Success
 
+test_scroll_to_beginning
+    ${list_view}    Get Object    className=android.widget.ListView
+    Scroll To Beginning Vertically    ${list_view}
+
+Dropbox Integration Test
+    [Setup]    Run Keywords    Set Serial    0489902425228ab9    AND    Clear Recent Apps    AND
+    ...    Install Dropbox    AND    Remove Dropbox Account
+    ${dropbox_account}    Set Variable    t7820315@ntut.org.tw
+    ${dropbox_pwd}    Set Variable    ming060
+    Sign In Dropbox    ${dropbox_account}    ${dropbox_pwd}
+    #
+    ${file_name}    Take A Photo
+    ${file_name_on_dropbox}    Convert File Name To Dropbox Format    ${file_name}
+    #
+    Login Dropbox Wed    ${dropbox_account}    ${dropbox_pwd}
+    Verify Photo On Dropbox    ${file_name_on_dropbox}
+    [Teardown]    Run Keywords    Clear Recent Apps    AND    Remove Dropbox Account    AND    Uninstall Dropbox
+
 *** Keywords ***
 z_open_screen_lock
     Mobile.Swipe    240    560    450    560
 
-enter_all_apps
+Enter All Apps
     ${view}    Mobile.Get Object    className=android.view.View    index=4
     ${all_apps_button}    Mobile.Call    ${view}    child    className=android.widget.TextView    index=2
     Mobile.Call    ${all_apps_button}    click
@@ -138,9 +154,8 @@ Enter App
     : FOR    ${index}    IN RANGE    ${page_count}
     \    ${app_obj}    Get Object    text=${app}
     \    ${is_app_exist}    Wait For Object Exists    ${app_obj}
-    \    ${view}    Get Object    resourceId=com.android.launcher3:id/apps_customize_pane_content
     \    Run Keyword If    ${is_app_exist}    Run Keywords    Call    ${app_obj}    click
-    \    ...    AND    Exit For Loop    ELSE    Swipe Left    ${view}
+    \    ...    AND    Exit For Loop    ELSE    Swipe Left    resourceId=com.android.launcher3:id/apps_customize_pane_content
 
 Enter Game Category
     ${game_text_view}    Get Object
@@ -225,3 +240,84 @@ Connect To
     ${is_pwd_exist}    Wait For Exists    text=Password
     Run Keyword If    ${is_pwd_exist}    Run Keywords    Set Text    smart@inhon    resourceId=com.android.settings:id/password    AND
     ...    Press Back    AND    Click Connect Button
+
+Remove Dropbox Account
+    Enter App    Settings
+    ${list_view}    Get Object    className=android.widget.ListView
+    ${return}    Scroll To Vertically    ${list_view}    text=Dropbox
+    Run Keyword If    ${return}    Remove Dropbox Account From Setting
+
+Remove Dropbox Account From Setting
+    Click On    text=Dropbox
+    Click On    description=More options
+    Click On    text=Remove account
+    Click On    text=Remove account
+    ${is_dropbox_account_exist}    Wait For Exists    3000    text=Dropbox
+    Should Not Be True    ${is_dropbox_account_exist}
+
+Sign In Dropbox
+    [Arguments]    ${account}    ${pwd}
+    Enter App    Dropbox
+    Click On    text=Sign in!
+    Set Text    ${pwd}    resourceId=com.dropbox.android:id/login_password
+    Set Text    ${account}    resourceId=com.dropbox.android:id/login_email
+    Click On    text=Sign in
+    Click On    text=Turn on Camera Upload
+
+Take A Photo
+    Enter App    Camera
+    Click On    description=Shutter
+    Swipe Left
+    Click On    description=More options
+    Click On    text=Details
+    Scroll To End Vertically
+    ${path_text_view}    Get Object    textStartsWith=Path
+    ${text_of_path_text_view}    Get Info Of Object    ${path_text_view}    text
+    ${image_file_name}    Fetch From Right    ${text_of_path_text_view}    IMG_
+    [Return]    ${image_file_name}
+
+Convert File Name To Dropbox Format
+    [Arguments]    ${ifile_name}
+    ${file_name_year}    Get Substring    ${ifile_name}    \    4
+    ${file_name_month}    Get Substring    ${ifile_name}    4    6
+    ${file_name_day}    Get Substring    ${ifile_name}    6    8
+    ${file_name_hour}    Get Substring    ${ifile_name}    9    11
+    ${file_name_minute}    Get Substring    ${ifile_name}    11    13
+    ${file_name_on_second}    Get Substring    ${ifile_name}    13    15
+    ${file_name_on_dropbox}    Set Variable    ${file_name_year}-${file_name_month}-${file_name_day} ${file_name_hour}.${file_name_minute}.${file_name_on_second}.jpg
+    [Return]    ${file_name_on_dropbox}
+
+Install Dropbox
+    Install    C:${/}Users${/}YuMing${/}Documents${/}GitHub${/}furry-ironman${/}RF_uiautomator${/}com.dropbox.android_2.4.0.2.apk
+
+Uninstall Dropbox
+    Uninstall    com.dropbox.android
+
+Clear Recent Apps
+    Press Recent
+    ${is_clear_exist}    Wait For Exists    resourceId=com.android.systemui:id/recents_clear
+    Run Keyword If    ${is_clear_exist}    Click On    resourceId=com.android.systemui:id/recents_clear    ELSE    Press Recent
+
+Login Dropbox Wed
+    [Arguments]    ${dropbox_account}    ${dropbox_pwd}
+    Comment    Set Selenium Speed    1s
+    Open Browser    https://www.dropbox.com/    firefox
+    Click Link    /login
+    Input Text    id=login_email    ${dropbox_account}
+    Input Password    id=login_password    ${dropbox_pwd}
+    Click Button    id=login_submit
+
+Verify Photo On Dropbox
+    [Arguments]    ${photo_name}
+    Wait Until Page Contains Element    //a[text()="Camera Uploads"]    5s
+    Comment    ${list_items}    Get List Items    id=browse-files
+    ${list_items}    Get Value    //a[text()="Camera Uploads"]
+    Click Element    //a[text()="Camera Uploads"]
+    Comment    ${lsit}    Get List Items    class=mouse-active
+    Comment    Log List    ${lsit}
+    Comment    Log    ${photo_name}
+    Comment    ${all_links}    Get All Links
+    Comment    Log List    ${all_links}
+    ${is_text_exist}    Current Frame Contains    ${photo_name}
+    Comment    Wait Until Page Contains Element    //a[text()="${photo_name}"]    10s
+    Comment    Page Should Contain Element    //a[text()="${photo_name}"]    The photo does not exist.

@@ -19,8 +19,9 @@ if __name__ == '__main__':
 #     print screenshot_path
     d = Device('0489902425228ab9')
 #     d().swipe.left()
-    d(scrollable=True).scroll.vert.toEnd()
-    
+#     d(className='android.widget.ImageView').click()
+    print d(textStartsWith='Path').info
+#     print d(text='Path:').info
 #     d.screenshot(screenshot_path)
 
     print 'end'
