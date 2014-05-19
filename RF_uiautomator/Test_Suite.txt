@@ -13,16 +13,8 @@ ${infinite}       10000
 
 *** Test Cases ***
 test
-    Comment    Enter App    Settings
-    Comment    Click On    text=Wi‑Fi
-    Comment    Turn On Wifi
-    Comment    Disconnect All
-    Comment    Connect To    IAT
-    ${is_install_exist}    Set Variable    ${False}
-    ${is_update_exist}    Set Variable    ${True}
-    ${is_uninstall_exist}    Set Variable    ${False}
-    ${is_uninstall_complete}    Set Variable    ${is_install_exist} or (${is_update_exist} and not(${is_uninstall_exist}))
-    Run Keyword If    ${is_uninstall_complete}    Log    True
+    Set Serial    HT12ERT00129
+    Open Notification
 
 test_time
     Click On    text=0
@@ -318,6 +310,10 @@ Verify Photo On Dropbox
     Comment    Log    ${photo_name}
     Comment    ${all_links}    Get All Links
     Comment    Log List    ${all_links}
-    ${is_text_exist}    Current Frame Contains    ${photo_name}
-    Comment    Wait Until Page Contains Element    //a[text()="${photo_name}"]    10s
-    Comment    Page Should Contain Element    //a[text()="${photo_name}"]    The photo does not exist.
+    Execute Javascript    for (int second = 0;; second++) {
+    ${is_text_exist}    if(second >=60){    ${photo_name}
+    Comment    break;    //a[text()="${photo_name}"]    10s
+    Comment    }    //a[text()="${photo_name}"]    The photo does not exist.
+    \    selenium.getEval("window.scrollBy(0,200)");
+    \    Thread.sleep(3000);
+    \    }

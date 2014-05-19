@@ -581,6 +581,14 @@ class Mobile():
 
 # Other feature
 
+    def open_notification(self):
+        sdk_version = self.device.info['sdkInt']
+        if sdk_version < 18:
+            height = self.device.info['displayHeight']
+            self.device.swipe(1, 1, 1, height - 1, 1)
+        else:
+            self.device.open.notification()
+
     def sleep(self, time):
         """
         sleep(no action) for *time* (in millisecond)
