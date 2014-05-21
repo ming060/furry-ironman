@@ -5,18 +5,21 @@ Created on 2014/5/1
 @author: YuMing
 '''
 
+import base64
 import requests
 import time
 
 class ApHelper:
-    def change_ssid(self, ssid):
+    def change_ssid(self, ssid, account, password):
         """
                         修改AP的SSID
                         需要先裝requests模組，指令如下
         pip install requests
         """
+        account_info = ':'.join((account, password))
+        authorization = base64.b64encode(account_info)
         headers = {
-        'Authorization':'Basic YWRtaW46cGFzc3dvcmQ='
+        'Authorization':'Basic '+authorization
         }
 
         form = {
@@ -49,4 +52,4 @@ class ApHelper:
 
 def change_ssid(ssid):
     apHelper = ApHelper()
-    apHelper.change_ssid(ssid)
+    apHelper.change_ssid(ssid, 'admin', 'ATA2013')

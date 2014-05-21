@@ -74,6 +74,9 @@ resource_test
 test_type
     type    中文你好
 
+test_ssid
+    Change Ssid    IAT
+
 dropbox_test
     Install Dropbox
     Set Serial    0489902425228ab9
@@ -95,6 +98,7 @@ Google Play Test
     Install App
     Change Ssid    WIFI_IS_OFF
     Verify Install Success
+    [Teardown]    Change Ssid    IAT
 
 test_scroll_to_beginning
     ${list_view}    Get Object    className=android.widget.ListView
@@ -150,38 +154,30 @@ Enter App
     \    ...    AND    Exit For Loop    ELSE    Swipe Left    resourceId=com.android.launcher3:id/apps_customize_pane_content
 
 Enter Game Category
-    ${game_text_view}    Get Object
-    Wait For Exists    5000    resourceId=com.android.vending:id/li_title
-    Click On    resourceId=com.android.vending:id/li_title
+    Wait For Exists    5000    text=GAMES
+    Click On    text=GAMES
 
 Enter Top Free
-    ${top_free_text_view}    Get Object    text=TOP FREE
-    Wait For Exists    ${top_free_text_view}    5000
+    Wait For Exists    5000    text=TOP FREE
     Click On    text=TOP FREE
 
 Click First Item
-    ${view}    Get Object    resourceId=com.android.vending:id/bucket_items
-    Wait For Exists    ${view}    5000
+    Wait For Exists    5000    resourceId=com.android.vending:id/bucket_items
     Click On    resourceId=com.android.vending:id/bucket_items
 
 Click Install
-    ${install_button}    Get Object    resourceId=com.android.vending:id/buy_button
-    Wait For Exists    ${install_button}    5000
+    Wait For Exists    5000    resourceId=com.android.vending:id/buy_button
     Click On    resourceId=com.android.vending:id/buy_button
 
 Register Dialog Watcher
-    ${download_large_app_condition_dict}    Create Dictionary    text    Downloading a large app
-    ${proceed_button_attribtute_dict}    Create Dictionary    text    Proceed
-    register_click_watcher    test_watcher    ${proceed_button_attribtute_dict}    ${download_large_app_condition_dict}
+    register_click_watcher    test_watcher    text=Proceed    text=Downloading a large app
 
 Click Accept Button
-    ${accept_button}    Get Object    text=ACCEPT
-    Wait For Exists    ${accept_button}    5000
+    Wait For Exists    5000    text=ACCEPT
     Click On    text=ACCEPT
 
 Verify Install Success
-    ${open_button}    Get Object    text=OPEN
-    ${install_complete}    Wait For Exists    ${open_button}    500000
+    ${install_complete}    Wait For Exists    500000    text=OPEN
     Should Be True    ${install_complete}    Install Fail
 
 Click Connect Button
@@ -208,6 +204,7 @@ Turn On AP
 
 Install App
     Wakeup The Device
+    Clear Recent Apps
     Enter App    Play Store
     Enter Game Category
     Enter Top Free
@@ -287,7 +284,7 @@ Uninstall Dropbox
 
 Clear Recent Apps
     Press Recent
-    ${is_clear_exist}    Wait For Exists    resourceId=com.android.systemui:id/recents_clear
+    ${is_clear_exist}    Wait For Exists    2000    resourceId=com.android.systemui:id/recents_clear
     Run Keyword If    ${is_clear_exist}    Click On    resourceId=com.android.systemui:id/recents_clear    ELSE    Press Recent
 
 Login Dropbox Wed
