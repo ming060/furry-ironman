@@ -13,8 +13,16 @@ ${infinite}       10000
 
 *** Test Cases ***
 test
-    Set Serial    HT12ERT00129
-    Open Notification
+    Set Serial    0489902425228ab9
+    Comment    Clear Recent Apps
+    Comment    Install Dropbox
+    Comment    ${dropbox_account}    Set Variable    t7820315@ntut.org.tw
+    Comment    ${dropbox_pwd}    Set Variable    ming060
+    Comment    Sign In Dropbox    ${dropbox_account}    ${dropbox_pwd}
+    Comment    Comment    Remove Dropbox Account
+    Comment    Click On    className=android.app.ActionBar$Tab    index=1
+    Click On    text=Camera Uploads
+    ${is_photo_exist}    Wait For Exists    30000    resourceId=com.dropbox.android:id/filelist_name
 
 test_time
     Click On    text=0
@@ -77,7 +85,13 @@ test_type
 test_ssid
     Change Ssid    IAT
 
+test_test_agent
+    Comment    Start Test Agent
+    Comment    Connect To Wifi    WEP    12345
+    Stop Test Agent
+
 dropbox_test
+    [Documentation]    2.4.1
     Install Dropbox
     Set Serial    0489902425228ab9
     Remove Dropbox Account
@@ -299,18 +313,9 @@ Login Dropbox Wed
 Verify Photo On Dropbox
     [Arguments]    ${photo_name}
     Wait Until Page Contains Element    //a[text()="Camera Uploads"]    5s
-    Comment    ${list_items}    Get List Items    id=browse-files
-    ${list_items}    Get Value    //a[text()="Camera Uploads"]
     Click Element    //a[text()="Camera Uploads"]
-    Comment    ${lsit}    Get List Items    class=mouse-active
-    Comment    Log List    ${lsit}
-    Comment    Log    ${photo_name}
-    Comment    ${all_links}    Get All Links
-    Comment    Log List    ${all_links}
-    Execute Javascript    for (int second = 0;; second++) {
-    ${is_text_exist}    if(second >=60){    ${photo_name}
-    Comment    break;    //a[text()="${photo_name}"]    10s
-    Comment    }    //a[text()="${photo_name}"]    The photo does not exist.
-    \    selenium.getEval("window.scrollBy(0,200)");
-    \    Thread.sleep(3000);
-    \    }
+    Input Text    id=browse-search-input    ${photo_name}
+    Wait Until Page Contains    Search - 1 result    5s
+    Page Should Contain    Search - 1 result    Search result should be only one
+    Wait Until Page Contains Element    //a[text()="${photo_name}"]    10s
+    Page Should Contain Element    //a[text()="${photo_name}"]    The photo does not exist.

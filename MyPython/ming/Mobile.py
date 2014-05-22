@@ -374,31 +374,31 @@ class Mobile():
 
     def scroll_forward_horizontally(self, obj, steps=10):
         """
-        return whether the object can be fling or not
+        return whether the object can be scroll or not
         """
         return obj.scroll.horiz.forward(steps=steps)
 
     def scroll_backward_horizontally(self, obj, steps=10):
         """
-        return whether the object can be fling or not
+        return whether the object can be scroll or not
         """
         return obj.scroll.horiz.backward(steps=steps)
 
     def scroll_to_horizontally(self, obj, *args,**attribute):
         """
-        return whether the object can be fling or not
+        return whether the object can be scroll or not
         """
         return obj.scroll.horiz.to(**attribute)
 
     def scroll_forward_vertically(self, obj, steps=10):
         """
-        return whether the object can be fling or not
+        return whether the object can be scroll or not
         """
         return obj.scroll.vert.forward(steps=steps)
 
     def scroll_backward_vertically(self, obj, steps=10):
         """
-        return whether the object can be fling or not
+        return whether the object can be scroll or not
         """
         return obj.scroll.vert.backward(steps=steps)
 
@@ -619,6 +619,24 @@ class Mobile():
         Type *text* at current focused component
         """
         self.test_helper.send_set_text_cmd(text)
+
+    def start_test_agent(self):
+        cmd = 'am start edu.ntut.csie.sslab1321.testagent/edu.ntut.csie.sslab1321.testagent.DummyActivity'
+        self.adb.shell_cmd(cmd)
+
+    def stop_test_agent(self):
+        cmd = 'am broadcast -a testagent -e action STOP_TESTAGENT'
+        self.adb.shell_cmd(cmd)
+
+    def connect_to_wifi(self, ssid, password):
+        cmd = 'adb shell am start edu.ntut.csie.sslab1321.testagent/edu.ntut.csie.sslab1321.testagent.DummyActivity'
+        cmd = 'adb shell am broadcast -a testagent -e action CONNECT_TO_WIFI -e ssid WEP -e password 12345'
+        cmd = 'am broadcast -a testagent -e action CONNECT_TO_WIFI -e ssid %s -e password %s' % (ssid, password)
+        self.adb.shell_cmd(cmd)
+
+    def clear_connected_wifi(self):
+        cmd = 'am broadcast -a testagent -e action CLEAR_CONNECTED_WIFIS'
+        self.adb.shell_cmd(cmd)
 
     def foo(self):
         pass
