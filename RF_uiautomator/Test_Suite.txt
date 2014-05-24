@@ -14,15 +14,29 @@ ${infinite}       10000
 *** Test Cases ***
 test
     Set Serial    0489902425228ab9
-    Comment    Clear Recent Apps
-    Comment    Install Dropbox
-    Comment    ${dropbox_account}    Set Variable    t7820315@ntut.org.tw
-    Comment    ${dropbox_pwd}    Set Variable    ming060
-    Comment    Sign In Dropbox    ${dropbox_account}    ${dropbox_pwd}
-    Comment    Comment    Remove Dropbox Account
-    Comment    Click On    className=android.app.ActionBar$Tab    index=1
+    Clear Recent Apps
+    Remove Dropbox Account
+    Install Dropbox
+    ${dropbox_account}    Set Variable    t7820315@ntut.org.tw
+    ${dropbox_pwd}    Set Variable    ming060
+    Sign In Dropbox    ${dropbox_account}    ${dropbox_pwd}
+    Click On    className=android.app.ActionBar$Tab    index=1
+    Click On    className=android.app.ActionBar$Tab
+    Swipe right    45    text=Camera Uploads
+    Click On    text=Delete
+    Click On    text=Delete
+    Take A Photo
+    Press Home
+    Enter App    Dropbox
+    Click On    className=android.app.ActionBar$Tab    index=1
+    Click On    className=android.app.ActionBar$Tab    index=0
+    Click On    description=More options
+    Click On    text=Refresh
+    ${is_camera_upload_exist}    Wait For Exists    5000    text=Camera Uploads
     Click On    text=Camera Uploads
     ${is_photo_exist}    Wait For Exists    30000    resourceId=com.dropbox.android:id/filelist_name
+    ${file_text_view}    Get Object    resourceId=com.dropbox.android:id/filelist_name
+    ${file_name}    Get Info Of Object    ${file_text_view}    text
 
 test_time
     Click On    text=0
@@ -92,14 +106,13 @@ test_test_agent
 
 dropbox_test
     [Documentation]    2.4.1
-    Install Dropbox
     Set Serial    0489902425228ab9
+    Install Dropbox
     Remove Dropbox Account
     Sign In Dropbox    t7820315@ntut.org.tw    ming060
-    #
-    ${file_name}    Take A Photo
-    ${file_name_on_dropbox}    Convert File Name To Dropbox Format    ${file_name}
-    Uninstall Dropbox
+    Delete Camera Upload
+    Take A Photo
+    Verify Upload Photo
 
 web_test
     ${dropbox_account}    Set Variable    t7820315@ntut.org.tw
@@ -124,13 +137,14 @@ Dropbox Integration Test
     ${dropbox_account}    Set Variable    t7820315@ntut.org.tw
     ${dropbox_pwd}    Set Variable    ming060
     Sign In Dropbox    ${dropbox_account}    ${dropbox_pwd}
-    #
-    ${file_name}    Take A Photo
-    ${file_name_on_dropbox}    Convert File Name To Dropbox Format    ${file_name}
+    Delete Camera Upload
+    Take A Photo
+    ${file_name}    Verify Upload Photo
     #
     Login Dropbox Wed    ${dropbox_account}    ${dropbox_pwd}
-    Verify Photo On Dropbox    ${file_name_on_dropbox}
-    [Teardown]    Run Keywords    Clear Recent Apps    AND    Remove Dropbox Account    AND    Uninstall Dropbox
+    Verify Photo On Dropbox    ${file_name}
+    [Teardown]    Run Keywords    Run Keyword If Test Failed    Screenshot    AND    Clear Recent Apps    AND
+    ...    Remove Dropbox Account    AND    Uninstall Dropbox
 
 *** Keywords ***
 z_open_screen_lock
@@ -270,13 +284,13 @@ Sign In Dropbox
 Take A Photo
     Enter App    Camera
     Click On    description=Shutter
-    Swipe Left
-    Click On    description=More options
-    Click On    text=Details
-    Scroll To End Vertically
-    ${path_text_view}    Get Object    textStartsWith=Path
-    ${text_of_path_text_view}    Get Info Of Object    ${path_text_view}    text
-    ${image_file_name}    Fetch From Right    ${text_of_path_text_view}    IMG_
+    Comment    Swipe Left
+    Comment    Click On    description=More options
+    Comment    Click On    text=Details
+    Comment    Scroll To End Vertically
+    Comment    ${path_text_view}    Get Object    textStartsWith=Path
+    Comment    ${text_of_path_text_view}    Get Info Of Object    ${path_text_view}    text
+    Comment    ${image_file_name}    Fetch From Right    ${text_of_path_text_view}    IMG_
     [Return]    ${image_file_name}
 
 Convert File Name To Dropbox Format
@@ -291,7 +305,7 @@ Convert File Name To Dropbox Format
     [Return]    ${file_name_on_dropbox}
 
 Install Dropbox
-    Install    C:${/}Users${/}YuMing${/}Documents${/}GitHub${/}furry-ironman${/}RF_uiautomator${/}com.dropbox.android_2.4.0.2.apk
+    Install    C:${/}Users${/}YuMing${/}Documents${/}GitHub${/}furry-ironman${/}RF_uiautomator${/}com.dropbox.android_2.4.1.apk
 
 Uninstall Dropbox
     Uninstall    com.dropbox.android
@@ -319,3 +333,23 @@ Verify Photo On Dropbox
     Page Should Contain    Search - 1 result    Search result should be only one
     Wait Until Page Contains Element    //a[text()="${photo_name}"]    10s
     Page Should Contain Element    //a[text()="${photo_name}"]    The photo does not exist.
+
+Delete Camera Upload
+    Click On    className=android.app.ActionBar$Tab
+    Swipe right    45    text=Camera Uploads
+    Click On    text=Delete
+    Click On    text=Delete
+
+Verify Upload Photo
+    Enter App    Dropbox
+    Click On    className=android.app.ActionBar$Tab    index=1
+    Click On    className=android.app.ActionBar$Tab    index=0
+    Click On    description=More options
+    Click On    text=Refresh
+    ${is_camera_upload_exist}    Wait For Exists    5000    text=Camera Uploads
+    Click On    text=Camera Uploads
+    ${is_photo_exist}    Wait For Exists    30000    resourceId=com.dropbox.android:id/filelist_name
+    Should Be True    ${is_photo_exist}    No File
+    ${file_text_view}    Get Object    resourceId=com.dropbox.android:id/filelist_name
+    ${file_name}    Get Info Of Object    ${file_text_view}    text
+    [Return]    ${file_name}

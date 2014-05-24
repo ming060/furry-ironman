@@ -233,29 +233,29 @@ class Mobile():
 
 # Swipe from the center of the ui object to its edge
 
-    def swipe_left(self, steps=10, **attributes):
+    def swipe_left(self, steps=10, *args, **attributes):
         """
         swipe the *obj* from center to left
         """
         self.device(**attributes).swipe.left(steps=steps)
 
-    def swipe_right(self, steps=10, **attributes):
+    def swipe_right(self, steps=10, *args, **attributes):
         """
         swipe the *obj* from center to right
         """
         self.device(**attributes).swipe.right(steps=steps)
 
-    def swipe_top(self, steps=10, **attributes):
+    def swipe_top(self, steps=10, *args, **attributes):
         """
         swipe the *obj* from center to top
         """
-        self.device(**attributes).swipe.top(steps=steps)
+        self.device(**attributes).swipe.up(steps=steps)
 
-    def swipe_bottom(self, steps=10, **attributes):
+    def swipe_bottom(self, steps=10, *args, **attributes):
         """
         swipe the *obj* from center to bottom
         """
-        self.device(**attributes).swipe.bottom(steps=steps)
+        self.device(**attributes).swipe.down(steps=steps)
 
     def object_swipe_left(self, obj, steps=10):
         """
@@ -273,13 +273,13 @@ class Mobile():
         """
         swipe the *obj* from center to top
         """
-        obj.swipe.top(steps=steps)
+        obj.swipe.up(steps=steps)
 
     def object_swipe_bottom(self, obj, steps=10):
         """
         swipe the *obj* from center to bottom
         """
-        obj.swipe.bottom(steps=steps)
+        obj.swipe.down(steps=steps)
 
     def drag(self,sx, sy, ex, ey, steps=10):
         """
