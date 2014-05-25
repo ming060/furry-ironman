@@ -15,28 +15,15 @@ ${infinite}       10000
 test
     Set Serial    0489902425228ab9
     Clear Recent Apps
+    Delete All Albums
     Remove Dropbox Account
     Install Dropbox
     ${dropbox_account}    Set Variable    t7820315@ntut.org.tw
     ${dropbox_pwd}    Set Variable    ming060
     Sign In Dropbox    ${dropbox_account}    ${dropbox_pwd}
-    Click On    className=android.app.ActionBar$Tab    index=1
-    Click On    className=android.app.ActionBar$Tab
-    Swipe right    45    text=Camera Uploads
-    Click On    text=Delete
-    Click On    text=Delete
+    Empty Camera Upload
     Take A Photo
-    Press Home
-    Enter App    Dropbox
-    Click On    className=android.app.ActionBar$Tab    index=1
-    Click On    className=android.app.ActionBar$Tab    index=0
-    Click On    description=More options
-    Click On    text=Refresh
-    ${is_camera_upload_exist}    Wait For Exists    5000    text=Camera Uploads
-    Click On    text=Camera Uploads
-    ${is_photo_exist}    Wait For Exists    30000    resourceId=com.dropbox.android:id/filelist_name
-    ${file_text_view}    Get Object    resourceId=com.dropbox.android:id/filelist_name
-    ${file_name}    Get Info Of Object    ${file_text_view}    text
+    ${file_name}    Verify Upload Photo
 
 test_time
     Click On    text=0
@@ -96,6 +83,10 @@ resource_test
 test_type
     type    中文你好
 
+test_len
+    ${file}    Get Object    resourceId=com.dropbox.android:id/filelist_name
+    ${count}    Get Count Of Object    ${file}
+
 test_ssid
     Change Ssid    IAT
 
@@ -110,7 +101,7 @@ dropbox_test
     Install Dropbox
     Remove Dropbox Account
     Sign In Dropbox    t7820315@ntut.org.tw    ming060
-    Delete Camera Upload
+    Empty Camera Upload
     Take A Photo
     Verify Upload Photo
 
@@ -137,8 +128,24 @@ Dropbox Integration Test
     ${dropbox_account}    Set Variable    t7820315@ntut.org.tw
     ${dropbox_pwd}    Set Variable    ming060
     Sign In Dropbox    ${dropbox_account}    ${dropbox_pwd}
-    Delete Camera Upload
+    Empty Camera Upload
     Take A Photo
+    ${file_name}    Verify Upload Photo
+    #
+    Login Dropbox Wed    ${dropbox_account}    ${dropbox_pwd}
+    Verify Photo On Dropbox    ${file_name}
+    [Teardown]    Run Keywords    Run Keyword If Test Failed    Screenshot    AND    Clear Recent Apps    AND
+    ...    Remove Dropbox Account    AND    Uninstall Dropbox
+
+Dropbox Integration Test Fail
+    [Setup]    Run Keywords    Set Serial    0489902425228ab9    AND    Clear Recent Apps    AND
+    ...    Install Dropbox    AND    Remove Dropbox Account
+    ${dropbox_account}    Set Variable    t7820315@ntut.org.tw
+    ${dropbox_pwd}    Set Variable    ming060
+    Sign In Dropbox    ${dropbox_account}    ${dropbox_pwd}
+    Empty Camera Upload
+    Take A Photo
+    Clear Connected Wifi
     ${file_name}    Verify Upload Photo
     #
     Login Dropbox Wed    ${dropbox_account}    ${dropbox_pwd}
@@ -167,9 +174,6 @@ verify_google_play_text
 Enter App
     [Arguments]    ${app}
     Press Home
-    ${info_list}    Get Info
-    ${current_package}    Get From Dictionary    ${info_list}    currentPackageName
-    Should Be Equal As Strings    com.android.launcher3    ${current_package}
     Click On    text=Apps
     ${page_indactor}    Get Object    resourceId=com.android.launcher3:id/page_indicator
     ${page_indactor_info}    Get Info Of Object    ${page_indactor}
@@ -280,6 +284,7 @@ Sign In Dropbox
     Set Text    ${account}    resourceId=com.dropbox.android:id/login_email
     Click On    text=Sign in
     Click On    text=Turn on Camera Upload
+    ${is_take_photos_message_exist}    Wait For Exists    60000    text=Go take some photos!
 
 Take A Photo
     Enter App    Camera
@@ -291,7 +296,6 @@ Take A Photo
     Comment    ${path_text_view}    Get Object    textStartsWith=Path
     Comment    ${text_of_path_text_view}    Get Info Of Object    ${path_text_view}    text
     Comment    ${image_file_name}    Fetch From Right    ${text_of_path_text_view}    IMG_
-    [Return]    ${image_file_name}
 
 Convert File Name To Dropbox Format
     [Arguments]    ${ifile_name}
@@ -334,22 +338,46 @@ Verify Photo On Dropbox
     Wait Until Page Contains Element    //a[text()="${photo_name}"]    10s
     Page Should Contain Element    //a[text()="${photo_name}"]    The photo does not exist.
 
-Delete Camera Upload
+Empty Camera Upload
     Click On    className=android.app.ActionBar$Tab
-    Swipe right    45    text=Camera Uploads
-    Click On    text=Delete
-    Click On    text=Delete
+    Comment    ${is_camera_upload_exist}    Wait For Exists    2000    text=Camera Uploads
+    Comment    Run Keyword If    ${is_camera_upload_exist}    Run Keywords    Swipe right    45    text=Camera Uploads
+    ...    AND    Click On    text=Delete    AND    Click On    text=Delete
+    Comment    Click On    description=More options
+    Comment    Click On    text=New folder
+    Comment    Set Text    Camera Uploads    className=android.widget.EditText
+    Comment    Press Back
+    Comment    Click On    text=Create
+    Click On    text=Camera Uploads
+    :FOR    ${i}    IN RANGE    ${infinite}
+    \    ${is_file_exist}    Wait For Exists    1000    resourceId=com.dropbox.android:id/filelist_name
+    \    Exit For Loop If    not ${is_file_exist}
+    \    Swipe right    50    resourceId=com.dropbox.android:id/filelist_name
+    \    Click On    text=Delete
+    \    Click On    text=Delete
 
 Verify Upload Photo
     Enter App    Dropbox
-    Click On    className=android.app.ActionBar$Tab    index=1
-    Click On    className=android.app.ActionBar$Tab    index=0
-    Click On    description=More options
-    Click On    text=Refresh
-    ${is_camera_upload_exist}    Wait For Exists    5000    text=Camera Uploads
-    Click On    text=Camera Uploads
-    ${is_photo_exist}    Wait For Exists    30000    resourceId=com.dropbox.android:id/filelist_name
+    Comment    Click On    className=android.app.ActionBar$Tab    index=1
+    Comment    Click On    className=android.app.ActionBar$Tab    index=0
+    Comment    Click On    description=More options
+    Comment    Click On    text=Refresh
+    Comment    ${is_camera_upload_exist}    Wait For Exists    5000    text=Camera Uploads
+    Comment    Click On    text=Camera Uploads
+    ${is_photo_exist}    Wait For Exists    60000    resourceId=com.dropbox.android:id/filelist_name
     Should Be True    ${is_photo_exist}    No File
     ${file_text_view}    Get Object    resourceId=com.dropbox.android:id/filelist_name
     ${file_name}    Get Info Of Object    ${file_text_view}    text
     [Return]    ${file_name}
+
+Delete All Albums
+    Enter App    Gallery
+    ${is_camera_exist}    Wait For Exists    10000    text=Camera
+    Return From Keyword If    ${is_camera_exist}
+    Click On    description=More options
+    Click On    text=Select album
+    Click On    text=0 selected
+    Click On    text=Select all
+    Click On    description=Delete
+    Click On    text=OK
+    Wait For Exists    10000    text=Camera

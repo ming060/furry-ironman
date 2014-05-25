@@ -505,6 +505,9 @@ class Mobile():
         """
         return self.device(*args, **attribute)
 
+    def get_count_of_object(self, obj):
+        return len(obj)
+
     def get_info_of_object(self, obj, attribute=None):
         """
         return info dictionary of the *obj*
