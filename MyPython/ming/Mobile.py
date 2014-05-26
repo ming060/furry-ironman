@@ -412,7 +412,8 @@ class Mobile():
 
     def screenshot(self, scale=None, quality=None):
         """
-        Take a screenshot of device and log in the report with timestamp
+        Take a screenshot of device and log in the report with timestamp, scale for screenshot size and quality for screenshot quality
+        default scale=1.0 quality=100
         """
         output_dir = BuiltIn().get_variable_value('${OUTPUTDIR}')
         ts = time.time()
