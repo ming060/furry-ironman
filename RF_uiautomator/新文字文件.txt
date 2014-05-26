@@ -1,0 +1,3 @@
+adb shell screenrecord /sdcard/FILENAME.mp4
+
+adb pull /sdcard/FILENAME.mp4

@@ -84,8 +84,8 @@ test_ssid
 test_test_agent
     Install Test Agent
     Start Test Agent
-    Clear Connected Wifi
-    Comment    Connect To Wifi    WEP    12345
+    Comment    Clear Connected Wifi
+    Connect To Wifi    WEP    12345
     Stop Test Agent
     Uninstall Test Agent
 
@@ -108,12 +108,6 @@ web_test
     Verify Photo On Web    2009-02-06 21.27.14.jpg
     Comment    2014-05-17 17.05.41.jpg
 
-Google Play Test
-    Install App
-    Change Ssid    WIFI_IS_OFF
-    Verify Install Success
-    [Teardown]    Change Ssid    IAT
-
 test_scroll_to_beginning
     ${list_view}    Get Object    className=android.widget.ListView
     Scroll To Beginning Vertically    ${list_view}
@@ -124,6 +118,13 @@ Dropbox Integration Test
     ${photo_name}    Verify Photo On Android
     Verify Photo On Web    ${photo_name}
     [Teardown]    Dropbox Integration Teardown
+
+Google Play Test
+    [Setup]    Google Play Test Setup
+    Install App
+    Change Ssid    WIFI_IS_OFF
+    Verify Install Success
+    [Teardown]    Google Play Test Teardown
 
 Dropbox Integration Test Fail
     [Setup]    Run Keywords    Set Serial    0489902425228ab9    AND    Clear Recent Apps    AND
@@ -226,9 +227,18 @@ Install App
     Wakeup The Device
     Clear Recent Apps
     Enter App    Play Store
-    Enter Game Category
-    Enter Top Free
-    Click First Item
+    Wait For Exists    5000    description=Search Google Play
+    Click On    description=Search Google Play
+    Type    神魔之塔
+    Press Enter
+    Click On    description=Clear query
+    Press Back
+    Click On    text=神魔之塔
+    Comment    Click On    text=安裝
+    Comment    Click On    text=接受
+    Comment    Enter Game Category
+    Comment    Enter Top Free
+    Comment    Click First Item
     Click Install
     Register Dialog Watcher
     Click Accept Button
@@ -363,6 +373,7 @@ Verify Photo On Android
     ${is_loading_exist}    Wait For Exists    5000    text=Loading…
     ${is_loading_gone}    Wait Until Gone    5000    text=Loading…
     ${is_gallery_item_exist}    Wait For Exists    10000    resourceId=com.dropbox.android:id/gallery_item_icon
+    Should Be True    ${is_gallery_item_exist}    Photo upload fail
     Click On    className=android.app.ActionBar$Tab    index=0
     Comment    Click On    description=More options
     Comment    Click On    text=Refresh
@@ -393,15 +404,13 @@ Install Test Agent
     Install    C:${/}Users${/}YuMing${/}Documents${/}GitHub${/}furry-ironman${/}RF_uiautomator${/}TestAgent.apk
 
 Dropbox Integration Setup
-    Set Test Variable    ${dropbox_account}    t7820315@ntut.org.tw
-    Set Test Variable    ${dropbox_pwd}    ming060
+    ${dropbox_account}    Set Variable    t7820315@ntut.org.tw
+    ${dropbox_pwd}    Set Variable    ming060
     Set Serial    0489902425228ab9
     Install Test Agent
     Start Test Agent
     Connect To Wifi    WEP    12345
-    Screenshot
     Delete All Albums
-    Screenshot
     Remove Dropbox Account
     Install Dropbox
     Sign In Dropbox On Android    ${dropbox_account}    ${dropbox_pwd}
@@ -424,4 +433,18 @@ Uninstall Test Agent
     Uninstall    edu.ntut.csie.sslab1321.testagent
 
 Screenshot
-    Mobile.Screenshot    scale=0.1
+    Mobile.Screenshot    0.3
+
+Google Play Test Setup
+    Set Serial    0489902425228ab9
+    Install Test Agent
+    Start Test Agent
+    Connect To Wifi    WEP    12345
+    Clear Recent Apps
+
+Google Play Test Teardown
+    Run Keyword If Test Failed    Screenshot
+    Change Ssid    IAT
+    Clear Connected Wifi
+    Stop Test Agent
+    Uninstall Test Agent
