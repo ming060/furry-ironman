@@ -1,0 +1,29 @@
+*** Settings ***
+Library           ../../../../../Python27/Lib/site-packages/robot/libraries/Collections.py
+Library           Selenium2Library
+Library           ../../../../../../Python27/Lib/site-packages/robot/libraries/String.py
+
+*** Variables ***
+${infinite}       10000
+
+*** Test Cases ***
+test
+    Open Browser    https://play.google.com/store    firefox
+    Comment    Execute Javascript    alert('hello world');
+    Maximize Browser Window
+    Click Element    id=gb_70
+    Input Text    id=Email    minglin060
+    Input Text    id=Passwd    060nilgnim
+    Click Element    id=signIn
+    Wait Until Page Contains    Google Play    30s
+    Go To    https://play.google.com/store/apps/details?id=com.gameloft.android.ANMP.GloftIAHM
+    Comment    Go To    https://play.google.com/store/apps/details?id=com.dropbox.android
+    Click Element    //button[@class="price buy"]
+    Wait Until Page Contains Element    //button[@id="purchase-ok-button"]    10s
+    Click Element    //div[@class="id-displayed-device"]
+    Click Element    //button[@class="device-selector-button play-button"]
+    Click Element    //span[@text()="Chungwa Telecom LGE Nexus 5"]
+    Comment    Click Element    //button[@id="purchase-ok-button"]
+
+test2
+    Open Browser    https://play.google.com/store    Chrome

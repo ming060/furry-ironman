@@ -14,7 +14,21 @@ ${infinite}       10000
 *** Test Cases ***
 test
     Set Serial    0489902425228ab9
-    Screenshot
+    Comment    Remove Google Account
+    Comment    Enter App    Play Store
+    Comment    Click On    text=Existing
+    Comment    Set Text    minglin060    text=Email    #resourceId=com.google.android.gsf.login:id/username_edit
+    Comment    Set Text    060nilgnim    resourceId=com.google.android.gsf.login:id/password_edit
+    Comment    Click On    description=Next
+    Comment    Click On    text=OK
+    Comment    Click On    resourceId=com.google.android.gsf.login:id/agree_backup_restore
+    Comment    Click On    resourceId=com.google.android.gsf.login:id/google_play_opt_in
+    Comment    Click On    description=Next
+    Comment    Register Click Watcher    Click Accept Watcher    text=Accept    text=Accept
+    ${is_progress_bar_exist}    Wait For Exists    20000    className=android.widget.ProgressBar
+    ${is_progress_bar_gone}    Wait Until Gone    60000    className=android.widget.ProgressBar
+    ${is_install_success_exist}    Wait For Exists    60000    text=Successfully installed.
+    Should Be True    ${is_install_success_exist}    Install Fail
 
 test_time
     Click On    text=0
@@ -95,7 +109,7 @@ dropbox_test
     [Documentation]    2.4.1
     Set Serial    0489902425228ab9
     Install Dropbox
-    Remove Dropbox Account
+    Remove Account
     Sign In Dropbox On Android    t7820315@ntut.org.tw    ming060
     Delete Camera Upload
     Take A Photo
@@ -125,22 +139,6 @@ Google Play Test
     Change Ssid    WIFI_IS_OFF
     Verify Install Success
     [Teardown]    Google Play Test Teardown
-
-Dropbox Integration Test Fail
-    [Setup]    Run Keywords    Set Serial    0489902425228ab9    AND    Clear Recent Apps    AND
-    ...    Install Dropbox    AND    Remove Dropbox Account
-    ${dropbox_account}    Set Variable    t7820315@ntut.org.tw
-    ${dropbox_pwd}    Set Variable    ming060
-    Sign In Dropbox On Android    ${dropbox_account}    ${dropbox_pwd}
-    Delete Camera Upload
-    Take A Photo
-    Clear Connected Wifi
-    ${file_name}    Verify Photo On Android
-    #
-    Sign In Dropbox On Web    ${dropbox_account}    ${dropbox_pwd}
-    Verify Photo On Web    ${file_name}
-    [Teardown]    Run Keywords    Run Keyword If Test Failed    Screenshot    AND    Clear Recent Apps    AND
-    ...    Remove Dropbox Account    AND    Uninstall Dropbox
 
 *** Keywords ***
 z_open_screen_lock
@@ -260,18 +258,20 @@ Connect To
     Run Keyword If    ${is_pwd_exist}    Run Keywords    Set Text    smart@inhon    resourceId=com.android.settings:id/password    AND
     ...    Press Back    AND    Click Connect Button
 
-Remove Dropbox Account
+Remove Account
+    [Arguments]    ${account}
     Enter App    Settings
     ${list_view}    Get Object    className=android.widget.ListView
-    ${return}    Scroll To Vertically    ${list_view}    text=Dropbox
-    Run Keyword If    ${return}    Remove Dropbox Account From Setting
+    ${return}    Scroll To Vertically    ${list_view}    text=${account}
+    Run Keyword If    ${return}    Remove Account From Setting    ${account}
 
-Remove Dropbox Account From Setting
-    Click On    text=Dropbox
+Remove Account From Setting
+    [Arguments]    ${account}
+    Click On    text=${account}
     Click On    description=More options
     Click On    text=Remove account
     Click On    text=Remove account
-    ${is_dropbox_account_exist}    Wait For Exists    3000    text=Dropbox
+    ${is_dropbox_account_exist}    Wait For Exists    3000    text=${account}
     Should Not Be True    ${is_dropbox_account_exist}
 
 Sign In Dropbox On Android
@@ -322,6 +322,7 @@ Sign In Dropbox On Web
     [Arguments]    ${dropbox_account}    ${dropbox_pwd}
     Comment    Set Selenium Speed    1s
     Open Browser    https://www.dropbox.com/    firefox
+    Maximize Browser Window
     Click Link    /login
     Comment    Input Text    id=login_email    ${dropbox_account}
     Comment    Input Password    id=login_password    ${dropbox_pwd}
@@ -411,7 +412,7 @@ Dropbox Integration Setup
     Start Test Agent
     Connect To Wifi    WEP    12345
     Delete All Albums
-    Remove Dropbox Account
+    Remove Account    Dropbox
     Install Dropbox
     Sign In Dropbox On Android    ${dropbox_account}    ${dropbox_pwd}
     Delete Camera Upload
@@ -421,7 +422,7 @@ Dropbox Integration Teardown
     Run Keyword If Test Failed    Screenshot
     Delete All Albums
     Delete Camera Upload
-    Remove Dropbox Account
+    Remove Account    Dropbox
     Uninstall Dropbox
     Clear Connected Wifi
     Stop Test Agent
@@ -448,3 +449,23 @@ Google Play Test Teardown
     Clear Connected Wifi
     Stop Test Agent
     Uninstall Test Agent
+
+Clear Notification
+    Open Notification
+    ${is_clear_exist}    Wait For Exists    2000    description=Clear all notifications.
+    Run Keyword If    ${is_clear_exist}    Click On    description=Clear all notifications.
+
+Remove Google Account
+    Enter App    Settings
+    ${list_view}    Get Object    className=android.widget.ListView
+    ${return}    Scroll To Vertically    ${list_view}    text=Google
+    Run Keyword If    ${return}    Remove Google Account From Setting
+
+Remove Google Account From Setting
+    Click On    text=Google
+    Click On    descriptionContains=Sync
+    Click On    description=More options
+    Click On    text=Remove account
+    Click On    text=Remove account
+    ${is_dropbox_account_exist}    Wait For Exists    3000    text=Google
+    Should Not Be True    ${is_dropbox_account_exist}

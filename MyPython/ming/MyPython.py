@@ -18,7 +18,6 @@ if __name__ == '__main__':
 #     screenshot_path = '%s%s%s' % (output_dir, os.sep, st)
 #     print screenshot_path
     d = Device('0489902425228ab9')
-    d.screenshot('test.png', 0.1, 50)
-#     print len(d(resourceId='com.dropbox.android:id/filelist_name'))
+    print len(d(descriptionContains='Sync'))
 
     print 'end'

@@ -565,11 +565,11 @@ class Mobile():
         func = getattr(obj, method)
         return func(**attribute)
 
-    def set_text(self, text, *args, **attribute):
+    def set_text(self, input_text, *args, **attribute):
         """
         set *text* to the Component which has the *attribute* 
         """
-        self.device(**attribute).set_text(text)
+        self.device(**attribute).set_text(input_text)
 
     def clear_text(self, *args, **attributes):
         """
