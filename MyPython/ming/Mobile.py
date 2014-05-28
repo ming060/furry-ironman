@@ -618,6 +618,18 @@ class Mobile():
     def uninstall(self, package_name):
         self.adb.cmd('uninstall %s' % package_name)
 
+    def execute_adb_command(self, cmd):
+        """
+        Execute adb *cmd*
+        """
+        self.adb.cmd(cmd)
+
+    def execute_adb_shell_command(self,cmd):
+        """
+        Execute adb shell *cmd*
+        """
+        self.adb.shell_cmd(cmd)
+
     def type(self, text):
         """
         Type *text* at current focused component

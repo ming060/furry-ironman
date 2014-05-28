@@ -1,34 +1,18 @@
 *** Settings ***
 Library           ../../../../../Python27/Lib/site-packages/robot/libraries/Collections.py
 Library           ../MyPython/ming/Mobile.py
-Resource          abstract.txt
-Resource          desire_z.txt
-Resource          nexus_5.txt
 Library           Selenium2Library
 Library           ../MyPython/ming/Custom_Library.py
 Library           ../../../../../../Python27/Lib/site-packages/robot/libraries/String.py
+Library           ../../../../../../Python27/Lib/site-packages/robot/libraries/OperatingSystem.py
 
 *** Variables ***
 ${infinite}       10000
 
 *** Test Cases ***
 test
-    Set Serial    0489902425228ab9
-    Comment    Remove Google Account
-    Comment    Enter App    Play Store
-    Comment    Click On    text=Existing
-    Comment    Set Text    minglin060    text=Email    #resourceId=com.google.android.gsf.login:id/username_edit
-    Comment    Set Text    060nilgnim    resourceId=com.google.android.gsf.login:id/password_edit
-    Comment    Click On    description=Next
-    Comment    Click On    text=OK
-    Comment    Click On    resourceId=com.google.android.gsf.login:id/agree_backup_restore
-    Comment    Click On    resourceId=com.google.android.gsf.login:id/google_play_opt_in
-    Comment    Click On    description=Next
-    Comment    Register Click Watcher    Click Accept Watcher    text=Accept    text=Accept
-    ${is_progress_bar_exist}    Wait For Exists    20000    className=android.widget.ProgressBar
-    ${is_progress_bar_gone}    Wait Until Gone    60000    className=android.widget.ProgressBar
-    ${is_install_success_exist}    Wait For Exists    60000    text=Successfully installed.
-    Should Be True    ${is_install_success_exist}    Install Fail
+    Wi-Fi SD Card Test Setup
+    [Teardown]    Run Keyword If Test Failed    Screenshot
 
 test_time
     Click On    text=0
@@ -139,6 +123,19 @@ Google Play Test
     Change Ssid    WIFI_IS_OFF
     Verify Install Success
     [Teardown]    Google Play Test Teardown
+
+Google Play Store Test
+    [Setup]    Google Play Store Test Setup
+    Install App On Google Play
+    Verify Installation
+    [Teardown]    Google Play Store Test Teardown
+
+Wi-Fi SD Card Test
+    [Setup]    Wi-Fi SD Card Test Setup
+    Verify Photo Does Not Exist    ${file_name}
+    Copy File    ${CURDIR}${/}${file_name}    ${test_dir}
+    Verify Photo \ Do Exist    ${file_name}
+    [Teardown]    Wi-Fi SD Card Test Teardown
 
 *** Keywords ***
 z_open_screen_lock
@@ -467,5 +464,118 @@ Remove Google Account From Setting
     Click On    description=More options
     Click On    text=Remove account
     Click On    text=Remove account
-    ${is_dropbox_account_exist}    Wait For Exists    3000    text=Google
-    Should Not Be True    ${is_dropbox_account_exist}
+    ${is_google_account_exist}    Wait For Exists    3000    text=Google
+    Should Not Be True    ${is_google_account_exist}
+
+Login Play Store
+    [Arguments]    ${google_account}    ${google_password}
+    Enter App    Play Store
+    Click On    text=Existing
+    Set Text    ${google_account}    text=Email    #resourceId=com.google.android.gsf.login:id/username_edit
+    Set Text    ${google_password}    resourceId=com.google.android.gsf.login:id/password_edit
+    Click On    description=Next
+    Click On    text=OK
+    Click On    resourceId=com.google.android.gsf.login:id/agree_backup_restore
+    Click On    resourceId=com.google.android.gsf.login:id/google_play_opt_in
+    Click On    description=Next
+    Register Click Watcher    Click Accept Watcher    text=Accept    text=Accept
+
+Verify Installation
+    Clear Notification
+    Open Notification
+    ${is_progress_bar_exist}    Wait For Exists    20000    className=android.widget.ProgressBar
+    ${is_progress_bar_gone}    Wait Until Gone    60000    className=android.widget.ProgressBar
+    ${is_install_success_exist}    Wait For Exists    60000    text=Successfully installed.
+    Should Be True    ${is_install_success_exist}    Install Fail
+
+Login Google Play
+    [Arguments]    ${google_account}    ${google_password}
+    Open Browser    https://play.google.com/store    Firefox
+    Maximize Browser Window
+    Click Element    id=gb_70
+    Input Text    id=Email    ${google_account}
+    Input Text    id=Passwd    ${google_password}
+    Click Element    id=signIn
+    Wait Until Page Contains    Google Play    30s
+
+Install App On Google Play
+    Go To    https://play.google.com/store/apps/details?id=com.gameloft.android.ANMP.GloftIAHM
+    Comment    Go To    https://play.google.com/store/apps/details?id=com.dropbox.android
+    Click Element    //button[@class="price buy"]
+    Wait Until Page Contains Element    //button[@id="purchase-ok-button"]    10s
+    Wait Until Page Contains Element    //div[@class="id-displayed-device"]
+    Click Element    //div[@class="id-displayed-device"]
+    Wait Until Page Contains Element    //*[@id="device-selector-container"]/div/div/div/div[1]/div/div/span[1]
+    Click Element    //*[@id="device-selector-container"]/div/div/div/div[1]/div/div/span[1]
+    Comment    Click Element    //button[@id="purchase-ok-button"]
+
+Google Play Store Test Setup
+    ${google_account}    Set Variable    minglin060
+    ${google_password}    Set Variable    060nilgnim
+    Login Google Play    ${google_account}    ${google_password}
+    Remove Google Account
+    Set Serial    0489902425228ab9
+    Login Play Store    ${google_account}    ${google_password}
+
+Google Play Store Test Teardown
+    Run Keyword If Test Failed    Screenshot
+    Close Browser
+    Remove Google Account
+
+Install FlashAir
+    Install    C:${/}Users${/}YuMing${/}Documents${/}GitHub${/}furry-ironman${/}RF_uiautomator${/}jp.co.toshiba.android.FlashAir-1.apk
+
+Uninstall FlashAir
+    Uninstall    jp.co.toshiba.android.FlashAir
+
+Clear FlashAir App Data
+    Execute Adb Shell Command    pm clear jp.co.toshiba.android.FlashAir
+
+Wi-Fi SD Card Test Setup
+    Set Serial    0489902425228ab9
+    Set Test Variable    ${test_dir}    F:${/}DCIM${/}Test
+    Set Test Variable    ${file_name}    DSCF1927_LR.JPG
+    Remove Directory    ${test_dir}    recursive=True
+    Create Directory    ${test_dir}
+    Install Test Agent
+    Start Test Agent
+    Clear Connected Wifi
+    Install FlashAir
+    Clear FlashAir App Data
+    Login FlashAir
+
+Wi-Fi SD Card Test Teardown
+    Run Keyword If Test Failed    Screenshot
+    Clear Connected Wifi
+    Stop Test Agent
+    Uninstall FlashAir
+    Uninstall Test Agent
+
+Login FlashAir
+    Enter App    FlashAir
+    ${is_scanning_msg_exist}    Wait For Exists    5000    text=Scanning for FlashAir card now.
+    ${is_scanning_msg_gone}    Wait Until Gone    20000    text=Scanning for FlashAir card now.
+    Should Be True    ${is_scanning_msg_gone}
+    Wait For Exists    3000    text=Enter the password for
+    Set Text    12345678    className=android.widget.EditText
+    Click On    text=OK
+    ${is_more_exist}    Wait For Exists    10000    description=More options
+
+Verify Photo Does Not Exist
+    [Arguments]    ${photo_name}
+    Click On    description=More options
+    Click On    text=Folder View
+    Wait For Exists    3000    text=DCIM
+    Click On    text=DCIM
+    ${is_test_dir_exist}    Wait For Exists    3000    text=Test
+    Click On    text=Test
+    ${is_list_view_gone}    Wait Until Gone    2000    className=android.widget.ListView
+    Should Be True    ${is_list_view_gone}    There should not be any photo.
+    ${is_photo_gone}    Wait Until Gone    0    text=${photo_name}
+    Should Be True    ${is_photo_gone}    Photo exists.
+
+Verify Photo \ Do Exist
+    [Arguments]    ${photo_name}
+    Click On    description=Refresh
+    ${is_photo_exist}    Wait For Exists    0    text=${photo_name}
+    Should Be True    ${is_photo_exist}    Photo doesn't exist.
