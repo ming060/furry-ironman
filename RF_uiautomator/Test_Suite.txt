@@ -11,7 +11,8 @@ ${infinite}       10000
 
 *** Test Cases ***
 test
-    Wi-Fi SD Card Test Setup
+    Set Serial    0489902425228ab9
+    Login Google Play    minglin060    060nilgnim
     [Teardown]    Run Keyword If Test Failed    Screenshot
 
 test_time
@@ -133,7 +134,7 @@ Google Play Store Test
 Wi-Fi SD Card Test
     [Setup]    Wi-Fi SD Card Test Setup
     Verify Photo Does Not Exist    ${file_name}
-    Copy File    ${CURDIR}${/}${file_name}    ${test_dir}
+    Copy Photo To SD Card
     Verify Photo \ Do Exist    ${file_name}
     [Teardown]    Wi-Fi SD Card Test Teardown
 
@@ -499,7 +500,7 @@ Login Google Play
     Wait Until Page Contains    Google Play    30s
 
 Install App On Google Play
-    Go To    https://play.google.com/store/apps/details?id=com.gameloft.android.ANMP.GloftIAHM
+    Go To    https://play.google.com/store/apps/details?id=com.sg.ranaz.audioandvideorecorder.lite
     Comment    Go To    https://play.google.com/store/apps/details?id=com.dropbox.android
     Click Element    //button[@class="price buy"]
     Wait Until Page Contains Element    //button[@id="purchase-ok-button"]    10s
@@ -579,3 +580,6 @@ Verify Photo \ Do Exist
     Click On    description=Refresh
     ${is_photo_exist}    Wait For Exists    0    text=${photo_name}
     Should Be True    ${is_photo_exist}    Photo doesn't exist.
+
+Copy Photo To SD Card
+    Copy File    ${CURDIR}${/}${file_name}    ${test_dir}
