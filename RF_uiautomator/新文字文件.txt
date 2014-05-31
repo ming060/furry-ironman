@@ -1,3 +1,15 @@
 adb shell screenrecord /sdcard/FILENAME.mp4
 
 adb pull /sdcard/FILENAME.mp4
+
+錄影要注意的
+
+pushbullet
+google drive upload
+cleaner
+line 通知
+fb通知
+
+桌面
+
+gmail

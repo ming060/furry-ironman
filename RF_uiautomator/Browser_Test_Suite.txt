@@ -9,9 +9,17 @@ ${infinite}       10000
 
 *** Test Cases ***
 test
+    Open Browser    https://play.google.com/store    Firefox
+    Maximize Browser Window
+    Click Element    id=gb_70
+    Input Text    id=Email    lym060
+    Input Text    id=Passwd    waitting060
+    Click Element    id=signIn
+    Wait Until Page Contains    Google Play    30s
+    Go To    https://play.google.com/store/search?q=line
 
 test2
-    Open Browser    https://play.google.com/store    Chrome
+    Open Browser    https://play.google.com/store    Firefox
 
 test execute javascript
     Execute Javascript    alert('hello world');
