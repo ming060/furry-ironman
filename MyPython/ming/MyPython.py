@@ -18,6 +18,7 @@ if __name__ == '__main__':
 #     screenshot_path = '%s%s%s' % (output_dir, os.sep, st)
 #     print screenshot_path
     d = Device('0489902425228ab9')
-    print len(d(descriptionContains='Sync'))
+    d.press.home()
+#     print len(d(descriptionContains='Sync'))
 
     print 'end'

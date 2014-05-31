@@ -1,0 +1,368 @@
+*** Settings ***
+Library           ../../../../../Python27/Lib/site-packages/robot/libraries/Collections.py
+Library           ../MyPython/ming/Mobile.py
+Library           Selenium2Library
+Library           ../MyPython/ming/Custom_Library.py
+Library           ../../../../../../Python27/Lib/site-packages/robot/libraries/String.py
+Library           ../../../../../../Python27/Lib/site-packages/robot/libraries/OperatingSystem.py
+
+*** Variables ***
+${infinite}       10000
+
+*** Test Cases ***
+Dropbox Integration Test
+    [Setup]    Dropbox Integration Setup
+    Take A Photo
+    ${photo_name}    Verify Photo On Android
+    Verify Photo On Web    ${photo_name}
+    [Teardown]    Dropbox Integration Teardown
+
+Google Play Store Test
+    [Setup]    Google Play Store Test Setup
+    Install App On Google Play
+    Verify Installation
+    [Teardown]    Google Play Store Test Teardown
+
+Wi-Fi SD Card Test
+    [Setup]    Wi-Fi SD Card Test Setup
+    Verify Photo Does Not Exist    ${file_name}
+    Copy Photo To SD Card
+    Verify Photo Do Exist    ${file_name}
+    [Teardown]    Wi-Fi SD Card Test Teardown
+
+*** Keywords ***
+Enter App
+    [Arguments]    ${app}
+    Press Home
+    Click On    text=Apps
+    ${page_indactor}    Get Object    resourceId=com.android.launcher3:id/page_indicator
+    ${page_indactor_info}    Get Info Of Object    ${page_indactor}
+    Log Dictionary    ${page_indactor_info}
+    ${page_count}    Get From Dictionary    ${page_indactor_info}    chileCount
+    : FOR    ${index}    IN RANGE    ${page_count}
+    \    ${app_obj}    Get Object    text=${app}
+    \    ${is_app_exist}    Wait For Object Exists    ${app_obj}
+    \    Run Keyword If    ${is_app_exist}    Run Keywords    Call    ${app_obj}    click
+    \    ...    AND    Exit For Loop    ELSE    Swipe Left    resourceId=com.android.launcher3:id/apps_customize_pane_content
+
+Remove Account
+    [Arguments]    ${account}
+    Enter App    Settings
+    ${list_view}    Get Object    className=android.widget.ListView
+    ${return}    Scroll To Vertically    ${list_view}    text=${account}
+    Run Keyword If    ${return}    Remove Account From Setting    ${account}
+
+Remove Account From Setting
+    [Arguments]    ${account}
+    Click On    text=${account}
+    Click On    description=More options
+    Click On    text=Remove account
+    Click On    text=Remove account
+    ${is_dropbox_account_exist}    Wait For Exists    3000    text=${account}
+    Should Not Be True    ${is_dropbox_account_exist}
+
+Sign In Dropbox On Android
+    [Arguments]    ${account}    ${pwd}
+    Enter App    Dropbox
+    Click On    text=Sign in!
+    Set Text    ${pwd}    resourceId=com.dropbox.android:id/login_password
+    Set Text    ${account}    resourceId=com.dropbox.android:id/login_email
+    Click On    text=Sign in
+    Click On    text=Turn on Camera Upload
+
+Take A Photo
+    Enter App    Camera
+    Click On    description=Shutter
+    ${is_view_exist}    Wait For Exists    2000    description=Filmstrip view
+    ${is_view_gone}    Wait Until Gone    8000    description=Filmstrip view
+    Comment    Swipe Left
+    Comment    Click On    description=More options
+    Comment    Click On    text=Details
+    Comment    Scroll To End Vertically
+    Comment    ${path_text_view}    Get Object    textStartsWith=Path
+    Comment    ${text_of_path_text_view}    Get Info Of Object    ${path_text_view}    text
+    Comment    ${image_file_name}    Fetch From Right    ${text_of_path_text_view}    IMG_
+
+Install Dropbox
+    Install    C:${/}Users${/}YuMing${/}Documents${/}GitHub${/}furry-ironman${/}RF_uiautomator${/}com.dropbox.android_2.4.1.apk
+
+Uninstall Dropbox
+    Uninstall    com.dropbox.android
+
+Clear Recent Apps
+    Press Recent
+    ${is_clear_exist}    Wait For Exists    2000    resourceId=com.android.systemui:id/recents_clear
+    Run Keyword If    ${is_clear_exist}    Click On    resourceId=com.android.systemui:id/recents_clear    ELSE    Press Recent
+
+Sign In Dropbox On Web
+    [Arguments]    ${dropbox_account}    ${dropbox_pwd}
+    Comment    Set Selenium Speed    1s
+    Open Browser    https://www.dropbox.com/    firefox
+    Maximize Browser Window
+    Click Link    /login
+    Comment    Input Text    id=login_email    ${dropbox_account}
+    Comment    Input Password    id=login_password    ${dropbox_pwd}
+    Comment    Click Button    id=login_submit
+    Input Text    xpath=//input[@name='login_email']    ${dropbox_account}
+    Input Password    xpath=//input[@name='login_password']    ${dropbox_pwd}
+    Click Button    xpath=//button
+
+Verify Photo On Web
+    [Arguments]    ${photo_name}
+    Wait Until Page Contains Element    //a[text()="Camera Uploads"]    5s
+    Click Element    //a[text()="Camera Uploads"]
+    Input Text    id=browse-search-input    ${photo_name}
+    Wait Until Page Contains    Search - 1 result    5s
+    Page Should Contain    Search - 1 result    Search result should be only one
+    Wait Until Page Contains Element    //a[text()="${photo_name}"]    10s
+    Capture Page Screenshot
+    Page Should Contain Element    //a[text()="${photo_name}"]    The photo does not exist.
+
+Delete Camera Upload
+    Clear Recent Apps
+    Enter App    Dropbox
+    Click On    className=android.app.ActionBar$Tab
+    ${is_camera_upload_exist}    Wait For Exists    2000    text=Camera Uploads
+    Run Keyword If    ${is_camera_upload_exist}    Run Keywords    Swipe right    45    text=Camera Uploads    AND
+    ...    Click On    text=Delete    AND    Click On    text=Delete
+    Click On    className=android.app.ActionBar$Tab    index=1
+    ${is_take_photos_message_exist}    Wait For Exists    60000    text=Go take some photos!
+    #
+    Comment    Click On    description=More options
+    Comment    Click On    text=New folder
+    Comment    Set Text    Camera Uploads    className=android.widget.EditText
+    Comment    Press Back
+    Comment    Click On    text=Create
+    #
+    Comment    Click On    text=Camera Uploads
+    Comment    : FOR    ${i}    IN RANGE    ${infinite}
+    Comment    \    ${is_file_exist}    Wait For Exists    1000    resourceId=com.dropbox.android:id/filelist_name
+    Comment    \    Exit For Loop If    not ${is_file_exist}
+    Comment    \    Swipe right    50    resourceId=com.dropbox.android:id/filelist_name
+    Comment    \    Click On    text=Delete
+    Comment    \    Click On    text=Delete
+
+Verify Photo On Android
+    Clear Recent Apps
+    Enter App    Dropbox
+    Click On    className=android.app.ActionBar$Tab    index=1
+    Screenshot
+    ${is_progress_bar_gone}    Wait Until Gone    15000    resourceId=com.dropbox.android:id/filelist_status_progressbar
+    Screenshot
+    ${is_loading_exist}    Wait For Exists    5000    text=Loading…
+    ${is_loading_gone}    Wait Until Gone    5000    text=Loading…
+    ${is_gallery_item_exist}    Wait For Exists    10000    resourceId=com.dropbox.android:id/gallery_item_icon
+    Should Be True    ${is_gallery_item_exist}    Photo upload fail
+    Click On    className=android.app.ActionBar$Tab    index=0
+    Comment    Click On    description=More options
+    Comment    Click On    text=Refresh
+    Comment    ${is_camera_upload_exist}    Wait For Exists    5000    text=Camera Uploads
+    ${is_camera_upload_exist}    Wait For Exists    10000    text=Camera Uploads
+    Click On    text=Camera Uploads
+    ${is_photo_exist}    Wait For Exists    60000    resourceId=com.dropbox.android:id/filelist_name
+    Screenshot
+    Should Be True    ${is_photo_exist}    No File
+    ${file_text_view}    Get Object    resourceId=com.dropbox.android:id/filelist_name
+    ${file_name}    Get Info Of Object    ${file_text_view}    text
+    [Return]    ${file_name}
+
+Delete All Albums
+    Clear Recent Apps
+    Enter App    Gallery
+    ${is_camera_exist}    Wait For Exists    3000    text=Camera
+    Return From Keyword If    ${is_camera_exist}
+    Click On    description=More options
+    Click On    text=Select album
+    Click On    text=0 selected
+    Click On    text=Select all
+    Click On    description=Delete
+    Click On    text=OK
+    Wait For Exists    10000    text=Camera
+
+Install Test Agent
+    Install    C:${/}Users${/}YuMing${/}Documents${/}GitHub${/}furry-ironman${/}RF_uiautomator${/}TestAgent.apk
+
+Dropbox Integration Setup
+    ${dropbox_account}    Set Variable    t7820315@ntut.org.tw
+    ${dropbox_pwd}    Set Variable    ming060
+    Set Serial    0489902425228ab9
+    Install Test Agent
+    Start Test Agent
+    Connect To Wifi    WEP    12345
+    Delete All Albums
+    Remove Account    Dropbox
+    Install Dropbox
+    Sign In Dropbox On Android    ${dropbox_account}    ${dropbox_pwd}
+    Delete Camera Upload
+    Sign In Dropbox On Web    ${dropbox_account}    ${dropbox_pwd}
+
+Dropbox Integration Teardown
+    Run Keyword If Test Failed    Screenshot
+    Delete All Albums
+    Delete Camera Upload
+    Remove Account    Dropbox
+    Uninstall Dropbox
+    Clear Connected Wifi
+    Stop Test Agent
+    Uninstall Test Agent
+    Clear Recent Apps
+    Close All Browsers
+
+Uninstall Test Agent
+    Uninstall    edu.ntut.csie.sslab1321.testagent
+
+Google Play Test Setup
+    Set Serial    0489902425228ab9
+    Install Test Agent
+    Start Test Agent
+    Connect To Wifi    WEP    12345
+    Clear Recent Apps
+
+Google Play Test Teardown
+    Run Keyword If Test Failed    Screenshot
+    Change Ssid    IAT
+    Clear Connected Wifi
+    Stop Test Agent
+    Uninstall Test Agent
+
+Clear Notification
+    Open Notification
+    ${is_clear_exist}    Wait For Exists    2000    description=Clear all notifications.
+    Run Keyword If    ${is_clear_exist}    Click On    description=Clear all notifications.
+
+Remove Google Account
+    Enter App    Settings
+    ${list_view}    Get Object    className=android.widget.ListView
+    ${return}    Scroll To Vertically    ${list_view}    text=Google
+    Run Keyword If    ${return}    Remove Google Account From Setting
+
+Remove Google Account From Setting
+    Click On    text=Google
+    Click On    descriptionContains=Sync
+    Click On    description=More options
+    Click On    text=Remove account
+    Click On    text=Remove account
+    ${is_google_account_exist}    Wait For Exists    3000    text=Google
+    Should Not Be True    ${is_google_account_exist}
+
+Login Play Store
+    [Arguments]    ${google_account}    ${google_password}
+    Enter App    Play Store
+    Click On    text=Existing
+    Set Text    ${google_account}    text=Email    #resourceId=com.google.android.gsf.login:id/username_edit
+    Set Text    ${google_password}    resourceId=com.google.android.gsf.login:id/password_edit
+    Click On    description=Next
+    Click On    text=OK
+    Click On    resourceId=com.google.android.gsf.login:id/agree_backup_restore
+    Click On    resourceId=com.google.android.gsf.login:id/google_play_opt_in
+    Click On    description=Next
+    Register Click Watcher    Click Accept Watcher    text=Accept    text=Accept
+
+Verify Installation
+    Clear Notification
+    Open Notification
+    ${is_progress_bar_exist}    Wait For Exists    20000    className=android.widget.ProgressBar
+    ${is_progress_bar_gone}    Wait Until Gone    60000    className=android.widget.ProgressBar
+    ${is_install_success_exist}    Wait For Exists    60000    text=Successfully installed.
+    Should Be True    ${is_install_success_exist}    Install Fail
+
+Login Google Play
+    [Arguments]    ${google_account}    ${google_password}
+    Open Browser    https://play.google.com/store    Firefox
+    Maximize Browser Window
+    Click Element    id=gb_70
+    Input Text    id=Email    ${google_account}
+    Input Text    id=Passwd    ${google_password}
+    Click Element    id=signIn
+    Wait Until Page Contains    Google Play    30s
+
+Install App On Google Play
+    Go To    https://play.google.com/store/apps/details?id=com.sg.ranaz.audioandvideorecorder.lite
+    Comment    Go To    https://play.google.com/store/apps/details?id=com.dropbox.android
+    Click Element    //button[@class="price buy"]
+    Wait Until Page Contains Element    //button[@id="purchase-ok-button"]    10s
+    Wait Until Page Contains Element    //div[@class="id-displayed-device"]
+    Click Element    //div[@class="id-displayed-device"]
+    Wait Until Page Contains Element    //*[@id="device-selector-container"]/div/div/div/div[1]/div/div/span[1]
+    Click Element    //*[@id="device-selector-container"]/div/div/div/div[1]/div/div/span[1]
+    Comment    Click Element    //button[@id="purchase-ok-button"]
+
+Google Play Store Test Setup
+    ${google_account}    Set Variable    minglin060
+    ${google_password}    Set Variable    060nilgnim
+    Set Serial    0489902425228ab9
+    Install Test Agent
+    Start Test Agent
+    Connect To Wifi    WEP    12345
+    Login Google Play    ${google_account}    ${google_password}
+    Remove Google Account
+    Login Play Store    ${google_account}    ${google_password}
+
+Google Play Store Test Teardown
+    Run Keyword If Test Failed    Screenshot
+    Remove Google Account
+    Clear Connected Wifi
+    Stop Test Agent
+    Uninstall Test Agent
+    Close Browser
+
+Install FlashAir
+    Install    C:${/}Users${/}YuMing${/}Documents${/}GitHub${/}furry-ironman${/}RF_uiautomator${/}jp.co.toshiba.android.FlashAir-1.apk
+
+Uninstall FlashAir
+    Uninstall    jp.co.toshiba.android.FlashAir
+
+Clear FlashAir App Data
+    Execute Adb Shell Command    pm clear jp.co.toshiba.android.FlashAir
+
+Wi-Fi SD Card Test Setup
+    Set Serial    0489902425228ab9
+    Set Test Variable    ${test_dir}    F:${/}DCIM${/}Test
+    Set Test Variable    ${file_name}    DSCF1927_LR.JPG
+    Remove Directory    ${test_dir}    recursive=True
+    Create Directory    ${test_dir}
+    Install Test Agent
+    Start Test Agent
+    Clear Connected Wifi
+    Install FlashAir
+    Clear FlashAir App Data
+    Login FlashAir
+
+Wi-Fi SD Card Test Teardown
+    Run Keyword If Test Failed    Screenshot
+    Clear Connected Wifi
+    Stop Test Agent
+    Uninstall FlashAir
+    Uninstall Test Agent
+
+Login FlashAir
+    Enter App    FlashAir
+    ${is_scanning_msg_exist}    Wait For Exists    5000    text=Scanning for FlashAir card now.
+    ${is_scanning_msg_gone}    Wait Until Gone    20000    text=Scanning for FlashAir card now.
+    Should Be True    ${is_scanning_msg_gone}
+    Wait For Exists    3000    text=Enter the password for
+    Set Text    12345678    className=android.widget.EditText
+    Click On    text=OK
+    ${is_more_exist}    Wait For Exists    10000    description=More options
+
+Verify Photo Does Not Exist
+    [Arguments]    ${photo_name}
+    Click On    description=More options
+    Click On    text=Folder View
+    Wait For Exists    3000    text=DCIM
+    Click On    text=DCIM
+    ${is_test_dir_exist}    Wait For Exists    3000    text=Test
+    Click On    text=Test
+    ${is_list_view_gone}    Wait Until Gone    2000    className=android.widget.ListView
+    Should Be True    ${is_list_view_gone}    There should not be any photo.
+    ${is_photo_gone}    Wait Until Gone    0    text=${photo_name}
+    Should Be True    ${is_photo_gone}    Photo exists.
+
+Verify Photo Do Exist
+    [Arguments]    ${photo_name}
+    Click On    description=Refresh
+    ${is_photo_exist}    Wait For Exists    0    text=${photo_name}
+    Should Be True    ${is_photo_exist}    Photo doesn't exist.
+
+Copy Photo To SD Card
+    Copy File    ${CURDIR}${/}${file_name}    ${test_dir}

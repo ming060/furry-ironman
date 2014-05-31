@@ -7,8 +7,12 @@ import time
 import datetime
 from robot.output.monitor import CommandLineWriter as clm
 from robot.libraries.BuiltIn import BuiltIn
+import sys
 
-# logger.info("Importing Android library")
+__version__ = '0.1'
+ROBOT_LIBRARY_DOC_FORMAT = 'ROBOT'
+
+
 # print "Importing Android library"
 # clm = CommandLineWriter()
 # clm.message("Importing Android library")
@@ -71,9 +75,13 @@ class Mobile():
 #         logger.info("Importing Android library")
 #         print "Importing Android library"
 #         clm.message("Importing Android library")
-        self.adb = ADB(android_serial)
+        sys.__stdout__.write("Importing Android library. You can ignore the warning message")
+#         logger.info("Importing Android library. You can ignore the warning message", also_console=True)
+#         self.adb = ADB(android_serial)
         self.device = Device(android_serial)
-        self.test_helper = TestHelper(android_serial)
+#         self.test_helper = TestHelper(android_serial)
+        sys.__stdout__.write("Importing Android library complete.")
+#         logger.info("Importing Android library complete.", also_console=True)
 
     def set_serial(self, android_serial):
         """

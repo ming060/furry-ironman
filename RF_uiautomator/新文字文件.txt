@@ -9,6 +9,8 @@ google drive upload
 cleaner
 line 通知
 fb通知
+登入google mail後會有信件通知跳出
+
 
 桌面
 

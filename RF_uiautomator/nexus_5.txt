@@ -1,4 +1,0 @@
-*** Keywords ***
-enter_app
-    [Arguments]    ${app_name}
-    log    nexus_5

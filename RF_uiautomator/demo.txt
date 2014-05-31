@@ -1,0 +1,7 @@
+*** Settings ***
+Library           ../MyPython/ming/Mobile.py
+
+*** Test Cases ***
+test
+    Set Serial    0489902425228ab9
+    Press Home
