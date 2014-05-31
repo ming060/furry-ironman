@@ -485,7 +485,7 @@ class Mobile():
 
     def remove_watchers(self, watcher_name = None):
         """
-        remove watcher with *watcher_name* or remove all watchers
+        Remove watcher with *watcher_name* or remove all watchers
         """
         if watcher_name == None:
             self.device.watchers.remove()
@@ -502,11 +502,14 @@ class Mobile():
 
     def get_object(self, *args, **attribute):
         """
-        get the ui object with attribute *attribute*
+        Get the ui object with attribute *attribute*
         """
         return self.device(*args, **attribute)
 
     def get_count_of_object(self, obj):
+        """
+        Return the count of given *obj*
+        """
         return len(obj)
 
     def get_info_of_object(self, obj, attribute=None):
@@ -571,6 +574,8 @@ class Mobile():
         """
         self.device(**attribute).set_text(input_text)
 
+# Other feature
+
     def clear_text(self, *args, **attributes):
         """
         Clear text of the component  with *attributes*
@@ -582,8 +587,6 @@ class Mobile():
             remain_text = target.info['text']
             if text == ''  or remain_text == text:
                 break
-
-# Other feature
 
     def open_notification(self):
         """
@@ -613,9 +616,15 @@ class Mobile():
         self.device(text=target).wait.exists(timeout=time)
 
     def install(self, apk_path):
+        """
+        Install apk to the device
+        """
         self.adb.cmd('install "%s"' % apk_path)
 
     def uninstall(self, package_name):
+        """
+        Uninstall the APP with *package_name*
+        """
         self.adb.cmd('uninstall %s' % package_name)
 
     def execute_adb_command(self, cmd):
@@ -637,20 +646,36 @@ class Mobile():
         self.test_helper.send_set_text_cmd(text)
 
     def start_test_agent(self):
+        """
+        [Test Agent]
+        Start Test Agent Service
+        """
         cmd = 'am start edu.ntut.csie.sslab1321.testagent/edu.ntut.csie.sslab1321.testagent.DummyActivity'
         self.adb.shell_cmd(cmd)
 
     def stop_test_agent(self):
+        """
+        [Test Agent]
+        Stop Test Agent Service
+        """
         cmd = 'am broadcast -a testagent -e action STOP_TESTAGENT'
         self.adb.shell_cmd(cmd)
 
     def connect_to_wifi(self, ssid, password):
+        """
+        [Test Agent]
+        Connect to *ssid* with *password*
+        """
         cmd = 'adb shell am start edu.ntut.csie.sslab1321.testagent/edu.ntut.csie.sslab1321.testagent.DummyActivity'
         cmd = 'adb shell am broadcast -a testagent -e action CONNECT_TO_WIFI -e ssid WEP -e password 12345'
         cmd = 'am broadcast -a testagent -e action CONNECT_TO_WIFI -e ssid %s -e password %s' % (ssid, password)
         self.adb.shell_cmd(cmd)
 
     def clear_connected_wifi(self):
+        """
+        [Test Agent]
+        Clear all existed Wi-Fi connection
+        """
         cmd = 'am broadcast -a testagent -e action CLEAR_CONNECTED_WIFIS'
         self.adb.shell_cmd(cmd)
 
@@ -670,48 +695,5 @@ if __name__ == '__main__':
     print 'start'
 
     m = Mobile()
-
-#     dict = {'text':'音樂'}
-#     m.register_click_watcher('music', text='音樂', dict)
-    
-#     m = Mobile('192.168.185.101:5555')
-#     m.uninstall('com.dropbox.android')
-#     m.install('C:\\Users\\YuMing\\Documents\\GitHub\\furry-ironman\\RF_uiautomator\\com.dropbox.android_2.4.0.2.apk')
-#     m.wakeup_the_device()
-#   
-#     info = m.get_info()
-#     if info['currentPackageName'] == 'com.android.keyguard':
-#         m.swipe(540, 1335, 900, 1335, 5)
-#   
-#     m.press_home()
-#     m.click_on(description='Apps')
-#     m.click_on(text='Dropbox')
-#  
-#     m.click_on(text='Sign in!')
-#  
-#     m.set_text('lym060@gmail.com', resourceId='com.dropbox.android:id/login_email')
-#     m.set_text('ginobili060', resourceId='com.dropbox.android:id/login_password')
-#     m.click_on(resourceId='com.dropbox.android:id/login_submit')
-
-#     print m.get_info()
-# #     {u'displayRotation': 0, u'displaySizeDpY': 640, u'displaySizeDpX': 360, u'currentPackageName': u'com.android.launcher', u'productName': u'vbox86p', u'displayWidth': 1080, u'sdkInt': 19, u'displayHeight': 1776, u'naturalOrientation': True}
-#     m.click_on(description='Apps')
-#     view = m.get_object(resourceId='com.android.launcher:id/apps_customize_pane_content')
-#     print m.get_info_of_object(view)
-# #     {u'contentDescription': u'', u'checked': False, u'scrollable': True, u'text': u'', u'packageName': u'com.android.launcher', u'selected': False, u'enabled': True, u'bounds': {u'top': 231, u'left': 0, u'right': 1080, u'bottom': 1776}, u'className': u'android.view.View', u'focusable': False, u'focused': False, u'clickable': False, u'checkable': False, u'chileCount': 1, u'longClickable': False, u'visibleBounds': {u'top': 231, u'left': 0, u'right': 1080, u'bottom': 1776}}
-
-#     m.turn_off_screen()
-#     m.turn_on_screen()
-#     m.sleep()
-#     m.wakeup_the_device()
-    
-#     linearLayout = m.get_object(className='android.widget.LinearLayout', index=2)
-#     info_dict = m.get_info_of_object(linearLayout)
-#     print info_dict
-#     print info_dict['chileCount']
-#     chileCount = int(info_dict['chileCount']) - 1
-#     print chileCount
-#     btn = m.call(linearLayout, 'child', instance=chileCount, className='android.widget.ImageView')
-#     m.call(btn, 'click')
 
     print 'end'

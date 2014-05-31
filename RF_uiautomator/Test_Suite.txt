@@ -112,19 +112,19 @@ test_scroll_to_beginning
     ${list_view}    Get Object    className=android.widget.ListView
     Scroll To Beginning Vertically    ${list_view}
 
-Dropbox Integration Test
-    [Setup]    Dropbox Integration Setup
-    Take A Photo
-    ${photo_name}    Verify Photo On Android
-    Verify Photo On Web    ${photo_name}
-    [Teardown]    Dropbox Integration Teardown
-
 Google Play Test
     [Setup]    Google Play Test Setup
     Install App
     Change Ssid    WIFI_IS_OFF
     Verify Install Success
     [Teardown]    Google Play Test Teardown
+
+Dropbox Integration Test
+    [Setup]    Dropbox Integration Setup
+    Take A Photo
+    ${photo_name}    Verify Photo On Android
+    Verify Photo On Web    ${photo_name}
+    [Teardown]    Dropbox Integration Teardown
 
 Google Play Store Test
     [Setup]    Google Play Store Test Setup
