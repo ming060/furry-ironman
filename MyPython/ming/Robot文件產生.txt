@@ -14,3 +14,18 @@ options we may use：
 
 -n the name display on html
 -v version may use date to distinguish
+
+release
+http://www.diveinto.org/python3/packaging.html
+
+python setup.py check
+
+python setup.py sdist
+
+python setup.py register sdist upload -r https://testpypi.python.org/pypi/
+
+C:\Users\YuMing\.pypirc
+
+python setup.py register -r https://testpypi.python.org/pypi sdist upload -r https://testpypi.python.org/pypi
+
+pip install robotframework-uiautomatorlibrary -i https://testpypi.python.org/pypi
