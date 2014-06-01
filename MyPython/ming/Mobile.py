@@ -9,17 +9,14 @@ from robot.output.monitor import CommandLineWriter as clm
 from robot.libraries.BuiltIn import BuiltIn
 import sys
 
-__version__ = '0.1'
-ROBOT_LIBRARY_DOC_FORMAT = 'ROBOT'
-
 
 # print "Importing Android library"
 # clm = CommandLineWriter()
 # clm.message("Importing Android library")
 
 class TestHelper:
-    def __init__(self, serial_number=None):
-        self.serial_number = serial_number
+    def __init__(self, adb):
+        self.adb = adb
 
     def __convert_to_unicode_by_text(self, text):
         """
@@ -33,9 +30,8 @@ class TestHelper:
         shell指令使用雙引號括起來，例如：adb shell "am broadcast -a myIME.intent.action.pass.string -e input abc"
                         但由於內容也可能為包含符號或是空白，所以必須再使用雙引號括起來，例如："abc c"
         """
-        adb = ADB(self.serial_number)
-        adb.shell_cmd('\"am broadcast -a myIME.intent.action.pass.string -e input \\\"%s\\\"\"' % TestHelper.__convert_to_unicode_by_text(self, text))
-        adb.shell_cmd('input keyevent KEYCODE_UNKNOWN')
+        self.adb.shell_cmd('\"am broadcast -a myIME.intent.action.pass.string -e input \\\"%s\\\"\"' % TestHelper.__convert_to_unicode_by_text(self, text))
+        self.adb.shell_cmd('input keyevent KEYCODE_UNKNOWN')
 
 class ADB:
     def __init__(self, android_serial=None):
@@ -69,31 +65,85 @@ class ADB:
 
 class Mobile():
     """
+    robotframework-uiautomatorlibrary is an Android device testing library for Robot Framework.
+
+    It uses uiautomator - Python wrapper for Android uiautomator tool (https://pypi.python.org/pypi/uiautomator/0.1.28) internally.
+
+    *Before running tests*
+
+    You can use `Set Serial` to specify which device to perform the test.
+
+
+    *Identify UI object*
+
+    There are two kinds of keywords.
+
+    
     """
 
-    def __init__(self, android_serial = None):
-#         logger.info("Importing Android library")
-#         print "Importing Android library"
-#         clm.message("Importing Android library")
-        sys.__stdout__.write("Importing Android library. You can ignore the warning message")
-#         logger.info("Importing Android library. You can ignore the warning message", also_console=True)
-#         self.adb = ADB(android_serial)
-        self.device = Device(android_serial)
-#         self.test_helper = TestHelper(android_serial)
-        sys.__stdout__.write("Importing Android library complete.")
-#         logger.info("Importing Android library complete.", also_console=True)
+    __version__ = '0.1'
+    ROBOT_LIBRARY_DOC_FORMAT = 'ROBOT'
+    ROBOT_LIBRARY_SCOPE = 'GLOBAL'
 
     def set_serial(self, android_serial):
         """
-        Set device serial
+        Specify given *android_serial* device to perform test.
+
+        You do not have to specify the device when there is only one device connects to the computer.
+
+        When you need to use multiple devices, do not use this keyword to switch between devices in test execution.
+
+        Using different library name when importing this library according to http://robotframework.googlecode.com/hg/doc/userguide/RobotFrameworkUserGuide.html?r=2.8.4#setting-custom-name-to-test-library.
+
+        | Setting | Value |  Value |  Value | 
+        | Library | Mobile | WITH NAME | Mobile1 |
+        | Library | Mobile | WITH NAME | Mobile2 |
+
+        And set the serial to each library.
+
+        | Test Case        | Action             | Argument           |
+        | Multiple Devices | Mobile1.Set Serial | device_1's serial  |
+        |                  | Mobile2.Set Serial | device_2's serial  |
+
         """
         self.adb = ADB(android_serial)
         self.device = Device(android_serial)
-        self.test_helper = TestHelper(android_serial)
+        self.test_helper = TestHelper(self.adb)
 
-    def get_info(self):
+    def get_device_info(self):
         """
-        Retrieve the device info
+        Retrieve the device info.
+
+        The keyword will return a dictionary.
+
+        You can log the information by using the log dictionary keyword in build in Collections library(http://robotframework.googlecode.com/hg/doc/libraries/Collections.html?r=2.8.4).
+
+        Example:
+        | ${device_info} | Get Device Info |
+        | Log Dictionary | ${device_info}  |
+
+        =>
+
+        Dictionary size is 9 and it contains following items:\n
+        currentPackageName: com.android.keyguard\n
+        displayHeight: 1776\n
+        displayRotation: 0\n
+        displaySizeDpX: 360\n
+        displaySizeDpY: 640\n
+        displayWidth: 1080\n
+        naturalOrientation: True\n
+        productName: hammerhead\n
+        sdkInt: 19\n
+
+        Or get specific information of the device by giving the key.
+
+        | ${device_info}  | Get Device Info | | |
+        | ${product_name} | Get From Dictionary | ${device_info} | productName |
+
+        =>
+
+        ${product_name} = hammerhead
+
         """
         return self.device.info
 
@@ -113,183 +163,183 @@ class Mobile():
         """
         self.device.screen.off()
 
-    def wakeup_the_device(self):
-        """
-        wakeup the device
-        """
-        self.device.wakeup()
-
     """
     Press hard/soft key
     """
 
-    def press_key(self, *key):
+    def press_key(self, *keys):
         """
-        press *key* keycode
+        Press *key* keycode.
+
+        You can find all keycode in http://developer.android.com/reference/android/view/KeyEvent.html
+
+        Example:
+
+        |Press Key | 
         """
-        self.device.press(*key)
+        self.device.press(*keys)
 
     def press_home(self):
         """
-        press home key
+        Press home key
         """
         self.device.press.home()
 
     def press_back(self):
         """
-        press back key
+        Press back key
         """
         self.device.press.back()
 
     def press_left(self):
         """
-        press left key
+        Press left key
         """
         self.device.pres.left()
 
     def press_right(self):
         """
-        press right key
+        Press right key
         """
         self.device.press.right()
 
     def press_up(self):
         """
-        press up key
+        Press up key
         """
         self.device.press.up()
 
     def press_down(self):
         """
-        press down key
+        Press down key
         """
         self.device.press.down()
 
     def press_center(self):
         """
-        press center key
+        Press center key
         """
         self.device.press.center()
 
     def press_menu(self):
         """
-        press menu key
+        Press menu key
         """
         self.device.press.menu()
 
     def press_search(self):
         """
-        press search key
+        Press search key
         """
         self.device.press.search()
 
     def press_enter(self):
         """
-        press enter key
+        Press enter key
         """
         self.device.press.enter()
 
     def press_delete(self):
         """
-        press delete key
+        Press delete key
         """
         self.device.press.delete()
 
     def press_recent(self):
         """
-        press recent key
+        Press recent key
         """
         self.device.press.recent()
 
     def press_volume_up(self):
         """
-        press volume up key
+        Press volume up key
         """
         self.device.press.volume_up()
 
     def press_volume_down(self):
         """
-        press volume down key
+        Press volume down key
         """
         self.device.press.volume_down()
 
     def press_camera(self):
         """
-        press camera key
+        Press camera key
         """
         self.device.press.camera()
 
     def press_power(self):
         """
-        press power key
+        Press power key
         """
         self.device.press.power()
 
 #Gesture interaction of the device
 
-    def click(self, x, y):
+    def click_at_coordinates(self, x, y):
         """
-        click (x, y) on screen
+        Click at (x,y) coordinates.
         """
         self.device.click(x, y)
 
-    def swipe(self, sx, sy, ex, ey, steps=10):
+    def swipe_by_coordinates(self, sx, sy, ex, ey, steps=100):
         """
-        swipe from (sx, sy) to (ex, ey) with steps
+        Swipe from (sx, sy) to (ex, ey) with *steps* .
         """
         self.device.swipe(sx, sy, ex, ey, steps)
 
 # Swipe from the center of the ui object to its edge
 
-    def swipe_left(self, steps=10, *args, **attributes):
+    def swipe_left(self, steps=100, *args, **attributes):
         """
-        swipe the *obj* from center to left
+        Swipe the UI object with *attributes* from center to left.
         """
         self.device(**attributes).swipe.left(steps=steps)
 
-    def swipe_right(self, steps=10, *args, **attributes):
+    def swipe_right(self, steps=100, *args, **attributes):
         """
-        swipe the *obj* from center to right
+        Swipe the UI object with *attributes* from center to right
         """
         self.device(**attributes).swipe.right(steps=steps)
 
-    def swipe_top(self, steps=10, *args, **attributes):
+    def swipe_top(self, steps=100, *args, **attributes):
         """
-        swipe the *obj* from center to top
+        Swipe the UI object with *attributes* from center to top
         """
         self.device(**attributes).swipe.up(steps=steps)
 
-    def swipe_bottom(self, steps=10, *args, **attributes):
+    def swipe_bottom(self, steps=100, *args, **attributes):
         """
-        swipe the *obj* from center to bottom
+        Swipe the UI object with *attributes* from center to bottom
         """
         self.device(**attributes).swipe.down(steps=steps)
 
-    def object_swipe_left(self, obj, steps=10):
+    def object_swipe_left(self, obj, steps=100):
         """
-        swipe the *obj* from center to left
+        Swipe the *obj* from center to left
         """
         obj.swipe.left(steps=steps)
 
-    def object_swipe_right(self, obj, steps=10):
+    def object_swipe_right(self, obj, steps=100):
         """
-        swipe the *obj* from center to right
+        Swipe the *obj* from center to right
         """
         obj.swipe.right(steps=steps)
 
-    def object_swipe_top(self, obj, steps=10):
+    def object_swipe_top(self, obj, steps=100):
         """
-        swipe the *obj* from center to top
+        Swipe the *obj* from center to top
         """
         obj.swipe.up(steps=steps)
 
-    def object_swipe_bottom(self, obj, steps=10):
+    def object_swipe_bottom(self, obj, steps=100):
         """
-        swipe the *obj* from center to bottom
+        Swipe the *obj* from center to bottom
         """
         obj.swipe.down(steps=steps)
 
-    def drag(self,sx, sy, ex, ey, steps=10):
+    def drag(self,sx, sy, ex, ey, steps=100):
         """
         drag from (sx, sy) to (ex, ey) with steps
         """

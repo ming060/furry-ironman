@@ -1,7 +1,26 @@
 *** Settings ***
+Suite Setup       Set Serial    0489902425228ab9
 Library           ../MyPython/ming/Mobile.py
+Library           Collections.py
 
 *** Test Cases ***
 test
-    Set Serial    0489902425228ab9
     Press Home
+
+test set serial
+    Set Serial    0489902425228ab9
+
+test device info
+    ${device_info}    Get Device Info
+    Log Dictionary    ${device_info}
+    ${product_name}    Get From Dictionary    ${device_info}    productName
+
+test screen action
+    Turn Off Screen
+    Turn On Screen
+
+test press key
+    Press Key    0x04
+
+test swipe
+    Swipe By Coordinates    0    0    100    500
