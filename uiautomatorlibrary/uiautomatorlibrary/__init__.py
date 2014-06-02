@@ -13,7 +13,7 @@ class uiautomatorlibrary(Mobile):
 
     *Identify UI object*
 
-    There are two kinds of keywords.
+    If the UI object can be idntified by
 
     
     """

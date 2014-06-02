@@ -153,10 +153,8 @@ class Mobile():
 
         You can find all keycode in http://developer.android.com/reference/android/view/KeyEvent.html
 
-        Example:
-
-        |Press Key | 
         """
+        #not tested
         self.device.press(*keys)
 
     def press_home(self):

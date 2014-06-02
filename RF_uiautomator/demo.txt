@@ -1,7 +1,6 @@
 *** Settings ***
 Suite Setup       Set Serial    0489902425228ab9
 Library           Collections.py
-Library           Selenium2Library
 Library           uiautomatorlibrary
 
 *** Test Cases ***
@@ -21,7 +20,10 @@ test screen action
     Turn On Screen
 
 test press key
-    Press Key    0x04
+    Comment    Press Key    0x04
+
+test click at coordinates
+    Click At Coordinates    500    500
 
 test swipe
     Swipe By Coordinates    0    0    100    500

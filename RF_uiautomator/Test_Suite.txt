@@ -1,10 +1,8 @@
 *** Settings ***
-Library           ../../../../../Python27/Lib/site-packages/robot/libraries/Collections.py
-Library           ../MyPython/ming/Mobile.py
+Library           Collections
 Library           Selenium2Library
-Library           ../MyPython/ming/Custom_Library.py
-Library           ../../../../../../Python27/Lib/site-packages/robot/libraries/String.py
-Library           ../../../../../../Python27/Lib/site-packages/robot/libraries/OperatingSystem.py
+Library           String
+Library           OperatingSystem
 
 *** Variables ***
 ${infinite}       10000

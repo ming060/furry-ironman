@@ -1,0 +1,7 @@
+*** Settings ***
+Library           AndroidLibrary
+
+*** Test Cases ***
+test
+    Comment    Start Testserver With Apk    C:${/}Users${/}YuMing${/}Documents${/}GitHub${/}calabash-android-demoapp${/}bin${/}AndroidDemoProject.apk
+    Start Testserver With Apk    AndroidDemoProject.apk
