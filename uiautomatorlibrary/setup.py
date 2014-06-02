@@ -14,7 +14,7 @@ setup(
                     'Programming Language :: Python :: 2.7',
 #                     'License :: ', #TODO
                     'Operating System :: Microsoft :: Windows :: Windows 7',
-                    'Development Status :: 4 - Beta',
+                    'Development Status :: 3 - Alpha',
                     'Intended Audience :: Developers',
                     'Topic :: Software Development :: Testing'
                     ]
