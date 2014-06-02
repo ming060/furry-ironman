@@ -10,6 +10,8 @@ python -m robot.libdoc [options] library_or_resource list|show|version [names]
 
 python -m robot.libdoc [options] xxx.py xxx.html
 
+python -m robot.libdoc uiautomatorlibrary doc\uiautomatorlibrary.html
+
 options we may use：
 
 -n the name display on html
