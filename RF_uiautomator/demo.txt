@@ -5,7 +5,7 @@ Library           Collections.py
 Library           uiautomatorlibrary
 
 *** Variables ***
-${serial_number}    192.168.56.100:5555    # emulator-5554
+${serial_number}    192.168.218.101:5555    # emulator-5554 192.168.218.101:5555 192.168.56.100:5555
 
 *** Test Cases ***
 test
@@ -56,6 +56,12 @@ test open notification
     Execute Adb Shell Command    am start -W com.hmh.api/.app.StatusBarNotifications
 
 *** Keywords ***
+Install API Demo
+    Install    ${CURDIR}${/}com.hmh.api_4.0.apk
+
+Uninstall API Demo
+    Uninstall    com.hmh.api
+
 Start API Demo
     [Documentation]    https://play.google.com/store/apps/details?id=com.hmh.api
     Execute Adb Shell Command    am start -W com.hmh.api/.ApiDemos

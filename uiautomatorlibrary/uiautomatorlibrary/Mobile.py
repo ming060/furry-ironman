@@ -352,9 +352,11 @@ class Mobile():
         """
         obj.swipe.down(steps=steps)
 
-    def drag(self,sx, sy, ex, ey, steps=10):
+    def drag_by_coordinates(self,sx, sy, ex, ey, steps=10):
         """
-        drag from (sx, sy) to (ex, ey) with steps
+        Drag from (sx, sy) to (ex, ey) with steps
+
+        See `Swipe By Coordinates` for more details.
         """
         self.device.drag(sx, sy, ex, ey, steps)
 
