@@ -13,12 +13,36 @@ class uiautomatorlibrary(Mobile):
 
     *Identify UI object*
 
-    If the UI object can be idntified by
+    If the UI object can be identified by just one selector, you can use keywords that manipulate the object directly.
 
-    
+    For example:
+
+    | Swipe Left | description=Settings |                | # swipe the UI object left by description          |
+    | Swipe Left | description=Settings | clickable=True | # swipe the UI object left by description and text |
+
+    If the UI object is in other or UI object, you can always get the object by layer by layer.
+
+    For example:
+
+    | ${some_parent_object} | Get Object | description=parent |
+    | ${some_child_object}  | Get Child  | ${some_parent_object} | text=child |
+
+    Selector supports below parameters (more details https://github.com/xiaocong/uiautomator#selector):
+
+    - text, textContains, textMatches, textStartsWith
+    - className, classNameMatches
+    - description, descriptionContains, descriptionMatches, descriptionStartsWith
+    - checkable, checked, clickable, longClickable
+    - scrollable, enabled,focusable, focused, selected
+    - packageName, packageNameMatches
+    - resourceId, resourceIdMatches
+    - index, instance
     """
 
     __version__ = '0.1'
     ROBOT_LIBRARY_DOC_FORMAT = 'ROBOT'
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
-    pass
+    def __init__(self):
+        """
+        """
+        Mobile.__init__(self)

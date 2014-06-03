@@ -65,6 +65,9 @@ class ADB:
 
 class Mobile():
 
+    def __init__(self):
+        pass
+
     def set_serial(self, android_serial):
         """
         Specify given *android_serial* device to perform test.
@@ -261,63 +264,95 @@ class Mobile():
         """
         self.device.click(x, y)
 
-    def swipe_by_coordinates(self, sx, sy, ex, ey, steps=100):
+    def swipe_by_coordinates(self, sx, sy, ex, ey, steps=10):
         """
         Swipe from (sx, sy) to (ex, ey) with *steps* .
+
+        Example:
+        | Swipe By Coordinates | 540 | 1340 | 940 | 1340 | | # Swipe from (540, 1340) to (940, 100) with default steps 10 |
+        | Swipe By Coordinates | 540 | 1340 | 940 | 1340 | 100 | # Swipe from (540, 1340) to (940, 100) with steps 100 |
         """
         self.device.swipe(sx, sy, ex, ey, steps)
 
 # Swipe from the center of the ui object to its edge
 
-    def swipe_left(self, steps=100, *args, **attributes):
+    def swipe_left(self, steps=10, *args, **selectors):
         """
-        Swipe the UI object with *attributes* from center to left.
-        """
-        self.device(**attributes).swipe.left(steps=steps)
+        Swipe the UI object with *selectors* from center to left.
 
-    def swipe_right(self, steps=100, *args, **attributes):
-        """
-        Swipe the UI object with *attributes* from center to right
-        """
-        self.device(**attributes).swipe.right(steps=steps)
+        Example:
 
-    def swipe_top(self, steps=100, *args, **attributes):
-        """
-        Swipe the UI object with *attributes* from center to top
-        """
-        self.device(**attributes).swipe.up(steps=steps)
+        | Swipe Left | description=Home screen 3 | | # swipe the UI object left |
+        | Swipe Left | 5 | description=Home screen 3 | # swipe the UI object left with steps=5 |
 
-    def swipe_bottom(self, steps=100, *args, **attributes):
+        See `introduction` for details about identified UI object.
         """
-        Swipe the UI object with *attributes* from center to bottom
-        """
-        self.device(**attributes).swipe.down(steps=steps)
+        self.device(**selectors).swipe.left(steps=steps)
 
-    def object_swipe_left(self, obj, steps=100):
+    def swipe_right(self, steps=10, *args, **selectors):
+        """
+        Swipe the UI object with *selectors* from center to right
+
+        See `Swipe Left` for more details.
+        """
+        self.device(**selectors).swipe.right(steps=steps)
+
+    def swipe_top(self, steps=10, *args, **selectors):
+        """
+        Swipe the UI object with *selectors* from center to top
+
+        See `Swipe Left` for more details.
+        """
+        self.device(**selectors).swipe.up(steps=steps)
+
+    def swipe_bottom(self, steps=10, *args, **selectors):
+        """
+        Swipe the UI object with *selectors* from center to bottom
+
+        See `Swipe Left` for more details.
+        """
+        self.device(**selectors).swipe.down(steps=steps)
+
+    def object_swipe_left(self, obj, steps=10):
         """
         Swipe the *obj* from center to left
+
+        Example:
+
+        | ${object} | Get Object | description=Home screen 3 | # Get the UI object |
+        | Object Swipe Left | ${object} | | # Swipe the UI object left |
+        | Object Swipe Left | ${object} | 5 | # Swipe the UI object left with steps=5 |
+        | Object Swipe Left | ${object} | steps=5 | # Swipe the UI object left with steps=5 |
+
+        See `introduction` for details about identified UI object.
         """
         obj.swipe.left(steps=steps)
 
-    def object_swipe_right(self, obj, steps=100):
+    def object_swipe_right(self, obj, steps=10):
         """
         Swipe the *obj* from center to right
+
+        See `Object Swipe Left` for more details.
         """
         obj.swipe.right(steps=steps)
 
-    def object_swipe_top(self, obj, steps=100):
+    def object_swipe_top(self, obj, steps=10):
         """
         Swipe the *obj* from center to top
+
+        See `Object Swipe Left` for more details.
         """
         obj.swipe.up(steps=steps)
 
-    def object_swipe_bottom(self, obj, steps=100):
+    def object_swipe_bottom(self, obj, steps=10):
         """
         Swipe the *obj* from center to bottom
+
+        See `Object Swipe Left` for more details.
         """
         obj.swipe.down(steps=steps)
 
-    def drag(self,sx, sy, ex, ey, steps=100):
+    def drag(self,sx, sy, ex, ey, steps=10):
         """
         drag from (sx, sy) to (ex, ey) with steps
         """
@@ -388,15 +423,15 @@ class Mobile():
 
     # Perform scroll on the specific ui object(scrollable)
 
-    def scroll_to_beginning_vertically(self, steps=10, **attributes):
+    def scroll_to_beginning_vertically(self, steps=10, **selectors):
         """
         """
-        return self.device(**attributes).scroll.vert.toBeginning(steps=steps)
+        return self.device(**selectors).scroll.vert.toBeginning(steps=steps)
 
-    def scroll_to_end_vertically(self, steps=10, **attributes):
+    def scroll_to_end_vertically(self, steps=10, **selectors):
         """
         """
-        return self.device(**attributes).scroll.vert.toEnd(steps=steps)
+        return self.device(**selectors).scroll.vert.toEnd(steps=steps)
 
     def scroll_object_to_beginning_vertically(self, obj, steps=10):
         """
@@ -459,15 +494,15 @@ class Mobile():
         logger.info('\n<a href="%s">%s</a><br><img src="%s">' % (screenshot_path, st, screenshot_path), html=True)
 
 #Watcher
-#     def register_click_watcher(self, watcher_name, attributes, *condition_list):
+#     def register_click_watcher(self, watcher_name, selectors, *condition_list):
 #         """
-#         The watcher click on the object which has the attributes when conditions match
+#         The watcher click on the object which has the selectors when conditions match
 #         """
-#         print type(attributes)
+#         print type(selectors)
 #         watcher = self.device.watcher(watcher_name)
 #         for condition in condition_list:
 #             watcher.when(**condition)
-#         watcher.click(**attributes)
+#         watcher.click(**selectors)
 #         self.device.watchers.run()
 #         print 'register watcher:%s' % watcher_name
 #         return
@@ -487,14 +522,14 @@ class Mobile():
             a_dict[a_key] = a_value
         return a_dict
 
-    def register_click_watcher(self, watcher_name, attributes, *condition_list):
+    def register_click_watcher(self, watcher_name, selectors, *condition_list):
         """
-        The watcher click on the object which has the *attributes* when conditions match
+        The watcher click on the object which has the *selectors* when conditions match
         """
         watcher = self.device.watcher(watcher_name)
         for condition in condition_list:
             watcher.when(**self.__unicode_to_dict(condition))
-        watcher.click(**self.__unicode_to_dict(attributes))
+        watcher.click(**self.__unicode_to_dict(selectors))
         self.device.watchers.run()
 
     def register_press_watcher(self, watcher_name, press_keys, *condition_list):
@@ -612,12 +647,12 @@ class Mobile():
 
 # Other feature
 
-    def clear_text(self, *args, **attributes):
+    def clear_text(self, *args, **selectors):
         """
-        Clear text of the component  with *attributes*
+        Clear text of the component  with *selectors*
         """
         while True:
-            target = self.device(**attributes)
+            target = self.device(**selectors)
             text = target.info['text']
             target.clear_text()
             remain_text = target.info['text']

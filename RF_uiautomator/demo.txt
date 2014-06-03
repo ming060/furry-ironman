@@ -1,11 +1,14 @@
 *** Settings ***
-Suite Setup       Set Serial    0489902425228ab9
+Documentation     https://play.google.com/store/apps/details?id=com.hmh.api
+Suite Setup       Set Serial    ${serial_number}
 Library           Collections.py
 Library           uiautomatorlibrary
 
+*** Variables ***
+${serial_number}    192.168.56.100:5555    # emulator-5554
+
 *** Test Cases ***
 test
-    Press Home
 
 test set serial
     Set Serial    0489902425228ab9
@@ -20,10 +23,39 @@ test screen action
     Turn On Screen
 
 test press key
-    Comment    Press Key    0x04
+    Press Key    7
 
 test click at coordinates
     Click At Coordinates    500    500
 
+test swipe at coordinates
+    Press Power
+    Press Power
+    ${is_keyguard}    Wait For Exists    5000    packageName=com.android.keyguard
+    Should Be True    ${is_keyguard}
+    Swipe By Coordinates    540    1340    940    1340    10
+    ${is_launcher}    Wait For Exists    packageName=com.android.launcher
+    Should Be True    ${is_launcher}
+
 test swipe
-    Swipe By Coordinates    0    0    100    500
+    Swipe Right    5    description=Home screen 3
+    ${is_at_screen_2}    Wait For Exists    description=Home screen 2
+    Should Be True    ${is_at_screen_2}
+    Swipe Left    5    description=Home screen 2
+    ${is_at_screen_3}    Wait For Exists    description=Home screen 3
+    Should Be True    ${is_at_screen_3}
+
+test swipe top down
+    Comment    Execute Adb Shell Command    am start -W com.hmh.api/.accessibility.TaskListActivity
+    Swipe Top    5    text=Do Taxes
+    Swipe Bottom    5    text=Do Taxes
+
+test object swipe
+
+test open notification
+    Execute Adb Shell Command    am start -W com.hmh.api/.app.StatusBarNotifications
+
+*** Keywords ***
+Start API Demo
+    [Documentation]    https://play.google.com/store/apps/details?id=com.hmh.api
+    Execute Adb Shell Command    am start -W com.hmh.api/.ApiDemos
