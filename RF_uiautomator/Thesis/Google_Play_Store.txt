@@ -1,0 +1,88 @@
+*** Settings ***
+Library           Selenium2Library
+Library           uiautomatorlibrary
+Resource          nexus 5 resource.txt
+
+*** Test Cases ***
+Google Play Store Test
+    [Setup]    Google Play Store Test Setup
+    Install App On Google Play
+    Verify Installation
+    [Teardown]    Google Play Store Test Teardown
+
+*** Keywords ***
+Google Play Store Test Setup
+    ${google_account}    Set Variable    minglin060
+    ${google_password}    Set Variable    060nilgnim
+    Set Serial    0489902425228ab9
+    Install Test Agent
+    Start Test Agent
+    Connect To Wifi    WEP    12345
+    Remove Google Account
+    Login Play Store    ${google_account}    ${google_password}
+    Login Google Play    ${google_account}    ${google_password}
+
+Google Play Store Test Teardown
+    Run Keyword If Test Failed    Screenshot
+    Remove Google Account
+    Clear Connected Wifi
+    Stop Test Agent
+    Uninstall Test Agent
+    Close Browser
+
+Install App On Google Play
+    Go To    https://play.google.com/store/apps/details?id=com.sg.ranaz.audioandvideorecorder.lite
+    Comment    Go To    https://play.google.com/store/apps/details?id=com.dropbox.android
+    Click Element    //button[@class="price buy"]
+    Wait Until Page Contains Element    //button[@id="purchase-ok-button"]    10s
+    Wait Until Page Contains Element    //div[@class="id-displayed-device"]
+    Click Element    //div[@class="id-displayed-device"]
+    Wait Until Page Contains Element    //*[@id="device-selector-container"]/div/div/div/div[1]/div/div/span[1]
+    Click Element    //*[@id="device-selector-container"]/div/div/div/div[1]/div/div/span[1]
+    Comment    Click Element    //button[@id="purchase-ok-button"]
+
+Login Google Play
+    [Arguments]    ${google_account}    ${google_password}
+    Open Browser    https://play.google.com/store    Firefox
+    Maximize Browser Window
+    Click Element    id=gb_70
+    Input Text    id=Email    ${google_account}
+    Input Text    id=Passwd    ${google_password}
+    Click Element    id=signIn
+    Wait Until Page Contains    Google Play    30s
+
+Login Play Store
+    [Arguments]    ${google_account}    ${google_password}
+    Enter App    Play Store
+    Click    text=Existing
+    Set Text    ${google_account}    text=Email    #resourceId=com.google.android.gsf.login:id/username_edit
+    Set Text    ${google_password}    resourceId=com.google.android.gsf.login:id/password_edit
+    Click    description=Next
+    Click    text=OK
+    Click    resourceId=com.google.android.gsf.login:id/agree_backup_restore
+    Click    resourceId=com.google.android.gsf.login:id/google_play_opt_in
+    Click    description=Next
+    Register Click Watcher    Click Accept Watcher    text=Accept    text=Accept
+
+Remove Google Account
+    Enter App    Settings
+    ${list_view}    Get Object    className=android.widget.ListView
+    ${return}    Scroll To Vertically    ${list_view}    text=Google
+    Run Keyword If    ${return}    Remove Google Account From Setting
+
+Remove Google Account From Setting
+    Click    text=Google
+    Click    descriptionContains=Sync
+    Click    description=More options
+    Click    text=Remove account
+    Click    text=Remove account
+    ${is_google_account_exist}    Wait For Exists    3000    text=Google
+    Should Not Be True    ${is_google_account_exist}
+
+Verify Installation
+    Clear Notification
+    Open Notification
+    ${is_progress_bar_exist}    Wait For Exists    20000    className=android.widget.ProgressBar
+    ${is_progress_bar_gone}    Wait Until Gone    60000    className=android.widget.ProgressBar
+    ${is_install_success_exist}    Wait For Exists    60000    text=Successfully installed.
+    Should Be True    ${is_install_success_exist}    Install Fail

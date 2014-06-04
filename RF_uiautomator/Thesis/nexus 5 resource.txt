@@ -1,0 +1,48 @@
+*** Settings ***
+Library           uiautomatorlibrary
+Library           Selenium2Library
+
+*** Keywords ***
+Clear Notification
+    Open Notification
+    ${is_clear_exist}    Wait For Exists    2000    description=Clear all notifications.
+    Run Keyword If    ${is_clear_exist}    Click    description=Clear all notifications.
+
+Clear Recent Apps
+    Press Recent
+    ${is_clear_exist}    Wait For Exists    2000    resourceId=com.android.systemui:id/recents_clear
+    Run Keyword If    ${is_clear_exist}    Click    resourceId=com.android.systemui:id/recents_clear    ELSE    Press Recent
+
+Enter App
+    [Arguments]    ${app}
+    Press Home
+    Click    text=Apps
+    ${page_indactor}    Get Object    resourceId=com.android.launcher3:id/page_indicator
+    ${page_count}    Get Info Of Object    ${page_indactor}    chileCount
+    : FOR    ${index}    IN RANGE    ${page_count}
+    \    ${app_obj}    Get Object    text=${app}
+    \    ${is_app_exist}    Wait For Object Exists    ${app_obj}
+    \    Run Keyword If    ${is_app_exist}    Run Keywords    Call    ${app_obj}    click
+    \    ...    AND    Exit For Loop    ELSE    Swipe Left    resourceId=com.android.launcher3:id/apps_customize_pane_content
+
+Install Test Agent
+    Install    ${CURDIR}${/}TestAgent.apk
+
+Remove Account
+    [Arguments]    ${account}
+    Enter App    Settings
+    ${list_view}    Get Object    className=android.widget.ListView
+    ${return}    Scroll To Vertically    ${list_view}    text=${account}
+    Run Keyword If    ${return}    Remove Account From Setting    ${account}
+
+Remove Account From Setting
+    [Arguments]    ${account}
+    Click    text=${account}
+    Click    description=More options
+    Click    text=Remove account
+    Click    text=Remove account
+    ${is_dropbox_account_exist}    Wait For Exists    3000    text=${account}
+    Should Not Be True    ${is_dropbox_account_exist}
+
+Uninstall Test Agent
+    Uninstall    edu.ntut.csie.sslab1321.testagent

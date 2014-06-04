@@ -1,0 +1,74 @@
+*** Settings ***
+Library           OperatingSystem
+Library           uiautomatorlibrary
+Resource          nexus 5 resource.txt
+
+*** Test Cases ***
+Wi-Fi SD Card Test
+    [Setup]    Wi-Fi SD Card Test Setup
+    Verify Photo Does Not Exist    ${file_name}
+    Copy Photo To SD Card
+    Verify Photo Do Exist    ${file_name}
+    [Teardown]    Wi-Fi SD Card Test Teardown
+
+*** Keywords ***
+Clear FlashAir App Data
+    Execute Adb Shell Command    pm clear jp.co.toshiba.android.FlashAir
+
+Copy Photo To SD Card
+    Copy File    ${CURDIR}${/}${file_name}    ${test_dir}
+
+Install FlashAir
+    Install    ${CURDIR}${/}jp.co.toshiba.android.FlashAir-1.apk
+
+Login FlashAir
+    Enter App    FlashAir
+    ${is_scanning_msg_exist}    Wait For Exists    5000    text=Scanning for FlashAir card now.
+    ${is_scanning_msg_gone}    Wait Until Gone    20000    text=Scanning for FlashAir card now.
+    Should Be True    ${is_scanning_msg_gone}
+    Wait For Exists    3000    text=Enter the password for
+    Set Text    12345678    className=android.widget.EditText
+    Click    text=OK
+    ${is_more_exist}    Wait For Exists    10000    description=More options
+
+Uninstall FlashAir
+    Uninstall    jp.co.toshiba.android.FlashAir
+
+Verify Photo Do Exist
+    [Arguments]    ${photo_name}
+    Click    description=Refresh
+    ${is_photo_exist}    Wait For Exists    0    text=${photo_name}
+    Should Be True    ${is_photo_exist}    Photo doesn't exist.
+
+Verify Photo Does Not Exist
+    [Arguments]    ${photo_name}
+    Click    description=More options
+    Click    text=Folder View
+    Wait For Exists    3000    text=DCIM
+    Click    text=DCIM
+    ${is_test_dir_exist}    Wait For Exists    3000    text=Test
+    Click    text=Test
+    ${is_list_view_gone}    Wait Until Gone    2000    className=android.widget.ListView
+    Should Be True    ${is_list_view_gone}    There should not be any photo.
+    ${is_photo_gone}    Wait Until Gone    0    text=${photo_name}
+    Should Be True    ${is_photo_gone}    Photo exists.
+
+Wi-Fi SD Card Test Setup
+    Set Serial    0489902425228ab9
+    Set Test Variable    ${test_dir}    F:${/}DCIM${/}Test
+    Set Test Variable    ${file_name}    DSCF1927_LR.JPG
+    Remove Directory    ${test_dir}    recursive=True
+    Create Directory    ${test_dir}
+    Install Test Agent
+    Start Test Agent
+    Clear Connected Wifi
+    Install FlashAir
+    Clear FlashAir App Data
+    Login FlashAir
+
+Wi-Fi SD Card Test Teardown
+    Run Keyword If Test Failed    Screenshot
+    Clear Connected Wifi
+    Stop Test Agent
+    Uninstall FlashAir
+    Uninstall Test Agent

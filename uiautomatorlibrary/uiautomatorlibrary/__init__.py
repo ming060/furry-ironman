@@ -20,12 +20,18 @@ class uiautomatorlibrary(Mobile):
     | Swipe Left | description=Settings |                | # swipe the UI object left by description          |
     | Swipe Left | description=Settings | clickable=True | # swipe the UI object left by description and text |
 
-    If the UI object is in other or UI object, you can always get the object by layer by layer.
+    If the UI object is in other or UI object (other layout or something else), you can always get the object layer by layer.
 
     For example:
 
     | ${some_parent_object} | Get Object | description=parent |
     | ${some_child_object}  | Get Child  | ${some_parent_object} | text=child |
+
+    There are two kinds of keyword:
+
+    Example:
+
+    |
 
     Selector supports below parameters (more details https://github.com/xiaocong/uiautomator#selector):
 
@@ -42,6 +48,8 @@ class uiautomatorlibrary(Mobile):
     __version__ = '0.1'
     ROBOT_LIBRARY_DOC_FORMAT = 'ROBOT'
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
+    ROBOT_EXIT_ON_FAILURE = True
+
     def __init__(self):
         """
         """

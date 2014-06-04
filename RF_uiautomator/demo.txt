@@ -5,7 +5,7 @@ Library           Collections.py
 Library           uiautomatorlibrary
 
 *** Variables ***
-${serial_number}    192.168.218.101:5555    # emulator-5554 192.168.218.101:5555 192.168.56.100:5555
+${serial_number}    192.168.56.100:5555    # emulator-5554 192.168.218.101:5555 192.168.56.100:5555 0489902425228ab9
 
 *** Test Cases ***
 test
@@ -55,13 +55,39 @@ test object swipe
 test open notification
     Execute Adb Shell Command    am start -W com.hmh.api/.app.StatusBarNotifications
 
+test screen orientation
+    Start API Demo
+    Unfreeze Screen Rotation
+    Set Screen Orientation    n
+    ${orientation}    Get Screen Orientation
+    Should Be Equal As Strings    natural    ${orientation}
+    Set Screen Orientation    natural
+    ${orientation}    Get Screen Orientation
+    Should Be Equal As Strings    natural    ${orientation}
+    #
+    Set Screen Orientation    r
+    ${orientation}    Get Screen Orientation
+    Should Be Equal As Strings    right    ${orientation}
+    Freeze Screen Rotation
+
+test call
+    Start API Demo
+    ${accessibility_text}    Get Object    text=Accessibility
+    Call    ${accessibility_text}    click
+
+test get count
+    Start API Demo
+    ${accessibility_text}    Get Object    text=Accessibility
+    ${count}    Get Count Of Object    ${accessibility_text}
+    ${count}    uiautomatorlibrary.Get Count    text=Accessibility
+
 *** Keywords ***
 Install API Demo
+    [Documentation]    https://play.google.com/store/apps/details?id=com.hmh.api
     Install    ${CURDIR}${/}com.hmh.api_4.0.apk
 
 Uninstall API Demo
     Uninstall    com.hmh.api
 
 Start API Demo
-    [Documentation]    https://play.google.com/store/apps/details?id=com.hmh.api
     Execute Adb Shell Command    am start -W com.hmh.api/.ApiDemos

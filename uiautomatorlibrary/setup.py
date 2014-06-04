@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
     name = 'robotframework-uiautomatorlibrary',
     packages = ['uiautomatorlibrary'],
-    version = '0.2',
+    version = '0.1',
     author='ming060',
     author_email = 'lym060@gmail.com',
     url = 'https://github.com/ming060/robotframework-uiautomatorlibrary',

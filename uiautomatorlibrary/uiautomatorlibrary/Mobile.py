@@ -356,29 +356,29 @@ class Mobile():
         """
         Drag from (sx, sy) to (ex, ey) with steps
 
-        See `Swipe By Coordinates` for more details.
+        See `Swipe By Coordinates` also.
         """
         self.device.drag(sx, sy, ex, ey, steps)
 
     #Wait until the specific ui object appears or gone
 
     # wait until the ui object appears
-    def wait_for_exists(self, timeout=0, *args, **attribute):
+    def wait_for_exists(self, timeout=0, *args, **selectors):
         """
-        true means the object which has *attribute* exist
+        true means the object which has *selectors* exist
         false means the object does not exist
         in the given timeout
         """
-        return self.device(**attribute).wait.exists(timeout=timeout)
+        return self.device(**selectors).wait.exists(timeout=timeout)
 
     # wait until the ui object gone
-    def wait_until_gone(self, timeout=0, *args, **attribute):
+    def wait_until_gone(self, timeout=0, *args, **selectors):
         """
-        true means the object which has *attribute* disappear
+        true means the object which has *selectors* disappear
         false means the object exist
         in the given timeout
         """
-        return self.device(**attribute).wait.gone(timeout=timeout)
+        return self.device(**selectors).wait.gone(timeout=timeout)
 
     def wait_for_object_exists(self, obj, timeout=0):
         """
@@ -457,11 +457,11 @@ class Mobile():
         """
         return obj.scroll.horiz.backward(steps=steps)
 
-    def scroll_to_horizontally(self, obj, *args,**attribute):
+    def scroll_to_horizontally(self, obj, *args,**selectors):
         """
         return whether the object can be scroll or not
         """
-        return obj.scroll.horiz.to(**attribute)
+        return obj.scroll.horiz.to(**selectors)
 
     def scroll_forward_vertically(self, obj, steps=10):
         """
@@ -475,13 +475,52 @@ class Mobile():
         """
         return obj.scroll.vert.backward(steps=steps)
 
-    def scroll_to_vertically(self, obj, *args, **attribute):
+    def scroll_to_vertically(self, obj, *args, **selectors):
         """
         return whether the object exists or not
         """
-        return obj.scroll.vert.to(**attribute)
+        return obj.scroll.vert.to(**selectors)
 
 #Screen Actions of the device
+
+    def get_screen_orientation(self):
+        """
+        Get the screen orientation.
+
+        Possible result: natural, left, right, upsidedown
+
+        See for more details: https://github.com/xiaocong/uiautomator#screen-actions-of-the-device
+        """
+        return self.device.orientation
+
+    def set_screen_orientation(self, orientation):
+        """
+        Set the screen orientation.
+
+        Input *orientation* : natural or n, left or l, right or r, upsidedown (support android version above 4.3)
+
+        The keyword will unfreeze the screen rotation first.
+
+        See for more details: https://github.com/xiaocong/uiautomator#screen-actions-of-the-device
+
+        Example:
+
+        | Set Screen Orientation | n | # Set orientation to natural |
+        | Set Screen Orientation | natural | # Do the same thing  |
+        """
+        self.device.orientation = orientation
+
+    def freeze_screen_rotation(self):
+        """
+        Freeze the screen auto rotation
+        """
+        self.device.freeze_rotation()
+
+    def unfreeze_screen_rotation(self):
+        """
+        Un-Freeze the screen auto rotation
+        """
+        self.device.freeze_rotation(False)
 
     def screenshot(self, scale=None, quality=None):
         """
@@ -573,19 +612,37 @@ class Mobile():
 
 #Selector
 
-    def get_object(self, *args, **attribute):
+    def get_object(self, *args, **selectors):
         """
-        Get the ui object with attribute *attribute*
+        Get the UI object with selectors *selectors*
+
+        See `introduction` for details about identified UI object.
         """
-        return self.device(*args, **attribute)
+        return self.device(*args, **selectors)
+
+    def get_count(self, *args, **selectors):
+        """
+        Return the count of UI object with *selectors*
+
+        Example:
+
+        | ${count} | Get Count | text=Accessibility | # Get the count of UI object text=Accessibility |
+        | ${accessibility_text} | Get Object | text=Accessibility | # These two keywords combination |
+        | ${count} | Get Count Of Object | ${accessibility_text} | # do the same thing. |
+
+        """
+        obj = self.get_object(**selectors)
+        return self.get_count_of_object(obj)
 
     def get_count_of_object(self, obj):
         """
-        Return the count of given *obj*
+        Return the count of given UI object
+
+        See `Get Count` for more details.
         """
         return len(obj)
 
-    def get_info_of_object(self, obj, attribute=None):
+    def get_info_of_object(self, obj, selector=None):
         """
         return info dictionary of the *obj*
         The info example:
@@ -620,38 +677,48 @@ class Mobile():
                           }
         }
         """
-        if attribute:
-            return obj.info.get(attribute)
+        if selector:
+            return obj.info.get(selector)
         else:
             return obj.info
 
-    def click_on(self, *args, **attribute):
+    def click(self, *args, **selectors):
         """
-        click on the object with *attribute*
+        click on the UI object with *selectors*
         """
-        self.device(**attribute).click()
+        self.device(**selectors).click()
 
-    def long_click_on(self, *args, **attribute):
+    def long_click(self, *args, **selectors):
         """
-        click on the object with *attribute*
+        click on the UI object with *selectors*
         """
-        self.device(**attribute).long_click()
+        self.device(**selectors).long_click()
 
-    def call(self, obj, method, *args, **attribute):
+    def call(self, obj, method, *args, **selectors):
+        """
+        This keyword can use object method from original python uiautomator
+
+        See more details from https://github.com/xiaocong/uiautomator
+
+        Example:
+
+        | ${accessibility_text} | Get Object | text=Accessibility | # Get the UI object |
+        | Call | ${accessibility_text} | click | # Call the method of the UI object 'click' |
+        """
         func = getattr(obj, method)
-        return func(**attribute)
+        return func(**selectors)
 
-    def set_text(self, input_text, *args, **attribute):
+    def set_text(self, input_text, *args, **selectors):
         """
-        set *text* to the Component which has the *attribute* 
+        set *text* to the UI object with *selectors* 
         """
-        self.device(**attribute).set_text(input_text)
+        self.device(**selectors).set_text(input_text)
 
 # Other feature
 
     def clear_text(self, *args, **selectors):
         """
-        Clear text of the component  with *selectors*
+        Clear text of the UI object  with *selectors*
         """
         while True:
             target = self.device(**selectors)
@@ -664,8 +731,11 @@ class Mobile():
     def open_notification(self):
         """
         open notification
+
         Built in support for Android 4.3 (API level 18)
-        Using swipe action as a workaround for API level lower 18
+
+        Using swipe action as a workaround for API level lower than 18
+
         """
         sdk_version = self.device.info['sdkInt']
         if sdk_version < 18:
@@ -677,13 +747,15 @@ class Mobile():
     def open_quick_settings(self):
         """
         open quick settings
-        Work for Android 4.3 (API level 18)
+
+        Work for Android 4.3 above (API level 18)
+
         """
         self.device.open.quick_settings()
 
     def sleep(self, time):
         """
-        sleep(no action) for *time* (in millisecond)
+        Sleep(no action) for *time* (in millisecond)
         """
         target = 'wait for %s' % str(time)
         self.device(text=target).wait.exists(timeout=time)
