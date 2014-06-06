@@ -66,6 +66,7 @@ Dropbox Integration Setup
 
 Dropbox Integration Teardown
     Run Keyword If Test Failed    Screenshot
+    Close All Browsers
     Delete All Albums
     Delete Camera Upload
     Remove Account    Dropbox
@@ -74,7 +75,7 @@ Dropbox Integration Teardown
     Stop Test Agent
     Uninstall Test Agent
     Clear Recent Apps
-    Close All Browsers
+    Press Home
 
 Install Dropbox
     Install    ${CURDIR}${/}com.dropbox.android_2.4.1.apk
@@ -90,9 +91,9 @@ Sign In Dropbox On Android
 
 Sign In Dropbox On Web
     [Arguments]    ${dropbox_account}    ${dropbox_pwd}
-    Comment    Set Selenium Speed    1s
+    Set Selenium Speed    1s
     Open Browser    https://www.dropbox.com/    firefox
-    Maximize Browser Window
+    Comment    Maximize Browser Window
     Click Link    /login
     Comment    Input Text    id=login_email    ${dropbox_account}
     Comment    Input Password    id=login_password    ${dropbox_pwd}

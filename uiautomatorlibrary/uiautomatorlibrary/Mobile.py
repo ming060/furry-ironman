@@ -710,7 +710,7 @@ class Mobile():
 
     def set_text(self, input_text, *args, **selectors):
         """
-        set *text* to the UI object with *selectors* 
+        Set *input_text* to the UI object with *selectors* 
         """
         self.device(**selectors).set_text(input_text)
 
@@ -776,19 +776,19 @@ class Mobile():
         """
         Execute adb *cmd*
         """
-        self.adb.cmd(cmd)
+        return self.adb.cmd(cmd)
 
     def execute_adb_shell_command(self,cmd):
         """
         Execute adb shell *cmd*
         """
-        self.adb.shell_cmd(cmd)
+        return self.adb.shell_cmd(cmd)
 
-    def type(self, text):
+    def type(self, input_text, **selectors):
         """
-        Type *text* at current focused component
+        Type *text* at current focused UI object
         """
-        self.test_helper.send_set_text_cmd(text)
+        self.test_helper.send_set_text_cmd(input_text)
 
     def start_test_agent(self):
         """

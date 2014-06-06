@@ -55,7 +55,7 @@ Verify Photo Does Not Exist
 
 Wi-Fi SD Card Test Setup
     Set Serial    0489902425228ab9
-    Set Test Variable    ${test_dir}    F:${/}DCIM${/}Test
+    Set Test Variable    ${test_dir}    G:${/}DCIM${/}Test
     Set Test Variable    ${file_name}    DSCF1927_LR.JPG
     Remove Directory    ${test_dir}    recursive=True
     Create Directory    ${test_dir}

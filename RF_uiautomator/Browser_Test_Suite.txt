@@ -10,7 +10,7 @@ ${infinite}       10000
 *** Test Cases ***
 test
     Open Browser    https://play.google.com/store    Firefox
-    Maximize Browser Window
+    Comment    Maximize Browser Window
     Click Element    id=gb_70
     Input Text    id=Email    lym060
     Input Text    id=Passwd    waitting060

@@ -10,6 +10,22 @@ Google Play Store Test
     Verify Installation
     [Teardown]    Google Play Store Test Teardown
 
+test
+    ${google_account}    Set Variable    minglin060
+    ${google_password}    Set Variable    060nilgnim
+    Login Google Play    ${google_account}    ${google_password}
+    Go To    https://play.google.com/store/apps/details?id=com.sg.ranaz.audioandvideorecorder.lite
+    Comment    Go To    https://play.google.com/store/apps/details?id=com.dropbox.android    https://play.google.com/store/apps/details?id=jp.naver.line.android
+    Go To    https://play.google.com/store/apps/details?id=jp.naver.line.android
+    Comment    Click Element    //button[@class="price buy"]
+    Click Element    //*[@class="price buy id-track-click"]
+    Wait Until Page Contains Element    //button[@id="purchase-ok-button"]    10s
+    Wait Until Page Contains Element    //div[@class="id-displayed-device"]
+    Comment    Click Element    //div[@class="id-displayed-device"]
+    Comment    Wait Until Page Contains Element    //*[@id="device-selector-container"]/div/div/div/div[1]/div/div/span[1]
+    Comment    Click Element    //*[@id="device-selector-container"]/div/div/div/div[1]/div/div/span[1]
+    Click Element    //button[@id="purchase-ok-button"]
+
 *** Keywords ***
 Google Play Store Test Setup
     ${google_account}    Set Variable    minglin060
@@ -24,27 +40,30 @@ Google Play Store Test Setup
 
 Google Play Store Test Teardown
     Run Keyword If Test Failed    Screenshot
+    Close Browser
     Remove Google Account
     Clear Connected Wifi
     Stop Test Agent
     Uninstall Test Agent
-    Close Browser
 
 Install App On Google Play
     Go To    https://play.google.com/store/apps/details?id=com.sg.ranaz.audioandvideorecorder.lite
-    Comment    Go To    https://play.google.com/store/apps/details?id=com.dropbox.android
-    Click Element    //button[@class="price buy"]
+    Comment    Go To    https://play.google.com/store/apps/details?id=com.dropbox.android    https://play.google.com/store/apps/details?id=jp.naver.line.android
+    Go To    https://play.google.com/store/apps/details?id=jp.naver.line.android
+    Comment    Click Element    //button[@class="price buy"]
+    Click Element    //*[@class="price buy id-track-click"]
     Wait Until Page Contains Element    //button[@id="purchase-ok-button"]    10s
-    Wait Until Page Contains Element    //div[@class="id-displayed-device"]
-    Click Element    //div[@class="id-displayed-device"]
-    Wait Until Page Contains Element    //*[@id="device-selector-container"]/div/div/div/div[1]/div/div/span[1]
-    Click Element    //*[@id="device-selector-container"]/div/div/div/div[1]/div/div/span[1]
-    Comment    Click Element    //button[@id="purchase-ok-button"]
+    Wait Until Page Contains Element    //div[@class="id-displayed-device"]    10s
+    Wait Until Page Contains Element    //button[@id="purchase-ok-button"]    10s
+    Comment    Click Element    //div[@class="id-displayed-device"]
+    Comment    Wait Until Page Contains Element    //*[@id="device-selector-container"]/div/div/div/div[1]/div/div/span[1]
+    Comment    Click Element    //*[@id="device-selector-container"]/div/div/div/div[1]/div/div/span[1]
+    Click Element    //button[@id="purchase-ok-button"]
 
 Login Google Play
     [Arguments]    ${google_account}    ${google_password}
     Open Browser    https://play.google.com/store    Firefox
-    Maximize Browser Window
+    Comment    Maximize Browser Window
     Click Element    id=gb_70
     Input Text    id=Email    ${google_account}
     Input Text    id=Passwd    ${google_password}
