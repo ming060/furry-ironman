@@ -1,0 +1,24 @@
+*** Settings ***
+Library           uiautomatorlibrary
+
+*** Test Cases ***
+三
+    Set Serial    0489902425228ab9
+    Click    text=0
+    Click    text=1
+    Click    text=2
+
+四
+    Set Serial    0489902425228ab9
+    Click    text=0
+    Click    text=1
+    Click    text=2
+    Click    text=3
+
+五
+    Set Serial    0489902425228ab9
+    Click    text=0
+    Click    text=1
+    Click    text=2
+    Click    text=3
+    Click    text=4

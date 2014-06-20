@@ -399,29 +399,29 @@ class Mobile():
 
 
     # Perform fling on the specific ui object(scrollable)
-    def fling_forward_horizontally(self, obj):
+    def fling_forward_horizontally(self, *args, **selectors):
         """
         return whether the object can be fling or not
         """
-        return obj.fling.horiz.forward()
+        return self.device(**selectors).fling.horiz.forward()
 
-    def fling_backward_horizontally(self, obj):
+    def fling_backward_horizontally(self, *args, **selectors):
         """
         return whether the object can be fling or not
         """
-        return obj.fling.horiz.backward()
+        return self.device(**selectors).fling.horiz.backward()
 
-    def fling_forward_vertically(self, obj):
+    def fling_forward_vertically(self, *args, **selectors):
         """
         return whether the object can be fling or not
         """
-        return obj.fling.vert.forward()
+        return self.device(**selectors).fling.vert.forward()
 
-    def fling_backward_vertically(self, obj):
+    def fling_backward_vertically(self, *args, **selectors):
         """
         return whether the object can be fling or not
         """
-        return obj.fling.vert.backward()
+        return self.device(**selectors).fling.vert.backward()
 
     # Perform scroll on the specific ui object(scrollable)
 
