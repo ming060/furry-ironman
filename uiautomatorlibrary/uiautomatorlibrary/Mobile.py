@@ -30,7 +30,7 @@ class TestHelper:
         shell指令使用雙引號括起來，例如：adb shell "am broadcast -a myIME.intent.action.pass.string -e input abc"
                         但由於內容也可能為包含符號或是空白，所以必須再使用雙引號括起來，例如："abc c"
         """
-        self.adb.shell_cmd('\"am broadcast -a myIME.intent.action.pass.string -e input \\\"%s\\\"\"' % TestHelper.__convert_to_unicode_by_text(self, text))
+        self.adb.shell_cmd('\"am broadcast -a myIME.intent.action.pass.string -e input \\\"\"%s\"\\\"\"' % TestHelper.__convert_to_unicode_by_text(self, text))
         self.adb.shell_cmd('input keyevent KEYCODE_UNKNOWN')
 
 class ADB:
@@ -78,7 +78,7 @@ class Mobile():
 
         Using different library name when importing this library according to http://robotframework.googlecode.com/hg/doc/userguide/RobotFrameworkUserGuide.html?r=2.8.4#setting-custom-name-to-test-library.
 
-        | Setting | Value |  Value |  Value | 
+        | ==Setting== | ==Value== |  ==Value== |  ==Value== | 
         | Library | Mobile | WITH NAME | Mobile1 |
         | Library | Mobile | WITH NAME | Mobile2 |
 
@@ -606,7 +606,7 @@ class Mobile():
 
     def list_all_watchers(self):
         """
-        return the watcher list
+        Return the watcher list
         """
         return self.device.watchers
 
