@@ -1,0 +1,58 @@
+*** Settings ***
+Library           uiautomatorlibrary
+
+*** Test Cases ***
+0
+    Set Serial    FA369W910426
+    Click    className=android.widget.ImageButton    index=18
+
+01
+    Set Serial    FA369W910426
+    Click    className=android.widget.ImageButton    index=18
+    Click    className=android.widget.ImageButton    index=13
+
+012
+    Set Serial    FA369W910426
+    Click    className=android.widget.ImageButton    index=18
+    Click    className=android.widget.ImageButton    index=13
+    Click    className=android.widget.ImageButton    index=14
+
+0123
+    Set Serial    FA369W910426
+    Click    className=android.widget.ImageButton    index=18
+    Click    className=android.widget.ImageButton    index=13
+    Click    className=android.widget.ImageButton    index=14
+    Click    className=android.widget.ImageButton    index=15
+
+01234
+    Set Serial    FA369W910426
+    Click    className=android.widget.ImageButton    index=18
+    Click    className=android.widget.ImageButton    index=13
+    Click    className=android.widget.ImageButton    index=14
+    Click    className=android.widget.ImageButton    index=15
+    Click    className=android.widget.ImageButton    index=9
+
+012345
+    Set Serial    FA369W910426
+    Click    className=android.widget.ImageButton    index=18
+    Click    className=android.widget.ImageButton    index=13
+    Click    className=android.widget.ImageButton    index=14
+    Click    className=android.widget.ImageButton    index=15
+    Click    className=android.widget.ImageButton    index=9
+    Click    className=android.widget.ImageButton    index=10
+
+10
+    Set Serial    FA369W910426
+    Repeat Keyword    10    Click    className=android.widget.ImageButton    index=18
+
+20
+    Set Serial    FA369W910426
+    Repeat Keyword    20    Click    className=android.widget.ImageButton    index=18
+
+40
+    Set Serial    FA369W910426
+    Repeat Keyword    40    Click    className=android.widget.ImageButton    index=18
+
+80
+    Set Serial    FA369W910426
+    Repeat Keyword    80    Click    className=android.widget.ImageButton    index=18
