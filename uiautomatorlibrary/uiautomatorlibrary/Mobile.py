@@ -76,9 +76,9 @@ class Mobile():
 
         When you need to use multiple devices, do not use this keyword to switch between devices in test execution.
 
-        Using different library name when importing this library according to http://robotframework.googlecode.com/hg/doc/userguide/RobotFrameworkUserGuide.html?r=2.8.4#setting-custom-name-to-test-library.
+        Using different library name when importing this library according to http://robotframework.googlecode.com/hg/doc/userguide/RobotFrameworkUserGuide.html?r=2.8.5.
 
-        | ==Setting== | ==Value== |  ==Value== |  ==Value== | 
+        | Setting | Value |  Value |  Value | 
         | Library | Mobile | WITH NAME | Mobile1 |
         | Library | Mobile | WITH NAME | Mobile2 |
 
@@ -634,13 +634,13 @@ class Mobile():
         obj = self.get_object(**selectors)
         return self.get_count_of_object(obj)
 
-    def get_count_of_object(self, obj):
-        """
-        Return the count of given UI object
-
-        See `Get Count` for more details.
-        """
-        return len(obj)
+#     def get_count_of_object(self, obj):
+#         """
+#         Return the count of given UI object
+# 
+#         See `Get Count` for more details.
+#         """
+#         return len(obj)
 
     def get_info_of_object(self, obj, selector=None):
         """
@@ -684,13 +684,17 @@ class Mobile():
 
     def click(self, *args, **selectors):
         """
-        click on the UI object with *selectors*
+        Click on the UI object with *selectors*
+
+        | Click | text=Accessibility | className=android.widget.Button | # Click the object with class name and text |
         """
         self.device(**selectors).click()
 
     def long_click(self, *args, **selectors):
         """
-        click on the UI object with *selectors*
+        Long click on the UI object with *selectors*
+
+        See `Click` for more details.
         """
         self.device(**selectors).long_click()
 
@@ -730,7 +734,7 @@ class Mobile():
 
     def open_notification(self):
         """
-        open notification
+        Open notification
 
         Built in support for Android 4.3 (API level 18)
 
@@ -806,13 +810,11 @@ class Mobile():
         cmd = 'am broadcast -a testagent -e action STOP_TESTAGENT'
         self.adb.shell_cmd(cmd)
 
-    def connect_to_wifi(self, ssid, password):
+    def connect_to_wifi(self, ssid, password=None):
         """
         [Test Agent]
         Connect to *ssid* with *password*
         """
-        cmd = 'adb shell am start edu.ntut.csie.sslab1321.testagent/edu.ntut.csie.sslab1321.testagent.DummyActivity'
-        cmd = 'adb shell am broadcast -a testagent -e action CONNECT_TO_WIFI -e ssid WEP -e password 12345'
         cmd = 'am broadcast -a testagent -e action CONNECT_TO_WIFI -e ssid %s -e password %s' % (ssid, password)
         self.adb.shell_cmd(cmd)
 
@@ -823,22 +825,3 @@ class Mobile():
         """
         cmd = 'am broadcast -a testagent -e action CLEAR_CONNECTED_WIFIS'
         self.adb.shell_cmd(cmd)
-
-    def foo(self):
-        pass
-#         logger.info('\nGot arg %s %s' % (output_dir, st), also_console=True)
-#         clm = CommandLineWriter()
-        # output some messages on console
-#         clm.message(' ')
-#         clm.message(u'中文')
-#         clm.message(u'2----------2')
-
-    def test(self):
-        pass
-
-if __name__ == '__main__':
-    print 'start'
-
-    m = Mobile()
-
-    print 'end'
