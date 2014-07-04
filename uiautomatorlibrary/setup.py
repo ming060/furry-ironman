@@ -7,12 +7,17 @@ setup(
     author='ming060',
     author_email = 'lym060@gmail.com',
     url = 'https://github.com/ming060/robotframework-uiautomatorlibrary',
-    description = 'Robot Framework Android Test Library',
-    long_description = '',
+    description = 'Robot Framework Android Test Library Based on Python uiautomator',
+    long_description = 
+    """
+    This is a test library for `Robot Framework <https://pypi.python.org/pypi/robotframework>`_.
+
+    It extend the test ability for Android Device by using `Python uiautomator <https://pypi.python.org/pypi/uiautomator>`_ internally.
+    """,
     install_requires = ['uiautomator >= 0.1.28'],
     classifiers  = [
                     'Programming Language :: Python :: 2.7',
-#                     'License :: ', #TODO
+                    'License :: OSI Approved :: MIT License',
                     'Operating System :: Microsoft :: Windows :: Windows 7',
                     'Development Status :: 3 - Alpha',
                     'Intended Audience :: Developers',
