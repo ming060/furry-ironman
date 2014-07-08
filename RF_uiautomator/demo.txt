@@ -9,6 +9,12 @@ ${serial_number}    192.168.56.100:5555    # emulator-5554 192.168.218.101:5555 
 
 *** Test Cases ***
 test
+    ${a}    Scroll Forward Vertically    className=android.widget.ListView
+    ${a}    Scroll Forward Vertically    100    className=android.widget.ListView
+
+test_scroll
+    ${list}    Get Object    className=android.widget.ListView
+    ${is_web_view}    Scroll To Vertically    ${list}    text=WebView
 
 test set serial
     Set Serial    0489902425228ab9
