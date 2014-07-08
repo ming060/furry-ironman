@@ -5,14 +5,7 @@ import subprocess
 import os
 import time
 import datetime
-from robot.output.monitor import CommandLineWriter as clm
 from robot.libraries.BuiltIn import BuiltIn
-import sys
-
-
-# print "Importing Android library"
-# clm = CommandLineWriter()
-# clm.message("Importing Android library")
 
 class TestHelper:
     def __init__(self, adb):
@@ -20,15 +13,16 @@ class TestHelper:
 
     def __convert_to_unicode_by_text(self, text):
         """
-                        將輸入的字串轉換成 Unicode Transformation Format (UTF-8)
+        Transfer input string to UTF-8 format
         """
-        # 由object轉換為string之後，移除前後的unicode標記，例如：將u'abc'轉換為字串abc
+        # Remove the unicode tag. example: transfer u'abc' to string abc
         return repr(text)[2:-1]
 
     def send_set_text_cmd(self, text):
         """
-        shell指令使用雙引號括起來，例如：adb shell "am broadcast -a myIME.intent.action.pass.string -e input abc"
-                        但由於內容也可能為包含符號或是空白，所以必須再使用雙引號括起來，例如："abc c"
+        Setting the input string to MyIME
+        1. adb shell "am broadcast -a myIME.intent.action.pass.string -e input abc"
+        2. adb shell input keyevent KEYCODE_UNKNOWN
         """
         self.adb.shell_cmd('\"am broadcast -a myIME.intent.action.pass.string -e input \\\"\"%s\"\\\"\"' % TestHelper.__convert_to_unicode_by_text(self, text))
         self.adb.shell_cmd('input keyevent KEYCODE_UNKNOWN')
@@ -43,9 +37,6 @@ class ADB:
             self.prefix_cmd = ''.join(self.buf)
 
     def cmd(self, cmd):
-        """
-                        將 adb -s SERIAL_NUMBER xxxxxx or adb xxxxxxx 取代成 xxxxxx
-        """
         self.buf = []
         self.buf.append(self.prefix_cmd)
         self.buf.append(cmd)
@@ -53,9 +44,6 @@ class ADB:
         return subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
 
     def shell_cmd(self, cmd):
-        """
-                        將 adb -s SERIAL_NUMBER shell xxxxxx or adb shell xxxxxxx 取代成 xxxxx-x
-        """
         self.buf = []
         self.buf.append(self.prefix_cmd)
         self.buf.append('shell ')
@@ -66,7 +54,7 @@ class ADB:
 class Mobile():
 
     def __init__(self):
-        pass
+        self.set_serial(None)
 
     def set_serial(self, android_serial):
         """
@@ -136,13 +124,13 @@ class Mobile():
     """
     def turn_on_screen(self):
         """
-        Turn on screen
+        Turn on the screen.
         """
         self.device.screen.on()
 
     def turn_off_screen(self):
         """
-        Turn off screen
+        Turn off the screen.
         """
         self.device.screen.off()
 
@@ -162,97 +150,97 @@ class Mobile():
 
     def press_home(self):
         """
-        Press home key
+        Press home key.
         """
         self.device.press.home()
 
     def press_back(self):
         """
-        Press back key
+        Press back key.
         """
         self.device.press.back()
 
     def press_left(self):
         """
-        Press left key
+        Press left key.
         """
         self.device.pres.left()
 
     def press_right(self):
         """
-        Press right key
+        Press right key.
         """
         self.device.press.right()
 
     def press_up(self):
         """
-        Press up key
+        Press up key.
         """
         self.device.press.up()
 
     def press_down(self):
         """
-        Press down key
+        Press down key.
         """
         self.device.press.down()
 
     def press_center(self):
         """
-        Press center key
+        Press center key.
         """
         self.device.press.center()
 
     def press_menu(self):
         """
-        Press menu key
+        Press menu key.
         """
         self.device.press.menu()
 
     def press_search(self):
         """
-        Press search key
+        Press search key.
         """
         self.device.press.search()
 
     def press_enter(self):
         """
-        Press enter key
+        Press enter key.
         """
         self.device.press.enter()
 
     def press_delete(self):
         """
-        Press delete key
+        Press delete key.
         """
         self.device.press.delete()
 
     def press_recent(self):
         """
-        Press recent key
+        Press recent key.
         """
         self.device.press.recent()
 
     def press_volume_up(self):
         """
-        Press volume up key
+        Press volume up key.
         """
         self.device.press.volume_up()
 
     def press_volume_down(self):
         """
-        Press volume down key
+        Press volume down key.
         """
         self.device.press.volume_down()
 
     def press_camera(self):
         """
-        Press camera key
+        Press camera key.
         """
         self.device.press.camera()
 
     def press_power(self):
         """
-        Press power key
+        Press power key.
         """
         self.device.press.power()
 
@@ -365,35 +353,35 @@ class Mobile():
     # wait until the ui object appears
     def wait_for_exists(self, timeout=0, *args, **selectors):
         """
-        true means the object which has *selectors* exist
-        false means the object does not exist
-        in the given timeout
+        Wait for the object which has *selectors* within the given timeout.
+
+        Return true if the object *appear* in the given timeout. Else return false.
         """
         return self.device(**selectors).wait.exists(timeout=timeout)
 
     # wait until the ui object gone
     def wait_until_gone(self, timeout=0, *args, **selectors):
         """
-        true means the object which has *selectors* disappear
-        false means the object exist
-        in the given timeout
+        Wait for the object which has *selectors* within the given timeout.
+
+        Return true if the object *disappear* in the given timeout. Else return false.
         """
         return self.device(**selectors).wait.gone(timeout=timeout)
 
     def wait_for_object_exists(self, obj, timeout=0):
         """
-        true means the object exist
-        false means the object does not exist
-        in the given timeout
+        Wait for the object: obj within the given timeout.
+
+        Return true if the object *appear* in the given timeout. Else return false.
         """
         return obj.wait.exists(timeout=timeout)
 
     # wait until the ui object gone
     def wait_until_object_gone(self, obj, timeout=0):
         """
-        true means the object disappear
-        false means the object exist
-        in the given timeout
+        Wait for the object: obj within the given timeout.
+
+        Return true if the object *disappear* in the given timeout. Else return false.
         """
         return obj.wait.gone(timeout=timeout)
 
@@ -401,25 +389,33 @@ class Mobile():
     # Perform fling on the specific ui object(scrollable)
     def fling_forward_horizontally(self, *args, **selectors):
         """
-        return whether the object can be fling or not
+        Perform fling forward (horizontally)action on the object which has *selectors* attributes.
+
+        Return whether the object can be fling or not.
         """
         return self.device(**selectors).fling.horiz.forward()
 
     def fling_backward_horizontally(self, *args, **selectors):
         """
-        return whether the object can be fling or not
+        Perform fling backward (horizontally)action on the object which has *selectors* attributes.
+
+        Return whether the object can be fling or not.
         """
         return self.device(**selectors).fling.horiz.backward()
 
     def fling_forward_vertically(self, *args, **selectors):
         """
-        return whether the object can be fling or not
+        Perform fling forward (vertically)action on the object which has *selectors* attributes.
+
+        Return whether the object can be fling or not.
         """
         return self.device(**selectors).fling.vert.forward()
 
     def fling_backward_vertically(self, *args, **selectors):
         """
-        return whether the object can be fling or not
+        Perform fling backward (vertically)action on the object which has *selectors* attributes.
+
+        Return whether the object can be fling or not.
         """
         return self.device(**selectors).fling.vert.backward()
 
@@ -427,21 +423,25 @@ class Mobile():
 
     def scroll_to_beginning_vertically(self, steps=10, **selectors):
         """
+        Scroll the object which has *selectors* attributes to *beginning* vertically.
         """
         return self.device(**selectors).scroll.vert.toBeginning(steps=steps)
 
     def scroll_to_end_vertically(self, steps=10, **selectors):
         """
+        Scroll the object which has *selectors* attributes to *end* vertically.
         """
         return self.device(**selectors).scroll.vert.toEnd(steps=steps)
 
     def scroll_object_to_beginning_vertically(self, obj, steps=10):
         """
+        Scroll the object: obj to *beginning* vertically.
         """
         return obj.scroll.vert.toBeginning(steps=steps)
 
     def scroll_object_to_end_vertically(self, obj, steps=10):
         """
+        Scroll the object: obj to *end* vertically.
         """
         return obj.scroll.vert.toEnd(steps=steps)
 
