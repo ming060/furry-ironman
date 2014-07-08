@@ -27,12 +27,6 @@ class uiautomatorlibrary(Mobile):
     | ${some_parent_object} | Get Object | description=parent |
     | ${some_child_object}  | Get Child  | ${some_parent_object} | text=child |
 
-    There are two kinds of keyword:
-
-    Example:
-
-    |
-
     Selector supports below parameters (more details https://github.com/xiaocong/uiautomator#selector):
 
     - text, textContains, textMatches, textStartsWith
@@ -43,6 +37,14 @@ class uiautomatorlibrary(Mobile):
     - packageName, packageNameMatches
     - resourceId, resourceIdMatches
     - index, instance
+
+    If you want to use `Type` keyword with [IME] tag.
+
+    Please install MyIME.apk to device and chose MyIME as your input method editor.
+
+    If you want to use keywords with [Test Agent] tag.
+
+    Please install TestAgent.apk to device.
     """
 
     __version__ = '0.1'

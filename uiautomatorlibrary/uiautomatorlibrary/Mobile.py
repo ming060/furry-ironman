@@ -421,63 +421,102 @@ class Mobile():
 
     # Perform scroll on the specific ui object(scrollable)
 
-    def scroll_to_beginning_vertically(self, steps=10, **selectors):
+    # horizontal
+    def scroll_to_beginning_horizontally(self, steps=10, *args,**selectors):
         """
-        Scroll the object which has *selectors* attributes to *beginning* vertically.
-        """
-        return self.device(**selectors).scroll.vert.toBeginning(steps=steps)
+        Scroll the object which has *selectors* attributes to *beginning* horizontally.
 
-    def scroll_to_end_vertically(self, steps=10, **selectors):
+        See `Scroll Forward Vertically` for more details.
         """
-        Scroll the object which has *selectors* attributes to *end* vertically.
-        """
-        return self.device(**selectors).scroll.vert.toEnd(steps=steps)
+        return self.device(**selectors).scroll.horiz.toBeginning(steps=steps)
 
-    def scroll_object_to_beginning_vertically(self, obj, steps=10):
+    def scroll_to_end_horizontally(self, steps=10, *args, **selectors):
         """
-        Scroll the object: obj to *beginning* vertically.
-        """
-        return obj.scroll.vert.toBeginning(steps=steps)
+        Scroll the object which has *selectors* attributes to *end* horizontally.
 
-    def scroll_object_to_end_vertically(self, obj, steps=10):
+        See `Scroll Forward Vertically` for more details.
         """
-        Scroll the object: obj to *end* vertically.
-        """
-        return obj.scroll.vert.toEnd(steps=steps)
+        return self.device(**selectors).scroll.horiz.toEnd(steps=steps)
 
-    def scroll_forward_horizontally(self, obj, steps=10):
+    def scroll_forward_horizontally(self, steps=10, *args, **selectors):
         """
-        return whether the object can be scroll or not
-        """
-        return obj.scroll.horiz.forward(steps=steps)
+        Perform scroll forward (horizontally)action on the object which has *selectors* attributes.
 
-    def scroll_backward_horizontally(self, obj, steps=10):
+        Return whether the object can be Scroll or not.
+
+        See `Scroll Forward Vertically` for more details.
         """
-        return whether the object can be scroll or not
+        return self.device(**selectors).scroll.horiz.forward(steps=steps)
+
+    def scroll_backward_horizontally(self, steps=10, *args, **selectors):
         """
-        return obj.scroll.horiz.backward(steps=steps)
+        Perform scroll backward (horizontally)action on the object which has *selectors* attributes.
+
+        Return whether the object can be Scroll or not.
+
+        See `Scroll Forward Vertically` for more details.
+        """
+        return self.device(**selectors).scroll.horiz.backward(steps=steps)
 
     def scroll_to_horizontally(self, obj, *args,**selectors):
         """
-        return whether the object can be scroll or not
+        Scroll(horizontally) on the object: obj to specific UI object which has *selectors* attributes appears.
+
+        Return true if the UI object, else return false.
+
+        See `Scroll To Vertically` for more details.
         """
         return obj.scroll.horiz.to(**selectors)
 
-    def scroll_forward_vertically(self, obj, steps=10):
+    # vertical
+    def scroll_to_beginning_vertically(self, steps=10, *args,**selectors):
         """
-        return whether the object can be scroll or not
-        """
-        return obj.scroll.vert.forward(steps=steps)
+        Scroll the object which has *selectors* attributes to *beginning* vertically.
 
-    def scroll_backward_vertically(self, obj, steps=10):
+        See `Scroll Forward Vertically` for more details.
         """
-        return whether the object can be scroll or not
-        """
-        return obj.scroll.vert.backward(steps=steps)
+        return self.device(**selectors).scroll.vert.toBeginning(steps=steps)
 
-    def scroll_to_vertically(self, obj, *args, **selectors):
+    def scroll_to_end_vertically(self, steps=10, *args, **selectors):
         """
-        return whether the object exists or not
+        Scroll the object which has *selectors* attributes to *end* vertically.
+
+        See `Scroll Forward Vertically` for more details.
+        """
+        return self.device(**selectors).scroll.vert.toEnd(steps=steps)
+
+    def scroll_forward_vertically(self, steps=10, *args, **selectors):
+        """
+        Perform scroll forward (vertically)action on the object which has *selectors* attributes.
+
+        Return whether the object can be Scroll or not.
+
+        Example:
+        | ${can_be_scroll} | Scroll Forward Vertically | className=android.widget.ListView |  | # Scroll forward the UI object with class name |
+        | ${can_be_scroll} | Scroll Forward Vertically | 100 | className=android.widget.ListView | # Scroll with steps |
+        """
+        return self.device(**selectors).scroll.vert.forward(steps=steps)
+
+    def scroll_backward_vertically(self, steps=10, *args, **selectors):
+        """
+        Perform scroll backward (vertically)action on the object which has *selectors* attributes.
+
+        Return whether the object can be Scroll or not.
+
+        See `Scroll Forward Vertically` for more details.
+        """
+        return self.device(**selectors).scroll.vert.backward(steps=steps)
+
+    def scroll_to_vertically(self, obj, *args,**selectors):
+        """
+        Scroll(vertically) on the object: obj to specific UI object which has *selectors* attributes appears.
+
+        Return true if the UI object, else return false.
+
+        Example:
+
+        | ${list} | Get Object | className=android.widget.ListView |  | # Get the list object |
+        | ${is_web_view} | Scroll To Vertically | ${list} | text=WebView | # Scroll to text:WebView. |
         """
         return obj.scroll.vert.to(**selectors)
 
@@ -535,19 +574,6 @@ class Mobile():
         logger.info('\n<a href="%s">%s</a><br><img src="%s">' % (screenshot_path, st, screenshot_path), html=True)
 
 #Watcher
-#     def register_click_watcher(self, watcher_name, selectors, *condition_list):
-#         """
-#         The watcher click on the object which has the selectors when conditions match
-#         """
-#         print type(selectors)
-#         watcher = self.device.watcher(watcher_name)
-#         for condition in condition_list:
-#             watcher.when(**condition)
-#         watcher.click(**selectors)
-#         self.device.watchers.run()
-#         print 'register watcher:%s' % watcher_name
-#         return
-
     def __unicode_to_dict(self, a_unicode):
         a_dict = dict()
         dict_item_count = a_unicode.count('=')
@@ -565,7 +591,7 @@ class Mobile():
 
     def register_click_watcher(self, watcher_name, selectors, *condition_list):
         """
-        The watcher click on the object which has the *selectors* when conditions match
+        The watcher click on the object which has the *selectors* when conditions match.
         """
         watcher = self.device.watcher(watcher_name)
         for condition in condition_list:
@@ -575,7 +601,7 @@ class Mobile():
 
     def register_press_watcher(self, watcher_name, press_keys, *condition_list):
         """
-        The watcher perform *press_keys* action sequentially when conditions match
+        The watcher perform *press_keys* action sequentially when conditions match.
         """
         def unicode_to_list(a_unicode):
             a_list = list()
@@ -597,7 +623,7 @@ class Mobile():
 
     def remove_watchers(self, watcher_name = None):
         """
-        Remove watcher with *watcher_name* or remove all watchers
+        Remove watcher with *watcher_name* or remove all watchers.
         """
         if watcher_name == None:
             self.device.watchers.remove()
@@ -606,7 +632,7 @@ class Mobile():
 
     def list_all_watchers(self):
         """
-        Return the watcher list
+        Return the watcher list.
         """
         return self.device.watchers
 
@@ -750,7 +776,7 @@ class Mobile():
 
     def open_quick_settings(self):
         """
-        open quick settings
+        Open quick settings
 
         Work for Android 4.3 above (API level 18)
 
@@ -766,7 +792,11 @@ class Mobile():
 
     def install(self, apk_path):
         """
-        Install apk to the device
+        Install apk to the device.
+
+        Example:
+
+        | Install | ${CURDIR}${/}com.hmh.api_4.0.apk | # Given the absolute path to the apk file |
         """
         self.adb.cmd('install "%s"' % apk_path)
 
@@ -788,8 +818,10 @@ class Mobile():
         """
         return self.adb.shell_cmd(cmd)
 
-    def type(self, input_text, **selectors):
+    def type(self, input_text):
         """
+        [IME]
+
         Type *text* at current focused UI object
         """
         self.test_helper.send_set_text_cmd(input_text)
@@ -797,6 +829,7 @@ class Mobile():
     def start_test_agent(self):
         """
         [Test Agent]
+
         Start Test Agent Service
         """
         cmd = 'am start edu.ntut.csie.sslab1321.testagent/edu.ntut.csie.sslab1321.testagent.DummyActivity'
@@ -805,6 +838,7 @@ class Mobile():
     def stop_test_agent(self):
         """
         [Test Agent]
+
         Stop Test Agent Service
         """
         cmd = 'am broadcast -a testagent -e action STOP_TESTAGENT'
@@ -813,6 +847,7 @@ class Mobile():
     def connect_to_wifi(self, ssid, password=None):
         """
         [Test Agent]
+
         Connect to *ssid* with *password*
         """
         cmd = 'am broadcast -a testagent -e action CONNECT_TO_WIFI -e ssid %s -e password %s' % (ssid, password)
@@ -821,6 +856,7 @@ class Mobile():
     def clear_connected_wifi(self):
         """
         [Test Agent]
+
         Clear all existed Wi-Fi connection
         """
         cmd = 'am broadcast -a testagent -e action CLEAR_CONNECTED_WIFIS'
