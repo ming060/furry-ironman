@@ -38,13 +38,21 @@ class uiautomatorlibrary(Mobile):
     - resourceId, resourceIdMatches
     - index, instance
 
-    If you want to use `Type` keyword with [IME] tag.
+    *Input*
 
-    Please install MyIME.apk to device and chose MyIME as your input method editor.
+    If you want to use `Type` keyword. It can help you type other language.
 
-    If you want to use keywords with [Test Agent] tag.
+    You have to :
 
-    Please install TestAgent.apk to device.
+    1. Install MyIME.apk (in support folder) to device.
+
+    2. Set MyIME as your input method editor in the setting.
+
+    *Operations without UI*
+
+    If you want to use keywords with *[Test Agent]* tag.
+
+    You have to install TestAgent.apk (in support folder) to device.
     """
 
     __version__ = '0.1'

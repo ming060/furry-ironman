@@ -1,1 +1,2 @@
-recursive-include doc *.html
+include doc/*
+include support/*
