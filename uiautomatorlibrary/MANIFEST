@@ -2,5 +2,7 @@
 README.txt
 setup.py
 doc\uiautomatorlibrary.html
+support\MyIME.apk
+support\TestAgent.apk
 uiautomatorlibrary\Mobile.py
 uiautomatorlibrary\__init__.py
