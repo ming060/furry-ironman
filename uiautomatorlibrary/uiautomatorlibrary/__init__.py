@@ -10,7 +10,6 @@ class uiautomatorlibrary(Mobile):
 
     You can use `Set Serial` to specify which device to perform the test.
 
-
     *Identify UI object*
 
     If the UI object can be identified by just one selector, you can use keywords that manipulate the object directly.
