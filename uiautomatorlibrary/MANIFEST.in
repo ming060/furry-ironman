@@ -1,2 +1,3 @@
 include doc/*
 include support/*
+include demo/*
