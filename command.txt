@@ -1,0 +1,3 @@
+python -m robot.libdoc uiautomatorlibrary doc\uiautomatorlibrary.html
+
+python setup.py register sdist upload -r https://testpypi.python.org/pypi
