@@ -1,0 +1,52 @@
+*** Settings ***
+Library           uiautomatorlibrary
+Library           Selenium2Library
+
+*** Keywords ***
+Clear Notification
+    Open Notification
+    ${is_clear_exist}    Wait For Exists    2000    description=Clear all notifications.
+    Run Keyword If    ${is_clear_exist}    Click    description=Clear all notifications.
+
+Clear Recent Apps
+    Press Recent
+    ${is_no_recent_exist}    Wait For Exists    2000    text=No recent apps
+    Run Keyword If    ${is_no_recent_exist}    Press Back
+    ${count_of_recent_app}    uiautomatorlibrary.Get Count    resourceId=com.android.systemui:id/recent_item
+    :FOR    ${i}    IN RANGE    ${count_of_recent_app}
+    \    Log    ${i}
+    \    Swipe Right    resourceId=com.android.systemui:id/recent_item
+    \    uiautomatorlibrary.Sleep    1000
+
+Enter App
+    [Arguments]    ${app}
+    Press Home
+    Click    description=Apps
+    Click    text=Widgets
+    Swipe Right    resourceId=com.android.launcher:id/drag_layer
+    : FOR    ${index}    IN RANGE    100
+    \    ${is_app_exist}    Wait For Exists    text=${app}
+    \    Run Keyword If    ${is_app_exist}    Run Keywords    Click    text=${app}    AND
+    \    ...    Exit For Loop    ELSE    Swipe Right    resourceId=com.android.launcher:id/drag_layer
+
+Install Test Agent
+    Install    ${CURDIR}${/}TestAgent.apk
+
+Remove Account
+    [Arguments]    ${account}
+    Enter App    Settings
+    ${list_view}    Get Object    className=android.widget.ListView
+    ${return}    Scroll To Vertically    ${list_view}    text=${account}
+    Run Keyword If    ${return}    Remove Account From Setting    ${account}
+
+Remove Account From Setting
+    [Arguments]    ${account}
+    Click    text=${account}
+    Click    description=More options
+    Click    text=Remove account
+    Click    text=Remove account
+    ${is_dropbox_account_exist}    Wait For Exists    3000    text=${account}
+    Should Not Be True    ${is_dropbox_account_exist}
+
+Uninstall Test Agent
+    Uninstall    edu.ntut.csie.sslab1321.testagent

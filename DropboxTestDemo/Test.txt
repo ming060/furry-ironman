@@ -1,0 +1,36 @@
+*** Settings ***
+Library           uiautomatorlibrary
+Resource          nexus 7 resource.txt
+Library           Selenium2Library
+
+*** Test Cases ***
+test
+    ${dropbox_account}    Set Variable    t7820315@ntut.org.tw
+    ${dropbox_pwd}    Set Variable    ming060
+    Sign In Dropbox On Web    ${dropbox_account}    ${dropbox_pwd}
+
+*** Keywords ***
+Delete All Albums
+    Clear Recent Apps
+    Enter App    Gallery
+    ${is_camera_exist}    Wait For Exists    3000    text=Camera
+    Return From Keyword If    ${is_camera_exist}
+    Click    description=More options
+    Click    text=Select album
+    Click    text=0 selected
+    Click    text=Select all
+    Click    description=Delete
+    Click    text=OK
+    Wait For Exists    10000    text=Camera
+
+Sign In Dropbox On Web
+    [Arguments]    ${dropbox_account}    ${dropbox_pwd}
+    Open Browser    https://www.dropbox.com/    firefox
+    Comment    Maximize Browser Window
+    Click Link    /login
+    Comment    Input Text    id=login_email    ${dropbox_account}
+    Comment    Input Password    id=login_password    ${dropbox_pwd}
+    Comment    Click Button    id=login_submit
+    Input Text    xpath=//input[@name='login_email']    ${dropbox_account}
+    Input Password    xpath=//input[@name='login_password']    ${dropbox_pwd}
+    Click Button    xpath=//button[@class="login-button button-primary"]

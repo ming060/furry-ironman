@@ -1,0 +1,127 @@
+*** Settings ***
+Library           Selenium2Library
+Library           uiautomatorlibrary
+Library           Collections
+Resource          nexus 7 resource.txt
+
+*** Test Cases ***
+Dropbox Integration Test
+    [Setup]    Dropbox Integration Setup
+    Take A Photo
+    ${photo_name}    Verify Photo On Android
+    Verify Photo On Web    ${photo_name}
+    [Teardown]    Dropbox Integration Teardown
+
+*** Keywords ***
+Delete All Albums
+    Clear Recent Apps
+    Enter App    Gallery
+    ${is_camera_exist}    Wait For Exists    3000    text=Camera
+    Return From Keyword If    ${is_camera_exist}
+    Click    description=More options
+    Click    text=Select album
+    Click    text=0 selected
+    Click    text=Select all
+    Click    description=Delete
+    Click    text=OK
+    Wait For Exists    10000    text=Camera
+
+Delete Camera Upload
+    Clear Recent Apps
+    Enter App    Dropbox
+    Click    className=android.app.ActionBar$Tab
+    ${is_camera_upload_exist}    Wait For Exists    2000    text=Camera Uploads
+    Run Keyword If    ${is_camera_upload_exist}    Run Keywords    Swipe right    45    text=Camera Uploads    AND
+    ...    Click    text=Delete    AND    Click    text=Delete
+    Click    className=android.app.ActionBar$Tab    index=1
+    ${is_take_photos_message_exist}    Wait For Exists    60000    text=Go take some photos!
+
+Dropbox Integration Setup
+    ${dropbox_account}    Set Variable    t7820315@ntut.org.tw
+    ${dropbox_pwd}    Set Variable    ming060
+    Set Serial    0a1df05f
+    Install Test Agent
+    Start Test Agent
+    Connect To Wifi    WEP    12345
+    Delete All Albums
+    Remove Account    Dropbox
+    Install Dropbox
+    Sign In Dropbox On Android    ${dropbox_account}    ${dropbox_pwd}
+    Delete Camera Upload
+    Sign In Dropbox On Web    ${dropbox_account}    ${dropbox_pwd}
+
+Dropbox Integration Teardown
+    Run Keyword If Test Failed    Screenshot
+    Close All Browsers
+    Delete All Albums
+    Delete Camera Upload
+    Remove Account    Dropbox
+    Uninstall Dropbox
+    Clear Connected Wifi
+    Stop Test Agent
+    Uninstall Test Agent
+    Clear Recent Apps
+    Press Home
+
+Install Dropbox
+    Install    ${CURDIR}${/}com.dropbox.android_2.4.1.apk
+
+Sign In Dropbox On Android
+    [Arguments]    ${account}    ${pwd}
+    Enter App    Dropbox
+    Click    text=Sign in!
+    Set Text    ${pwd}    resourceId=com.dropbox.android:id/login_password
+    Set Text    ${account}    resourceId=com.dropbox.android:id/login_email
+    Click    text=Sign in
+    Click    text=Turn on Camera Upload
+
+Sign In Dropbox On Web
+    [Arguments]    ${dropbox_account}    ${dropbox_pwd}
+    Set Selenium Speed    1s
+    Open Browser    https://www.dropbox.com/    firefox
+    Comment    Maximize Browser Window
+    Click Link    /login
+    Input Text    xpath=//input[@name='login_email']    ${dropbox_account}
+    Input Password    xpath=//input[@name='login_password']    ${dropbox_pwd}
+    Click Button    xpath=//button[@class="login-button button-primary"]
+
+Take A Photo
+    Enter App    Camera
+    Click    description=Shutter
+    ${is_view_exist}    Wait For Exists    2000    description=Filmstrip view
+    ${is_view_gone}    Wait Until Gone    8000    description=Filmstrip view
+
+Uninstall Dropbox
+    Uninstall    com.dropbox.android
+
+Verify Photo On Android
+    Clear Recent Apps
+    Enter App    Dropbox
+    Click    className=android.app.ActionBar$Tab    index=1
+    Screenshot
+    ${is_progress_bar_gone}    Wait Until Gone    15000    resourceId=com.dropbox.android:id/filelist_status_progressbar
+    Screenshot
+    ${is_loading_exist}    Wait For Exists    5000    text=Loading…
+    ${is_loading_gone}    Wait Until Gone    5000    text=Loading…
+    ${is_gallery_item_exist}    Wait For Exists    10000    resourceId=com.dropbox.android:id/gallery_item_icon
+    Should Be True    ${is_gallery_item_exist}    Photo upload fail
+    Click    className=android.app.ActionBar$Tab    index=0
+    ${is_camera_upload_exist}    Wait For Exists    10000    text=Camera Uploads
+    Click    text=Camera Uploads
+    ${is_photo_exist}    Wait For Exists    60000    resourceId=com.dropbox.android:id/filelist_name
+    Screenshot
+    Should Be True    ${is_photo_exist}    No File
+    ${file_text_view}    Get Object    resourceId=com.dropbox.android:id/filelist_name
+    ${file_name}    Get Info Of Object    ${file_text_view}    text
+    [Return]    ${file_name}
+
+Verify Photo On Web
+    [Arguments]    ${photo_name}
+    Wait Until Page Contains Element    //a[text()="Camera Uploads"]    5s
+    Click Element    //a[text()="Camera Uploads"]
+    Input Text    id=browse-search-input    ${photo_name}
+    Wait Until Page Contains    Search - 1 result    5s
+    Page Should Contain    Search - 1 result    Search result should be only one
+    Wait Until Page Contains Element    //a[text()="${photo_name}"]    10s
+    Capture Page Screenshot
+    Page Should Contain Element    //a[text()="${photo_name}"]    The photo does not exist.
